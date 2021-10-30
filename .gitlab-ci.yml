@@ -1,0 +1,45 @@
+variables:
+  COMPONENT_IMAGE: registry.moetz.dev/dead-drop:$CI_BUILD_REF_NAME
+  COMPONENT_LATEST_IMAGE: registry.moetz.dev/dead-drop:latest
+
+stages:
+  - build_application
+  - build_image
+  - tag_image
+
+
+build application:
+  stage: build_application
+  script:
+    - ./gradlew clean build shadowJar
+  artifacts:
+    paths:
+      - build/libs/DeadDrop.jar
+  tags:
+    - maven
+
+build and push:
+  stage: build_image
+  script:
+    - echo $COMPONENT_IMAGE
+    - docker build --pull -t $COMPONENT_IMAGE ./
+    - docker login -u $REGISTRY_MOETZ_DEV_USERNAME -p $REGISTRY_MOETZ_DEV_PASSWORD registry.moetz.dev
+    - docker push $COMPONENT_IMAGE
+  tags:
+    - docker
+  only:
+    - develop
+    - master
+    - tags
+
+tag latest:
+  stage: tag_image
+  script:
+    - docker login -u $REGISTRY_MOETZ_DEV_USERNAME -p $REGISTRY_MOETZ_DEV_PASSWORD registry.moetz.dev
+    - docker pull $COMPONENT_IMAGE
+    - docker tag $COMPONENT_IMAGE $COMPONENT_LATEST_IMAGE
+    - docker push $COMPONENT_LATEST_IMAGE
+  tags:
+    - docker
+  only:
+    - master
