@@ -5,9 +5,9 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.31'
 }
 
-group "dev.moetz.ffmpegonlineconverter"
+group "dev.moetz.deaddrop"
 version "0.0.1"
-mainClassName = "dev.moetz.ffmpegonlineconverter.ApplicationKt"
+mainClassName = "dev.moetz.deaddrop.ApplicationKt"
 
 repositories {
     mavenCentral()
@@ -31,14 +31,14 @@ task copyShadowLibs(type: Copy) {
 
 jar {
     manifest {
-        attributes['Main-Class'] = 'dev.moetz.ffmpegonlineconverter.ApplicationKt'
-        attributes['Implementation-Title'] = "FFMPEGOnlineConverter"
+        attributes['Main-Class'] = 'dev.moetz.deaddrop.ApplicationKt'
+        attributes['Implementation-Title'] = "DeadDrop"
         attributes['Implementation-Version'] = archiveVersion
     }
 }
 
 shadowJar {
-    baseName = 'FFMPEGOnlineConverter'
+    baseName = 'DeadDrop'
     classifier = null
     version = null
     repositories {
