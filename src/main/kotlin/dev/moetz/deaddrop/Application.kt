@@ -17,8 +17,23 @@ fun main() {
     val dataDirectory = System.getenv("DATA_DIRECTORY")?.takeIf { it.isNotBlank() } ?: "./data"
     val encryptionKeyPath = System.getenv("ENCRYPTION_KEY_PATH")?.takeIf { it.isNotBlank() } ?: "./config/key.secret"
 
+    val keepFilesTimeInSeconds = System.getenv("FILE_KEEP_TIME_IN_SECONDS")
+        ?.takeIf { it.isNotBlank() }
+        ?.toLongOrNull()
+        ?: (60L * 60 + 24)/* 24 hours */
+
+    val timePeriodToSweepOverdueFilesInSeconds = System.getenv("FILE_KEEP_TIME_IN_SECONDS")
+        ?.takeIf { it.isNotBlank() }
+        ?.toLongOrNull()
+        ?: (60L * 60) /* every hour */
+
     val encryptionManager = EncryptionManager(File(encryptionKeyPath))
-    val dataRepository = DataRepository(dataDirectory, encryptionManager)
+    val dataRepository = DataRepository(
+        dataFolderPath = dataDirectory,
+        encryptionManager = encryptionManager,
+        keepFilesTimeInSeconds = keepFilesTimeInSeconds,
+        timePeriodToSweepOverdueFilesInSeconds = timePeriodToSweepOverdueFilesInSeconds
+    )
 
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
         install(DefaultHeaders)

@@ -1,12 +1,17 @@
 package dev.moetz.deaddrop.data
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.io.File
 import java.security.MessageDigest
 import java.security.SecureRandom
+import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.ZoneId
 import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -16,7 +21,9 @@ import javax.crypto.spec.SecretKeySpec
 
 class DataRepository(
     private val dataFolderPath: String,
-    private val encryptionManager: EncryptionManager
+    private val encryptionManager: EncryptionManager,
+    private val keepFilesTimeInSeconds: Long,
+    private val timePeriodToSweepOverdueFilesInSeconds: Long
 ) {
 
     private val dataFolder: File
@@ -36,11 +43,28 @@ class DataRepository(
 
     private val dataFolderCreateMutex = Mutex()
 
+    init {
+        GlobalScope.launch {
+            while (isActive) {
+                delay(1000 * timePeriodToSweepOverdueFilesInSeconds)
+                cleanUpOverdueFiles()
+            }
+        }
+    }
+
+    private suspend fun cleanUpOverdueFiles() {
+        val cutOffDateTime = LocalDateTime.now().minusSeconds(keepFilesTimeInSeconds)
+        dataFolder.listFiles()?.toList()
+            .orEmpty()
+            .filter { file -> file.lastModifiedAsLocalDateTime().isBefore(cutOffDateTime) }
+            .forEach { file -> file.delete() }
+    }
+
     private suspend fun getNewDropFile(): File {
         return dataFolderCreateMutex.withLock {
             var fileName: String
             do {
-                fileName = HashUtils.sha256(UUID.randomUUID().toString())
+                fileName = HashUtils.sha256(UUID.randomUUID().toString()).substring(0 until 12)
             } while (File(dataFolder, fileName).exists())
             File(dataFolder, fileName).also {
                 if (it.createNewFile().not()) {
@@ -57,10 +81,15 @@ class DataRepository(
         return file.name
     }
 
+    private fun File.isOverdue(): Boolean {
+        val cutOffDateTime = LocalDateTime.now().minusSeconds(keepFilesTimeInSeconds)
+        return this.lastModifiedAsLocalDateTime().isBefore(cutOffDateTime)
+    }
+
     suspend fun getDrop(id: String): String? {
         val file = File(dataFolder, id)
         return if (file.exists()) {
-            if (file.lastModifiedAsLocalDateTime().isAfter(LocalDateTime.now().minusHours(24))) {
+            if (file.isOverdue().not()) {
                 //valid timeframe
                 val encryptedContent = file.readText()
                 file.delete()
@@ -78,7 +107,7 @@ class DataRepository(
 
     private fun File.lastModifiedAsLocalDateTime(): LocalDateTime {
         val timestamp = this.lastModified()
-        return LocalDateTime.ofEpochSecond(timestamp, 0, ZoneOffset.UTC)
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
     }
 
 }
