@@ -18,22 +18,17 @@ fun main() {
     val encryptionKeyPath = System.getenv("ENCRYPTION_KEY_PATH")?.takeIf { it.isNotBlank() } ?: "./config/key.secret"
 
     //TODO UI string would need to be updated as well
-    val keepFilesTimeInSeconds = System.getenv("FILE_KEEP_TIME_IN_SECONDS")
+    val keepFilesTimeInHours = System.getenv("FILE_KEEP_TIME_IN_HOURS")
         ?.takeIf { it.isNotBlank() }
-        ?.toLongOrNull()
-        ?: (60L * 60 + 24)/* 24 hours */
-
-    val timePeriodToSweepOverdueFilesInSeconds = System.getenv("FILE_KEEP_TIME_IN_SECONDS")
-        ?.takeIf { it.isNotBlank() }
-        ?.toLongOrNull()
-        ?: (60L * 60) /* every hour */
+        ?.toIntOrNull()
+        ?: 24/* 24 hours */
 
     val encryptionManager = EncryptionManager(File(encryptionKeyPath))
     val dataRepository = DataRepository(
         dataFolderPath = dataDirectory,
         encryptionManager = encryptionManager,
-        keepFilesTimeInSeconds = keepFilesTimeInSeconds,
-        timePeriodToSweepOverdueFilesInSeconds = timePeriodToSweepOverdueFilesInSeconds
+        keepFilesTimeInSeconds = (60L * 60 * keepFilesTimeInHours),
+        timePeriodToSweepOverdueFilesInSeconds = (60L * 60) /* every hour */
     )
 
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
@@ -45,7 +40,7 @@ fun main() {
             gzip()
             deflate()
         }
-        configure(domain, isHttps)
+        configure(domain, isHttps, keepFilesTimeInHours)
         configureApi(dataRepository)
     }.start(wait = true)
 }

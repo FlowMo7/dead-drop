@@ -8,7 +8,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
 
-fun Application.configure(domain: String, isHttps: Boolean) {
+fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours: Int) {
 
     routing {
 
@@ -110,7 +110,7 @@ fun Application.configure(domain: String, isHttps: Boolean) {
                                 br()
                                 +"After you pick it up (either successfully or with e.g. a wrong password), the data will self-destruct and won't be available anymore."
                                 br()
-                                +"This link will only work for 24 hours, after that, the data will self-destruct as well."
+                                +"This link will only work for $keepFilesTimeInHours hours, after that, the data will self-destruct as well."
                             }
 
                         }
