@@ -17,6 +17,7 @@ fun main() {
     val dataDirectory = System.getenv("DATA_DIRECTORY")?.takeIf { it.isNotBlank() } ?: "./data"
     val encryptionKeyPath = System.getenv("ENCRYPTION_KEY_PATH")?.takeIf { it.isNotBlank() } ?: "./config/key.secret"
 
+    //TODO UI string would need to be updated as well
     val keepFilesTimeInSeconds = System.getenv("FILE_KEEP_TIME_IN_SECONDS")
         ?.takeIf { it.isNotBlank() }
         ?.toLongOrNull()
