@@ -8,6 +8,41 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
 
+fun FlowContent.isThisSafe(keepFilesTimeInHours: Int) {
+    div {
+        id = "is_this_safe"
+
+        h3 { +"How is this safe?" }
+        +"Here are the steps this platform does with your message:"
+        br()
+        ul {
+            li {
+                +"Once you click on "
+                i { +"Make the drop!"}
+                +", the message is encrypted in your browser with a password generated in your browser."
+            }
+            li {
+                +"This means, that the data does not leave your browser unencrypted, as well as your password."
+            }
+            li {
+                +"The encrypted data is then loaded (using a secure connection) to our servers, where it is stored for a maximum of $keepFilesTimeInHours hours (or when the drop is fetched, whichever is earlier)."
+            }
+            li {
+                +"When getting the drop, the encrypted data is fetched from the server (and instantly deleted when doing so), and is only encrypted in the browser. So, also here, the inserted password never leaves the browser."
+            }
+            li {
+                +"So the server (we) cannot see your message, as we never get the password for it."
+            }
+        }
+        br()
+        +"The encryption is algorithm used is "
+        a(href = "https://github.com/bitwiseshiftleft/sjcl") { +"github.com/bitwiseshiftleft/sjcl"}
+        +", which is a JavaScript crypto library developed at Stanford."
+        br()
+        +"The code is open source, and you can easily inspect what is going on on this website with your developer tools. Furthermore, feel free to host your own instance of this service, so that we do not even get to see your encrypted data at any time, and so that you do not have to rely on us not trying to decrypt your data."
+    }
+}
+
 fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours: Int) {
 
     routing {
@@ -121,6 +156,8 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                         }
                     }
 
+                    isThisSafe(keepFilesTimeInHours)
+
                 }
             }
         }
@@ -155,6 +192,16 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                     div {
                         id = "container_get_drop"
 
+                        +"Enter the password"
+                        br()
+                        +"Enter the password you got provided with this link."
+                        br()
+                        +"This will only work "
+                        b {+"once"}
+                        +"! Clicking "
+                        i {+"Get the drop"}
+                        +" will delete the message permanently, regardless of whether the password was correct or not."
+
                         textInput {
                             id = "drop_password"
                             placeholder = "Enter the password here"
@@ -164,14 +211,13 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
 
                         button {
                             onClick = "getDrop('$dropId', document.getElementById('drop_password').value)"
-                            +"Get Drop"
+                            +"Get the drop"
                         }
                     }
 
                     div {
                         id = "drop_content"
                     }
-
 
                     div {
                         id = "error_text"
@@ -192,6 +238,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                         +"In each case, if neither you nor the creator of the drop took actions that could lead to this scenario, please consider that the content of your drop may be in malicious hands as of now."
                     }
 
+                    isThisSafe(keepFilesTimeInHours)
                 }
             }
         }
@@ -202,8 +249,6 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                 get("styles.css") {
                     call.respondText(contentType = ContentType.Text.CSS) {
                         """
-
-
 
 """
                     }
