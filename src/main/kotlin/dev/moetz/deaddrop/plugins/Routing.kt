@@ -50,8 +50,10 @@ private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline bloc
     body {
         nav(classes = "orange") {
             div(classes = "nav-wrapper") {
-                a(href = "/", classes = "brand-logo center") {
-                    +"One-Time Dead Drop"
+                span(classes = "brand-logo center") {
+                    unsafe {
+                        +"One-Time&nbsp;Dead&nbsp;Drop"
+                    }
                 }
             }
         }
@@ -105,7 +107,14 @@ private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline bloc
                             ) { +"github.com/bitwiseshiftleft/sjcl" }
                             +", which is a JavaScript crypto library developed at Stanford."
                             br()
-                            +"The code is open source, and you can easily inspect what is going on on this website with your developer tools. Furthermore, feel free to host your own instance of this service, so that we do not even get to see your encrypted data at any time, and so that you do not have to rely on us not trying to decrypt your data."
+                            +"The code is open source, and you can easily inspect what is going on on this website with your developer tools."
+                            br()
+                            +"Furthermore, feel free to host your "
+                            a(
+                                classes = "orange-text",
+                                href = "https://gitlab.moetz.dev/florian/deaddrop"
+                            ) { +"own instance of this service" }
+                            +", so that we do not even get to see your encrypted data at any time, so that you do not have to rely on us not trying to decrypt your data."
                         }
                     }
                 }
@@ -129,6 +138,21 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                 siteSkeleton(keepFilesTimeInHours) {
                     div(classes = "section") {
                         id = "send_div"
+
+                        div(classes = "row") {
+                            div(classes = "col s12") {
+                                +"Want to send something private? A password, love-note or something else, no-one else than the recipient should see?"
+                                br()
+                                br()
+                                +"This service will:"
+                                br()
+                                +"Encrypt your message in your browser with a randomly generated password."
+                                br()
+                                +"Upload the encrypted message to the server (while not sharing the password with the server)"
+                                br()
+                                +"Display the password as well as a link to get the message back, which you can then share with your recipient."
+                            }
+                        }
 
                         div(classes = "row") {
                             div(classes = "col s12") {
@@ -263,7 +287,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                                 }
                             }
                             div(classes = "col s12") {
-                                a(classes = "waves-effect waves-light btn") {
+                                a(classes = "waves-effect waves-light btn orange") {
                                     onClick = "getDrop('$dropId', document.getElementById('drop_password').value)"
                                     +"Get the drop"
                                 }
