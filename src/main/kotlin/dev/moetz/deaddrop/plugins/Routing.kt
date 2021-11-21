@@ -85,16 +85,21 @@ private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline bloc
                     }
                     div(classes = "row") {
                         div("col s12") {
+                            unsafe { +"&bullet;&nbsp;" }
                             +"Once you click on "
                             i { +"Make the drop!" }
                             +", the message is encrypted in your browser with a password generated in your browser."
                             br()
+                            unsafe { +"&bullet;&nbsp;" }
                             +"This means, that the data does not leave your browser unencrypted, as well as your password."
                             br()
-                            +"The encrypted data is then loaded (using a secure connection) to our servers, where it is stored for a maximum of $keepFilesTimeInHours hours (or when the drop is fetched, whichever is earlier)."
+                            unsafe { +"&bullet;&nbsp;" }
+                            +"The encrypted data is then sent to the backend, where it is stored for a maximum of $keepFilesTimeInHours hours (or when the drop is fetched, whichever is earlier)."
                             br()
+                            unsafe { +"&bullet;&nbsp;" }
                             +"When getting the drop, the encrypted data is fetched from the server (and instantly deleted when doing so), and is only encrypted in the browser. So, also here, the inserted password never leaves the browser."
                             br()
+                            unsafe { +"&bullet;&nbsp;" }
                             +"So the server (we) cannot see your message, as we never get the password for it."
 
                             br()
@@ -107,7 +112,12 @@ private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline bloc
                             ) { +"github.com/bitwiseshiftleft/sjcl" }
                             +", which is a JavaScript crypto library developed at Stanford."
                             br()
-                            +"The code is open source, and you can easily inspect what is going on on this website with your developer tools."
+                            +"The code is "
+                            a(
+                                classes = "orange-text",
+                                href = "https://gitlab.moetz.dev/florian/deaddrop"
+                            ) { +"open source" }
+                            +", and you can easily inspect what is going on on this website with your developer tools."
                             br()
                             +"Furthermore, feel free to host your "
                             a(
@@ -146,10 +156,13 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                                 br()
                                 +"This service will:"
                                 br()
+                                unsafe { +"&bullet;&nbsp;" }
                                 +"Encrypt your message in your browser with a randomly generated password."
                                 br()
+                                unsafe { +"&bullet;&nbsp;" }
                                 +"Upload the encrypted message to the server (while not sharing the password with the server)"
                                 br()
+                                unsafe { +"&bullet;&nbsp;" }
                                 +"Display the password as well as a link to get the message back, which you can then share with your recipient."
                             }
                         }
