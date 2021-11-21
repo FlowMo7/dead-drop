@@ -15,34 +15,43 @@ private fun FlowContent.isThisSafe(keepFilesTimeInHours: Int) {
     div {
         id = "is_this_safe"
 
-        h3 { +"How is this safe?" }
-        +"Here are the steps this platform does with your message:"
-        br()
-        ul {
-            li {
-                +"Once you click on "
-                i { +"Make the drop!" }
-                +", the message is encrypted in your browser with a password generated in your browser."
-            }
-            li {
-                +"This means, that the data does not leave your browser unencrypted, as well as your password."
-            }
-            li {
-                +"The encrypted data is then loaded (using a secure connection) to our servers, where it is stored for a maximum of $keepFilesTimeInHours hours (or when the drop is fetched, whichever is earlier)."
-            }
-            li {
-                +"When getting the drop, the encrypted data is fetched from the server (and instantly deleted when doing so), and is only encrypted in the browser. So, also here, the inserted password never leaves the browser."
-            }
-            li {
-                +"So the server (we) cannot see your message, as we never get the password for it."
+        h3 {
+            onClick = "toggleIsThisSafeVisible()"
+            a(href="#is_this_safe") {
+                +"How is this safe?"
             }
         }
-        br()
-        +"The encryption is algorithm used is "
-        a(href = "https://github.com/bitwiseshiftleft/sjcl") { +"github.com/bitwiseshiftleft/sjcl" }
-        +", which is a JavaScript crypto library developed at Stanford."
-        br()
-        +"The code is open source, and you can easily inspect what is going on on this website with your developer tools. Furthermore, feel free to host your own instance of this service, so that we do not even get to see your encrypted data at any time, and so that you do not have to rely on us not trying to decrypt your data."
+        div {
+            id = "container_is_this_safe"
+            style = "display: none;"
+            +"Here are the steps this platform does with your message:"
+            br()
+            ul {
+                li {
+                    +"Once you click on "
+                    i { +"Make the drop!" }
+                    +", the message is encrypted in your browser with a password generated in your browser."
+                }
+                li {
+                    +"This means, that the data does not leave your browser unencrypted, as well as your password."
+                }
+                li {
+                    +"The encrypted data is then loaded (using a secure connection) to our servers, where it is stored for a maximum of $keepFilesTimeInHours hours (or when the drop is fetched, whichever is earlier)."
+                }
+                li {
+                    +"When getting the drop, the encrypted data is fetched from the server (and instantly deleted when doing so), and is only encrypted in the browser. So, also here, the inserted password never leaves the browser."
+                }
+                li {
+                    +"So the server (we) cannot see your message, as we never get the password for it."
+                }
+            }
+            br()
+            +"The encryption is algorithm used is "
+            a(href = "https://github.com/bitwiseshiftleft/sjcl") { +"github.com/bitwiseshiftleft/sjcl" }
+            +", which is a JavaScript crypto library developed at Stanford."
+            br()
+            +"The code is open source, and you can easily inspect what is going on on this website with your developer tools. Furthermore, feel free to host your own instance of this service, so that we do not even get to see your encrypted data at any time, and so that you do not have to rely on us not trying to decrypt your data."
+        }
     }
 }
 
@@ -278,6 +287,14 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
         document.getElementById('drop_content').value = '';
         showDropLink(id, password);
     });
+}
+
+function toggleIsThisSafeVisible() {
+    if (document.getElementById('container_is_this_safe').style.display == 'none') {
+        document.getElementById('container_is_this_safe').style.display = 'block';
+    } else {
+        document.getElementById('container_is_this_safe').style.display = 'none';
+    }
 }
 
 function showDropLink(id, password) {
