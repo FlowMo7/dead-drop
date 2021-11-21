@@ -44,6 +44,8 @@ private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline bloc
         meta(name = "og:title", content = "Dead-Drop: Send secure information")
         meta(name = "description", content = "Create one-time links for securely sending data")
         meta(name = "keywords", content = "drop,password,encrypt,secure,send")
+        meta(name = "theme-color", content = "#ff9800")
+        meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
     }
     body {
         nav(classes = "orange") {
