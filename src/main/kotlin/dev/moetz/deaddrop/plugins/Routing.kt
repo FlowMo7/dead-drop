@@ -11,50 +11,6 @@ import kotlinx.html.*
 import java.math.BigInteger
 import java.security.MessageDigest
 
-private fun FlowContent.isThisSafe(keepFilesTimeInHours: Int) {
-    div {
-        id = "is_this_safe"
-
-        h3 {
-            onClick = "toggleIsThisSafeVisible()"
-            a(href="#is_this_safe") {
-                +"How is this safe?"
-            }
-        }
-        div {
-            id = "container_is_this_safe"
-            style = "display: none;"
-            +"Here are the steps this platform does with your message:"
-            br()
-            ul {
-                li {
-                    +"Once you click on "
-                    i { +"Make the drop!" }
-                    +", the message is encrypted in your browser with a password generated in your browser."
-                }
-                li {
-                    +"This means, that the data does not leave your browser unencrypted, as well as your password."
-                }
-                li {
-                    +"The encrypted data is then loaded (using a secure connection) to our servers, where it is stored for a maximum of $keepFilesTimeInHours hours (or when the drop is fetched, whichever is earlier)."
-                }
-                li {
-                    +"When getting the drop, the encrypted data is fetched from the server (and instantly deleted when doing so), and is only encrypted in the browser. So, also here, the inserted password never leaves the browser."
-                }
-                li {
-                    +"So the server (we) cannot see your message, as we never get the password for it."
-                }
-            }
-            br()
-            +"The encryption is algorithm used is "
-            a(href = "https://github.com/bitwiseshiftleft/sjcl") { +"github.com/bitwiseshiftleft/sjcl" }
-            +", which is a JavaScript crypto library developed at Stanford."
-            br()
-            +"The code is open source, and you can easily inspect what is going on on this website with your developer tools. Furthermore, feel free to host your own instance of this service, so that we do not even get to see your encrypted data at any time, and so that you do not have to rely on us not trying to decrypt your data."
-        }
-    }
-}
-
 private fun String.md5(): String {
     val md = MessageDigest.getInstance("MD5")
     return BigInteger(1, md.digest(this.toByteArray())).toString(16).padStart(32, '0')
@@ -70,6 +26,87 @@ private suspend fun ApplicationCall.etagMagic(content: String) {
     }
 }
 
+private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline block: DIV.() -> Unit) {
+    head {
+        title("Dead-Drop: Send secure information")
+        link(href = "/static/materialize.min.css", rel = "stylesheet", type = "text/css")
+        script(src = "/static/sjcl.js") {
+
+        }
+        script(src = "/static/drop.js") {
+
+        }
+        script(src = "/static/frontend.js") {
+
+        }
+    }
+    body {
+        nav(classes = "orange") {
+            div(classes = "nav-wrapper") {
+                a(href = "/", classes = "brand-logo center") {
+                    +"One-Time Dead Drop"
+                }
+            }
+        }
+        br()
+        div(classes = "container") {
+
+            block.invoke(this)
+
+            div(classes = "divider") {
+
+            }
+            div(classes = "section") {
+                id = "is_this_safe"
+
+                h3 {
+                    onClick = "toggleIsThisSafeVisible()"
+                    a(classes = "orange-text", href = "#is_this_safe") {
+                        +"How is this safe?"
+                    }
+                }
+                div {
+                    id = "container_is_this_safe"
+                    style = "display: none;"
+
+                    div(classes = "row") {
+                        div("col s12") {
+                            +"Here are the steps this platform does with your message:"
+                        }
+                    }
+                    div(classes = "row") {
+                        div("col s12") {
+                            +"Once you click on "
+                            i { +"Make the drop!" }
+                            +", the message is encrypted in your browser with a password generated in your browser."
+                            br()
+                            +"This means, that the data does not leave your browser unencrypted, as well as your password."
+                            br()
+                            +"The encrypted data is then loaded (using a secure connection) to our servers, where it is stored for a maximum of $keepFilesTimeInHours hours (or when the drop is fetched, whichever is earlier)."
+                            br()
+                            +"When getting the drop, the encrypted data is fetched from the server (and instantly deleted when doing so), and is only encrypted in the browser. So, also here, the inserted password never leaves the browser."
+                            br()
+                            +"So the server (we) cannot see your message, as we never get the password for it."
+
+                            br()
+                            br()
+
+                            +"The encryption is algorithm used is "
+                            a(
+                                classes = "orange-text",
+                                href = "https://github.com/bitwiseshiftleft/sjcl"
+                            ) { +"github.com/bitwiseshiftleft/sjcl" }
+                            +", which is a JavaScript crypto library developed at Stanford."
+                            br()
+                            +"The code is open source, and you can easily inspect what is going on on this website with your developer tools. Furthermore, feel free to host your own instance of this service, so that we do not even get to see your encrypted data at any time, and so that you do not have to rely on us not trying to decrypt your data."
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours: Int) {
 
     routing {
@@ -82,204 +119,209 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
 
         get {
             call.respondHtml {
-                head {
-                    title("Dead-Drop: Send secure information")
-                    link(href = "/static/styles.css", rel = "stylesheet", type = "text/css")
-                    script(src = "/static/sjcl.js") {
-
-                    }
-                    script(src = "/static/drop.js") {
-
-                    }
-                    script(src = "/static/frontend.js") {
-
-                    }
-                }
-                body {
-                    h1 {
-                        +"One Time Dead-Drop"
-                    }
-                    br()
-                    div {
-                        +"Need to send some data securely? This is the place to do it."
-                    }
-                    br()
-                    br()
-
-                    div {
+                siteSkeleton(keepFilesTimeInHours) {
+                    div(classes = "section") {
                         id = "send_div"
 
-                        +"Enter your message below:"
-                        br()
-                        textArea(cols = "70", rows = "8") {
-                            name = "message"
-                            id = "drop_content"
-                            placeholder = "Enter your message"
+                        div(classes = "row") {
+                            div(classes = "col s6") {
+                                +"Enter your message below:"
+                            }
                         }
 
-
-                        br()
-
-                        button {
-                            onClick = "sendDrop(document.getElementById('drop_content').value)"
-                            +"Make the drop!"
+                        div(classes = "row") {
+                            div(classes = "col s12") {
+                                textArea(cols = "70", rows = "8") {
+                                    style = "min-height:200px;"
+                                    name = "message"
+                                    id = "drop_content"
+                                    placeholder = "Enter your message"
+                                }
+                            }
+                            div(classes = "col s12") {
+                                a(classes = "waves-effect waves-light btn orange") {
+                                    onClick = "sendDrop(document.getElementById('drop_content').value)"
+                                    +"Make the drop!"
+                                }
+                            }
                         }
-
                     }
 
-                    div {
+                    div(classes = "section") {
                         id = "link_div"
                         hidden = true
 
-                        +"Drop made!"
-                        br()
-                        +"Your recipient needs the link as well as the password to get the drop."
-                        br()
-                        +"It might be best to just fully copy the message below to your recipient."
-                        br()
-                        +"Note, that for additional security, the link and password may be sent on separate channels (e.g. mail and a messenger)"
-
-                        br()
-                        br()
-                        br()
-
-                        div {
-                            id = "to_copy"
-
-                            +"Hi,"
-                            br()
-                            +"I'm sending you some secure information, which can be retrieved by browsing to:"
-                            br()
-                            +"Location: "
-                            span {
-                                id = "drop_share_link"
+                        div("row") {
+                            div(classes = "col s12") {
+                                h5 {
+                                    +"Drop made!"
+                                }
                             }
-                            br()
-                            +"The password to be entered there is: "
-                            span {
-                                id = "drop_share_password"
+                        }
+                        div("row") {
+                            div(classes = "col s12") {
+                                +"Your recipient needs the link as well as the password to get the drop."
                             }
-                            br()
-                            br()
-                            br()
-
-                            div {
-                                +"Warning!"
-                                br()
-                                +"This drop will only work "
-                                b { +"once" }
-                                +", so be careful with the password, and make sure to copy the data immediately."
-                                br()
-                                +"After you pick it up (either successfully or with e.g. a wrong password), the data will self-destruct and won't be available anymore."
-                                br()
-                                +"This link will only work for $keepFilesTimeInHours hours, after that, the data will self-destruct as well."
+                            div(classes = "col s12") {
+                                +"It might be best to just fully copy the message below to your recipient."
                             }
-
+                            div(classes = "col s12") {
+                                +"Note, that for additional security, the link and password may be sent on separate channels (e.g. mail and a messenger)"
+                            }
                         }
 
-                        button {
+                        div(classes = "row") {
+                            div(classes = "col s10") {
+                                div(classes = "card blue-grey darken-1") {
+                                    div(classes = "card-content black-text orange accent-1") {
+                                        span(classes = "card-title") { +"Hi," }
+                                        p {
+                                            id = "message_to_share_drop"
+
+                                            +"I'm sending you some secure information, which can be retrieved by browsing to:"
+                                            br()
+                                            +"Location: "
+                                            b {
+                                                span {
+                                                    id = "drop_share_link"
+                                                }
+                                            }
+                                            br()
+                                            +"The password to be entered there is: "
+
+                                            b {
+                                                span {
+                                                    id = "drop_share_password"
+                                                }
+                                            }
+                                            br()
+                                            br()
+
+                                            b { +"Warning!" }
+                                            br()
+
+                                            +"This drop will only work "
+                                            b { +"once" }
+                                            +", so be careful with the password, and make sure to copy the data immediately."
+                                            br()
+
+                                            +"After you pick it up (either successfully or with e.g. a wrong password), the data will self-destruct and won't be available anymore."
+                                            br()
+
+                                            +"This link will only work for $keepFilesTimeInHours hours, after that, the data will self-destruct as well."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        a(classes = "waves-effect waves-light btn-small orange") {
                             onClick = "window.location.assign('${if (isHttps) "https" else "http"}://$domain/')"
                             +"Make another drop"
                         }
                     }
-
-                    isThisSafe(keepFilesTimeInHours)
-
                 }
             }
         }
 
+
         get("pickup/{id}") {
             val dropId = call.parameters["id"]
             call.respondHtml {
-                head {
-                    title("Dead-Drop: Send secure information")
-                    link(href = "/static/styles.css", rel = "stylesheet", type = "text/css")
-                    script(src = "/static/sjcl.js") {
+                siteSkeleton(keepFilesTimeInHours) {
 
-                    }
-                    script(src = "/static/drop.js") {
-
-                    }
-                    script(src = "/static/frontend.js") {
-
-                    }
-                }
-                body {
-                    h1 {
-                        +"One Time Dead-Drop"
-                    }
-                    br()
-                    div {
-                        +"Need to send some data securely? This is the place to do it."
-                    }
-                    br()
-                    br()
-
-                    div {
+                    div(classes = "section") {
                         id = "container_get_drop"
 
-                        +"Enter the password"
-                        br()
-                        +"Enter the password you got provided with this link."
-                        br()
-                        +"This will only work "
-                        b { +"once" }
-                        +"! Clicking "
-                        i { +"Get the drop" }
-                        +" will delete the message permanently, regardless of whether the password was correct or not."
-
-                        textInput {
-                            id = "drop_password"
-                            placeholder = "Enter the password here"
+                        div("row") {
+                            div("col s12") {
+                                +"Enter the password you got provided with this link."
+                            }
+                        }
+                        div("row") {
+                            div("col s12") {
+                                +"This will only work "
+                                b { +"once" }
+                                +"! Clicking "
+                                i { +"Get the drop" }
+                                +" will delete the message permanently, regardless of whether the password was correct or not."
+                            }
                         }
 
-                        br()
-
-                        button {
-                            onClick = "getDrop('$dropId', document.getElementById('drop_password').value)"
-                            +"Get the drop"
+                        div("row") {
+                            div("input-field col s12") {
+                                textInput(classes = "validate") {
+                                    id = "drop_password"
+                                    placeholder = "Enter the password here"
+                                }
+                            }
+                            div(classes = "col s12") {
+                                a(classes = "waves-effect waves-light btn") {
+                                    onClick = "getDrop('$dropId', document.getElementById('drop_password').value)"
+                                    +"Get the drop"
+                                }
+                            }
                         }
                     }
 
-                    div {
-                        id = "drop_content"
+                    div(classes = "section") {
+                        id = "drop_content_section"
+                        hidden = true
+
+                        h3 {
+                            +"Your drop:"
+                        }
+
+                        div(classes = "divider") {
+
+                        }
+
+                        div(classes = "row") {
+                            div(classes = "col s12") {
+                                pre {
+                                    id = "drop_content"
+                                }
+                            }
+                        }
                     }
 
-                    div {
+
+                    div(classes = "section") {
                         id = "error_text"
                         hidden = true
 
-                        +"There was an error getting your drop. This can either be:"
-                        ul {
-                            li {
-                                +" The drop has already been fetched. You can only open / get a drop once. If you didn't get the drop yet, it might be that someone else tried (and if they got the password, may have succeeded) to get your drop. If you are unsure, you should consider that the dropped content is no longer safe in this scenario."
-                            }
-                            li {
-                                +"The entered password was wrong. You can only open / get a drop once, and if you enter the wrong password, the drop is gone forever. If you didn't get the drop yet, it might be that someone else tried (and if they got the password, may have succeeded) to get your drop. If you are unsure, you should consider that the dropped content is no longer safe in this scenario."
+                        div(classes = "row") {
+                            h3(classes = "red-text") {
+                                +"Error"
                             }
                         }
+                        div(classes = "row") {
+                            div(classes = "col s12") {
+                                +"There was an error getting your drop. This can either be:"
+                                br()
+                                br()
 
-                        br()
+                                +"The drop has already been fetched. You can only open / get a drop once. If you didn't get the drop yet, it might be that someone else tried (and if they got the password, may have succeeded) to get your drop. If you are unsure, you should consider that the dropped content is no longer safe in this scenario."
 
-                        +"In each case, if neither you nor the creator of the drop took actions that could lead to this scenario, please consider that the content of your drop may be in malicious hands as of now."
+                                br()
+                                br()
+                                +"The entered password was wrong. You can only open / get a drop once, and if you enter the wrong password, the drop is gone forever. If you didn't get the drop yet, it might be that someone else tried (and if they got the password, may have succeeded) to get your drop. If you are unsure, you should consider that the dropped content is no longer safe in this scenario."
+
+                                br()
+                                br()
+                                b {
+                                    +"In each case, if neither you nor the creator of the drop took actions that could lead to this scenario, please consider that the content of your drop may be in malicious hands as of now."
+                                }
+                            }
+                        }
                     }
 
-                    isThisSafe(keepFilesTimeInHours)
                 }
             }
         }
 
         static("static") {
             preCompressed {
-
-                get("styles.css") {
-                    call.respondText(contentType = ContentType.Text.CSS) {
-                        """
-
-"""
-                    }
-                }
 
                 get("frontend.js") {
                     val content = """function sendDrop(data) {
@@ -310,10 +352,11 @@ function getDrop(id, password) {
         password,
         function(data) {
             document.getElementById('drop_content').innerHTML = data;
+            document.getElementById('drop_content_section').style.display = 'block';
             document.getElementById('container_get_drop').style.display = 'none';
         },
         function() {
-            document.getElementById('drop_content').style.display = 'none';
+            document.getElementById('drop_content_section').style.display = 'none';
             document.getElementById('container_get_drop').style.display = 'none';
             document.getElementById('error_text').style.display = 'block';
         }
@@ -381,6 +424,8 @@ function get(path, onComplete) {
                 }
 
                 resource(remotePath = "sjcl.js", resource = "sjcl/sjcl.js")
+
+                resource(remotePath = "materialize.min.css", resource = "materialize/materialize.css")
             }
         }
 
