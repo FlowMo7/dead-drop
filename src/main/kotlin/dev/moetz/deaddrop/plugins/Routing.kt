@@ -52,7 +52,7 @@ private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline bloc
             div(classes = "nav-wrapper") {
                 span(classes = "brand-logo center") {
                     unsafe {
-                        +"One-Time&nbsp;Dead&nbsp;Drop"
+                        +"Dead&nbsp;Drop"
                     }
                 }
             }
