@@ -192,7 +192,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                                                 }
                                             }
                                             br()
-                                            +"The password to be entered there is: "
+                                            +"Password: "
 
                                             b {
                                                 span {
