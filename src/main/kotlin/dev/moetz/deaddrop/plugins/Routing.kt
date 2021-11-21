@@ -4,11 +4,14 @@ import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.http.*
 import io.ktor.http.content.*
+import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
+import java.math.BigInteger
+import java.security.MessageDigest
 
-fun FlowContent.isThisSafe(keepFilesTimeInHours: Int) {
+private fun FlowContent.isThisSafe(keepFilesTimeInHours: Int) {
     div {
         id = "is_this_safe"
 
@@ -18,7 +21,7 @@ fun FlowContent.isThisSafe(keepFilesTimeInHours: Int) {
         ul {
             li {
                 +"Once you click on "
-                i { +"Make the drop!"}
+                i { +"Make the drop!" }
                 +", the message is encrypted in your browser with a password generated in your browser."
             }
             li {
@@ -36,10 +39,25 @@ fun FlowContent.isThisSafe(keepFilesTimeInHours: Int) {
         }
         br()
         +"The encryption is algorithm used is "
-        a(href = "https://github.com/bitwiseshiftleft/sjcl") { +"github.com/bitwiseshiftleft/sjcl"}
+        a(href = "https://github.com/bitwiseshiftleft/sjcl") { +"github.com/bitwiseshiftleft/sjcl" }
         +", which is a JavaScript crypto library developed at Stanford."
         br()
         +"The code is open source, and you can easily inspect what is going on on this website with your developer tools. Furthermore, feel free to host your own instance of this service, so that we do not even get to see your encrypted data at any time, and so that you do not have to rely on us not trying to decrypt your data."
+    }
+}
+
+private fun String.md5(): String {
+    val md = MessageDigest.getInstance("MD5")
+    return BigInteger(1, md.digest(this.toByteArray())).toString(16).padStart(32, '0')
+}
+
+private suspend fun ApplicationCall.etagMagic(content: String) {
+    val etag = content.md5()
+    if (this.request.header(HttpHeaders.IfNoneMatch) == etag) {
+        this.respond(status = HttpStatusCode.NotModified, message = "")
+    } else {
+        this.response.header("ETag", etag)
+        this.respondText(contentType = ContentType.Application.JavaScript, text = content)
     }
 }
 
@@ -197,9 +215,9 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                         +"Enter the password you got provided with this link."
                         br()
                         +"This will only work "
-                        b {+"once"}
+                        b { +"once" }
                         +"! Clicking "
-                        i {+"Get the drop"}
+                        i { +"Get the drop" }
                         +" will delete the message permanently, regardless of whether the password was correct or not."
 
                         textInput {
@@ -255,8 +273,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                 }
 
                 get("frontend.js") {
-                    call.respondText(contentType = ContentType.Application.JavaScript) {
-                        """function sendDrop(data) {
+                    val content = """function sendDrop(data) {
     encryptAndPostDrop(data, function(id, password) {
         document.getElementById('drop_content').value = '';
         showDropLink(id, password);
@@ -286,12 +303,11 @@ function getDrop(id, password) {
     );
 }
 """
-                    }
+                    call.etagMagic(content)
                 }
 
                 get("drop.js") {
-                    call.respondText(contentType = ContentType.Application.JavaScript) {
-                        """function encryptAndPostDrop(plainData, onComplete) {
+                    val content = """function encryptAndPostDrop(plainData, onComplete) {
     var generatedPassword = generateStringSequence(16);
     var encrypted = sjcl.encrypt(generatedPassword, plainData);
     
@@ -344,7 +360,7 @@ function get(path, onComplete) {
     request.send();
 }
 """
-                    }
+                    call.etagMagic(content)
                 }
 
                 resource(remotePath = "sjcl.js", resource = "sjcl/sjcl.js")

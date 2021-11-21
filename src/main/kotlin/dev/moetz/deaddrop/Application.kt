@@ -6,8 +6,6 @@ import dev.moetz.deaddrop.plugins.configure
 import dev.moetz.deaddrop.plugins.configureApi
 import io.ktor.application.*
 import io.ktor.features.*
-import io.ktor.http.*
-import io.ktor.http.content.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import java.io.File
