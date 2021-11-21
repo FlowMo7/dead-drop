@@ -425,7 +425,7 @@ function get(path, onComplete) {
 
                 resource(remotePath = "sjcl.js", resource = "sjcl/sjcl.js")
 
-                resource(remotePath = "materialize.min.css", resource = "materialize/materialize.css")
+                resource(remotePath = "materialize.min.css", resource = "materialize/materialize.min.css")
             }
         }
 
