@@ -28,6 +28,7 @@ private suspend fun ApplicationCall.etagMagic(content: String) {
 
 private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline block: DIV.() -> Unit) {
     head {
+        charset("utf-8")
         title("Dead-Drop: Send secure information")
         link(href = "/static/materialize.min.css", rel = "stylesheet", type = "text/css")
         script(src = "/static/sjcl.js") {
@@ -39,6 +40,10 @@ private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline bloc
         script(src = "/static/frontend.js") {
 
         }
+        meta(name = "robots", content = "index, follow")
+        meta(name = "og:title", content = "Dead-Drop: Send secure information")
+        meta(name = "description", content = "Create one-time links for securely sending data")
+        meta(name = "keywords", content = "drop,password,encrypt,secure,send")
     }
     body {
         nav(classes = "orange") {
