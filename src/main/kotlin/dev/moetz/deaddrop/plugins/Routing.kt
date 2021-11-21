@@ -131,7 +131,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                         id = "send_div"
 
                         div(classes = "row") {
-                            div(classes = "col s6") {
+                            div(classes = "col s12") {
                                 +"Enter your message below:"
                             }
                         }
