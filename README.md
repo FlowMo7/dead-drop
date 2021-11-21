@@ -5,7 +5,7 @@
 A Dead Drop service written in Kotlin / KTor.
 
 This service uses [sjcl](https://github.com/bitwiseshiftleft/sjcl) on client-side to encrypt the data, stores the
-encrypted data on the server (while never sharing the password with the server), and generates a link to get the data 
+encrypted data on the server (while never sharing the password with the server), and generates a link to get the data
 (once) again.
 
 This is the source-code of [drop.moetz.dev](https://drop.moetz.dev).
@@ -42,6 +42,11 @@ services:
       - /srv/docker/dead-drop/data:/var/dead-drop/data:rw
       - /srv/docker/dead-drop/key:/var/dead-drop/key:rw
 ```
+
+## Acknowledgments
+
+This project is heavily inspired by [BillKeenan/dead-drop-python](https://github.com/BillKeenan/dead-drop-python), which
+I heavily used (self-hosted) before creating this service.
 
 # LICENSE
 
