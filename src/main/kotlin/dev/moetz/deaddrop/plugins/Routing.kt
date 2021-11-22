@@ -116,7 +116,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                                     style = "min-height:200px;"
                                     name = "message"
                                     id = "drop_content"
-                                    placeholder = "Enter your message"
+                                    placeholder = "Message to encrypt"
                                 }
                             }
                             div(classes = "col s12") {
@@ -134,7 +134,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
 
                         div("row") {
                             div(classes = "col s12") {
-                                h5 {
+                                h5(classes = "green-text") {
                                     +"Drop made!"
                                 }
                             }
@@ -304,8 +304,6 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
             call.respondHtml {
                 siteSkeleton {
                     div(classes = "section") {
-                        id = "is_this_safe"
-
                         h3(classes = "orange-text") { +"How is this safe?" }
                         div {
                             div(classes = "row") {
