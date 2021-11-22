@@ -45,7 +45,6 @@ private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
             }
         }
         main {
-            br()
             div(classes = "general-container") {
                 div(classes = "container") {
                     block.invoke(this)
@@ -82,6 +81,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
         get {
             call.respondHtml {
                 siteSkeleton {
+                    br()
                     div(classes = "section") {
                         id = "send_div"
 
