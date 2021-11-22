@@ -222,7 +222,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                                         p {
                                             id = "message_to_share_drop"
 
-                                            +"I'm sending you some secure information, which can be retrieved by browsing to:"
+                                            +"I'm sending you some secure information."
                                             br()
                                             +"Location: "
                                             b {
