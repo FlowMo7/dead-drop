@@ -6,6 +6,8 @@ import dev.moetz.deaddrop.plugins.configure
 import dev.moetz.deaddrop.plugins.configureApi
 import io.ktor.application.*
 import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import java.io.File
@@ -34,6 +36,22 @@ fun main() {
         install(DefaultHeaders)
         install(AutoHeadResponse)
         install(XForwardedHeaderSupport)
+        install(CachingHeaders) {
+            options { outgoingContent ->
+                when (outgoingContent.contentType?.withoutParameters()) {
+                    ContentType.Text.CSS, ContentType.Text.JavaScript -> {
+                        CachingOptions(
+                            CacheControl.MaxAge(
+                                maxAgeSeconds = 15 * 60,    //15 minutes
+                                visibility = CacheControl.Visibility.Public
+                            )
+                        )
+                    }
+                    else -> null
+                }
+            }
+        }
+        install(ConditionalHeaders)
 
         install(Compression) {
             gzip()
