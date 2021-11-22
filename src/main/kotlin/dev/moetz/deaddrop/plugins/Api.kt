@@ -9,6 +9,8 @@ import io.ktor.routing.*
 
 fun Application.configureApi(
     dataRepository: DataRepository,
+    isHttps: Boolean,
+    domain: String,
 ) {
     routing {
 
@@ -21,7 +23,7 @@ fun Application.configureApi(
                     call.respondText(
                         contentType = ContentType.Application.Json,
                         status = HttpStatusCode.OK,
-                        text = "{\"id\": \"$id\"}"
+                        text = "{\"pickupUrl\": \"${if (isHttps) "https" else "http"}://$domain/pickup/$id\"}"
                     )
                 } catch (throwable: Throwable) {
                     throwable.printStackTrace()
@@ -32,11 +34,11 @@ fun Application.configureApi(
             get("drop/{id}") {
                 try {
                     val id = call.parameters["id"]
-                    if(id.isNullOrBlank()) {
+                    if (id.isNullOrBlank()) {
                         call.respond(HttpStatusCode.NotFound)
                     } else {
                         val content = dataRepository.getDrop(id)
-                        if(content == null) {
+                        if (content == null) {
                             call.respond(HttpStatusCode.NotFound)
                         } else {
                             call.respondText(

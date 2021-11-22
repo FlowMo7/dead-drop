@@ -384,97 +384,9 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
         static("static") {
             preCompressed {
 
-                get("frontend.js") {
-                    val content = """function sendDrop(data) {
-    encryptAndPostDrop(data, function(id, password) {
-        document.getElementById('drop_content').value = '';
-        showDropLink(id, password);
-    });
-}
+                resource(remotePath = "frontend.js", resource = "frontend.js")
 
-function showDropLink(id, password) {
-    document.getElementById('send_div').style.display = 'none';
-    document.getElementById('link_div').style.display = 'block';
-    document.getElementById('drop_share_link').innerHTML = '${if (isHttps) "https" else "http"}://$domain/pickup/' + id;
-    document.getElementById('drop_share_password').innerHTML = password;
-}
-
-function getDrop(id, password) {
-    fetchDropAndDecrypt(
-        id,
-        password,
-        function(data) {
-            document.getElementById('drop_content').innerHTML = data;
-            document.getElementById('drop_content_section').style.display = 'block';
-            document.getElementById('container_get_drop').style.display = 'none';
-        },
-        function() {
-            document.getElementById('drop_content_section').style.display = 'none';
-            document.getElementById('container_get_drop').style.display = 'none';
-            document.getElementById('error_text').style.display = 'block';
-        }
-    );
-}
-"""
-                    call.etagMagic(content)
-                }
-
-                get("drop.js") {
-                    val content = """function encryptAndPostDrop(plainData, onComplete) {
-    var generatedPassword = generateStringSequence(16);
-    var encrypted = sjcl.encrypt(generatedPassword, plainData);
-    
-    post('/api/drop', encrypted, function(data) {
-        onComplete(data.id, generatedPassword);
-    });
-}
-
-function fetchDropAndDecrypt(id, password, onLoaded, onError) {
-    get('/api/drop/' + id, function(statusCode, data) {
-        if (statusCode == 200) {
-            try {
-                var decrypted = sjcl.decrypt(password, data);
-                onLoaded(decrypted);
-            } catch(e) {
-                onError();
-            }
-        } else {
-            onError();
-        }
-    });
-}
-
-function generateStringSequence(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
-function post(path, content, onComplete) {
-    var request = new XMLHttpRequest();
-    request.open("POST", path, true);
-    request.setRequestHeader('Content-Type', 'application/json');
-    request.onload = function() {
-        onComplete(JSON.parse(this.responseText));
-    };
-    request.send(content);
-}
-
-function get(path, onComplete) {
-    var request = new XMLHttpRequest();
-    request.open("GET", path, true);
-    request.onload = function() {
-        onComplete(this.status, this.responseText);
-    };
-    request.send();
-}
-"""
-                    call.etagMagic(content)
-                }
+                resource(remotePath = "drop.js", resource = "drop.js")
 
                 resource(remotePath = "sjcl.js", resource = "sjcl/sjcl.js")
 

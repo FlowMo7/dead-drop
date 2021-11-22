@@ -40,6 +40,6 @@ fun main() {
             deflate()
         }
         configure(domain, isHttps, keepFilesTimeInHours)
-        configureApi(dataRepository)
+        configureApi(dataRepository, isHttps, domain)
     }.start(wait = true)
 }
