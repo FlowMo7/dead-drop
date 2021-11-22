@@ -55,11 +55,10 @@ private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
         footer(classes = "page-footer orange lighten-5") {
             div(classes = "container") {
                 div(classes = "row") {
-                    div(classes = "black-text col l6 s12") {
-                        +"Open Source on "
-                        a(classes = "blue-text", href = "https://gitlab.moetz.dev/florian/deaddrop") { +"Gitlab" }
+                    div(classes = "col s6") {
+                        a(classes = "black-text", href = "https://gitlab.moetz.dev/florian/deaddrop") { +"Open Source on Gitlab" }
                     }
-                    div(classes = "col l4 offset-l2 s12") {
+                    div(classes = "col s6") {
                         a(classes = "black-text right", href = "/info") { +"How is this safe?" }
                     }
                 }
@@ -153,7 +152,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                         div(classes = "row") {
                             div(classes = "col s12") {
                                 div(classes = "card") {
-                                    div(classes = "card-content black-text orange accent-1") {
+                                    div(classes = "card-content black-text grey lighten-3") {
                                         span(classes = "card-title") { +"Hi," }
                                         p {
                                             id = "message_to_share_drop"
