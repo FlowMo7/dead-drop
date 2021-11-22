@@ -4,27 +4,9 @@ import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.http.*
 import io.ktor.http.content.*
-import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
-import java.math.BigInteger
-import java.security.MessageDigest
-
-private fun String.md5(): String {
-    val md = MessageDigest.getInstance("MD5")
-    return BigInteger(1, md.digest(this.toByteArray())).toString(16).padStart(32, '0')
-}
-
-private suspend fun ApplicationCall.etagMagic(content: String) {
-    val etag = content.md5()
-    if (this.request.header(HttpHeaders.IfNoneMatch) == etag) {
-        this.respond(status = HttpStatusCode.NotModified, message = "")
-    } else {
-        this.response.header("ETag", etag)
-        this.respondText(contentType = ContentType.Application.JavaScript, text = content)
-    }
-}
 
 private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
     head {
