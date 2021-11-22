@@ -40,7 +40,7 @@ main{flex: 1 0 auto;}"""
             nav(classes = "orange") {
                 div(classes = "nav-wrapper") {
                     span(classes = "brand-logo center") {
-                        unsafe { +"Dead&nbsp;Drop" }
+                        a(href = "/") { unsafe { +"Dead&nbsp;Drop" } }
                     }
                 }
             }
