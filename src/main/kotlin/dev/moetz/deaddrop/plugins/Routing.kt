@@ -24,8 +24,7 @@ private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
         }
         style {
             unsafe {
-                +"""body{display: flex;min-height: 100vh;flex-direction: column;}
-main{flex: 1 0 auto;}"""
+                +"""body{display: flex;min-height: 100vh;flex-direction: column;}main{flex: 1 0 auto;}"""
             }
         }
         meta(name = "robots", content = "index, follow")
@@ -54,15 +53,15 @@ main{flex: 1 0 auto;}"""
             }
         }
 
-        footer(classes = "page-footer orange") {
+        footer(classes = "page-footer orange lighten-5") {
             div(classes = "container") {
                 div(classes = "row") {
-                    div(classes = "white-text col l6 s12") {
+                    div(classes = "black-text col l6 s12") {
                         +"Open Source on "
                         a(classes = "blue-text", href = "https://gitlab.moetz.dev/florian/deaddrop") { +"Gitlab" }
                     }
                     div(classes = "col l4 offset-l2 s12") {
-                        a(classes = "white-text right", href = "/info") { +"How is this safe?" }
+                        a(classes = "black-text right", href = "/info") { +"How is this safe?" }
                     }
                 }
             }
@@ -113,14 +112,14 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                         div(classes = "row") {
                             div(classes = "col s12") {
                                 textArea(cols = "70", rows = "8") {
-                                    style = "min-height:200px;"
+                                    style = "min-height:200px;padding:10px;"
                                     name = "message"
                                     id = "drop_content"
                                     placeholder = "Message to encrypt"
                                 }
                             }
                             div(classes = "col s12") {
-                                a(classes = "waves-effect waves-light btn orange") {
+                                a(classes = "waves-effect waves-light btn orange right") {
                                     onClick = "sendDrop(document.getElementById('drop_content').value)"
                                     +"Make the drop!"
                                 }
@@ -152,8 +151,8 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                         }
 
                         div(classes = "row") {
-                            div(classes = "col s10") {
-                                div(classes = "card blue-grey darken-1") {
+                            div(classes = "col s12") {
+                                div(classes = "card") {
                                     div(classes = "card-content black-text orange accent-1") {
                                         span(classes = "card-title") { +"Hi," }
                                         p {
@@ -196,9 +195,13 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                             }
                         }
 
-                        a(classes = "waves-effect waves-light btn-small orange") {
-                            onClick = "window.location.assign('${if (isHttps) "https" else "http"}://$domain/')"
-                            +"Make another drop"
+                        div(classes = "row") {
+                            div(classes = "col s12") {
+                                a(classes = "waves-effect waves-light btn-small white orange-text right") {
+                                    onClick = "window.location.assign('${if (isHttps) "https" else "http"}://$domain/')"
+                                    +"Make another drop"
+                                }
+                            }
                         }
                     }
                 }
