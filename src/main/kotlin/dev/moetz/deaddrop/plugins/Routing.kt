@@ -26,7 +26,7 @@ private suspend fun ApplicationCall.etagMagic(content: String) {
     }
 }
 
-private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline block: DIV.() -> Unit) {
+private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
     head {
         charset("utf-8")
         title("Dead-Drop: Send secure information")
@@ -40,6 +40,12 @@ private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline bloc
         script(src = "/static/frontend.js") {
 
         }
+        style {
+            unsafe {
+                +"""body{display: flex;min-height: 100vh;flex-direction: column;}
+main{flex: 1 0 auto;}"""
+            }
+        }
         meta(name = "robots", content = "index, follow")
         meta(name = "og:title", content = "Dead-Drop: Send secure information")
         meta(name = "description", content = "Create one-time links for securely sending data")
@@ -48,84 +54,33 @@ private inline fun HTML.siteSkeleton(keepFilesTimeInHours: Int, crossinline bloc
         meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
     }
     body {
-        nav(classes = "orange") {
-            div(classes = "nav-wrapper") {
-                span(classes = "brand-logo center") {
-                    unsafe {
-                        +"Dead&nbsp;Drop"
+        header {
+            nav(classes = "orange") {
+                div(classes = "nav-wrapper") {
+                    span(classes = "brand-logo center") {
+                        unsafe { +"Dead&nbsp;Drop" }
                     }
                 }
             }
         }
-        br()
-        div(classes = "container") {
-
-            block.invoke(this)
-
-            div(classes = "divider") {
-
-            }
-            div(classes = "section") {
-                id = "is_this_safe"
-
-                h3 {
-                    onClick = "toggleIsThisSafeVisible()"
-                    a(classes = "orange-text", href = "#is_this_safe") {
-                        +"How is this safe?"
-                    }
+        main {
+            br()
+            div(classes = "general-container") {
+                div(classes = "container") {
+                    block.invoke(this)
                 }
-                div {
-                    id = "container_is_this_safe"
-                    style = "display: none;"
+            }
+        }
 
-                    div(classes = "row") {
-                        div("col s12") {
-                            +"Here are the steps this platform does with your message:"
-                        }
+        footer(classes = "page-footer orange") {
+            div(classes = "container") {
+                div(classes = "row") {
+                    div(classes = "white-text col l6 s12") {
+                        +"Open Source on "
+                        a(classes = "blue-text", href = "https://gitlab.moetz.dev/florian/deaddrop") { +"Gitlab" }
                     }
-                    div(classes = "row") {
-                        div("col s12") {
-                            unsafe { +"&bullet;&nbsp;" }
-                            +"Once you click on "
-                            i { +"Make the drop!" }
-                            +", the message is encrypted in your browser with a password generated in your browser."
-                            br()
-                            unsafe { +"&bullet;&nbsp;" }
-                            +"This means, that the data does not leave your browser unencrypted, as well as your password."
-                            br()
-                            unsafe { +"&bullet;&nbsp;" }
-                            +"The encrypted data is then sent to the backend, where it is stored for a maximum of $keepFilesTimeInHours hours (or when the drop is fetched, whichever is earlier)."
-                            br()
-                            unsafe { +"&bullet;&nbsp;" }
-                            +"When getting the drop, the encrypted data is fetched from the server (and instantly deleted when doing so), and is only encrypted in the browser. So, also here, the inserted password never leaves the browser."
-                            br()
-                            unsafe { +"&bullet;&nbsp;" }
-                            +"So the server (we) cannot see your message, as we never get the password for it."
-
-                            br()
-                            br()
-
-                            +"The encryption is algorithm used is "
-                            a(
-                                classes = "orange-text",
-                                href = "https://github.com/bitwiseshiftleft/sjcl"
-                            ) { +"github.com/bitwiseshiftleft/sjcl" }
-                            +", which is a JavaScript crypto library developed at Stanford."
-                            br()
-                            +"The code is "
-                            a(
-                                classes = "orange-text",
-                                href = "https://gitlab.moetz.dev/florian/deaddrop"
-                            ) { +"open source" }
-                            +", and you can easily inspect what is going on on this website with your developer tools."
-                            br()
-                            +"Furthermore, feel free to host your "
-                            a(
-                                classes = "orange-text",
-                                href = "https://gitlab.moetz.dev/florian/deaddrop"
-                            ) { +"own instance of this service" }
-                            +", so that we do not even get to see your encrypted data at any time, so that you do not have to rely on us not trying to decrypt your data."
-                        }
+                    div(classes = "col l4 offset-l2 s12") {
+                        a(classes = "white-text right", href = "/info") { +"How is this safe?" }
                     }
                 }
             }
@@ -145,7 +100,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
 
         get {
             call.respondHtml {
-                siteSkeleton(keepFilesTimeInHours) {
+                siteSkeleton {
                     div(classes = "section") {
                         id = "send_div"
 
@@ -268,11 +223,10 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
             }
         }
 
-
         get("pickup/{id}") {
             val dropId = call.parameters["id"]
             call.respondHtml {
-                siteSkeleton(keepFilesTimeInHours) {
+                siteSkeleton {
 
                     div(classes = "section") {
                         id = "container_get_drop"
@@ -364,6 +318,69 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
             }
         }
 
+        get("info") {
+            call.respondHtml {
+                siteSkeleton {
+                    div(classes = "section") {
+                        id = "is_this_safe"
+
+                        h3(classes = "orange-text") { +"How is this safe?" }
+                        div {
+                            div(classes = "row") {
+                                div("col s12") {
+                                    +"Here are the steps this platform does with your message:"
+                                }
+                            }
+                            div(classes = "row") {
+                                div("col s12") {
+                                    unsafe { +"&bullet;&nbsp;" }
+                                    +"Once you click on "
+                                    i { +"Make the drop!" }
+                                    +", the message is encrypted in your browser with a password generated in your browser."
+                                    br()
+                                    unsafe { +"&bullet;&nbsp;" }
+                                    +"This means, that the data does not leave your browser unencrypted, as well as your password."
+                                    br()
+                                    unsafe { +"&bullet;&nbsp;" }
+                                    +"The encrypted data is then sent to the backend, where it is stored for a maximum of $keepFilesTimeInHours hours (or when the drop is fetched, whichever is earlier)."
+                                    br()
+                                    unsafe { +"&bullet;&nbsp;" }
+                                    +"When getting the drop, the encrypted data is fetched from the server (and instantly deleted when doing so), and is only encrypted in the browser. So, also here, the inserted password never leaves the browser."
+                                    br()
+                                    unsafe { +"&bullet;&nbsp;" }
+                                    +"So the server (we) cannot see your message, as we never get the password for it."
+
+                                    br()
+                                    br()
+
+                                    +"The encryption is algorithm used is "
+                                    a(
+                                        classes = "orange-text",
+                                        href = "https://github.com/bitwiseshiftleft/sjcl"
+                                    ) { +"github.com/bitwiseshiftleft/sjcl" }
+                                    +", which is a JavaScript crypto library developed at Stanford."
+                                    br()
+                                    +"The code is "
+                                    a(
+                                        classes = "orange-text",
+                                        href = "https://gitlab.moetz.dev/florian/deaddrop"
+                                    ) { +"open source" }
+                                    +", and you can easily inspect what is going on on this website with your developer tools."
+                                    br()
+                                    +"Furthermore, feel free to host your "
+                                    a(
+                                        classes = "orange-text",
+                                        href = "https://gitlab.moetz.dev/florian/deaddrop"
+                                    ) { +"own instance of this service" }
+                                    +", so that we do not even get to see your encrypted data at any time, so that you do not have to rely on us not trying to decrypt your data."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         static("static") {
             preCompressed {
 
@@ -373,14 +390,6 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
         document.getElementById('drop_content').value = '';
         showDropLink(id, password);
     });
-}
-
-function toggleIsThisSafeVisible() {
-    if (document.getElementById('container_is_this_safe').style.display == 'none') {
-        document.getElementById('container_is_this_safe').style.display = 'block';
-    } else {
-        document.getElementById('container_is_this_safe').style.display = 'none';
-    }
 }
 
 function showDropLink(id, password) {
