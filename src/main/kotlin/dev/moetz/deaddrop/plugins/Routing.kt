@@ -8,10 +8,14 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
 
+private const val TITLE = "Dead-Drop: Send secure information"
+private const val TITLE_SHORT = "Dead-Drop"
+private const val COLOR = "#ff9800"
+
 private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
     head {
         charset("utf-8")
-        title("Dead-Drop: Send secure information")
+        title(TITLE)
         link(href = "/static/materialize.min.css", rel = "stylesheet", type = "text/css")
         script(src = "/static/sjcl.js") {
 
@@ -28,11 +32,15 @@ private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
             }
         }
         meta(name = "robots", content = "index, follow")
-        meta(name = "og:title", content = "Dead-Drop: Send secure information")
+        meta(name = "og:title", content = TITLE)
         meta(name = "description", content = "Create one-time links for securely sending data")
         meta(name = "keywords", content = "drop,password,encrypt,secure,send")
-        meta(name = "theme-color", content = "#ff9800")
+        meta(name = "theme-color", content = COLOR)
         meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
+        link(href = "/apple-touch-icon.png", rel = "apple-touch-icon") { sizes = "180x180" }
+        link(href = "/favicon-32x32.png", type = "image/png", rel = "icon") { sizes = "32x32" }
+        link(href = "/favicon-16x16.png", type = "image/png", rel = "icon") { sizes = "16x16" }
+        link(href = "/site.webmanifest", rel = "manifest")
     }
     body {
         header {
@@ -56,7 +64,10 @@ private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
             div(classes = "container") {
                 div(classes = "row") {
                     div(classes = "col s6") {
-                        a(classes = "black-text", href = "https://gitlab.moetz.dev/florian/deaddrop") { +"Open Source on Gitlab" }
+                        a(
+                            classes = "black-text",
+                            href = "https://gitlab.moetz.dev/florian/deaddrop"
+                        ) { +"Open Source on Gitlab" }
                     }
                     div(classes = "col s6") {
                         a(classes = "black-text right", href = "/info") { +"How is this safe?" }
@@ -363,13 +374,25 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
             }
         }
 
+        get("site.webmanifest") {
+            call.respondText(contentType = ContentType.parse("application/manifest+json")) {
+                """{"name":"$TITLE","short_name":"$TITLE_SHORT","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"$COLOR","background_color":"#ffffff","display":"standalone"}"""
+            }
+        }
+
+        preCompressed {
+            resource(remotePath = "android-chrome-192x192.png", resource = "icon/android-chrome-192x192.png")
+            resource(remotePath = "android-chrome-512x512.png", resource = "icon/android-chrome-512x512.png")
+            resource(remotePath = "apple-touch-icon.png", resource = "icon/apple-touch-icon.png")
+            resource(remotePath = "favicon.ico", resource = "icon/favicon.ico")
+            resource(remotePath = "favicon-16x16.png", resource = "icon/favicon-16x16.png")
+            resource(remotePath = "favicon-32x32.png", resource = "icon/favicon-32x32.png")
+        }
+
         static("static") {
             preCompressed {
-
                 resource(remotePath = "frontend.js", resource = "frontend.js")
-
                 resource(remotePath = "drop.js", resource = "drop.js")
-
                 resource(remotePath = "sjcl.js", resource = "sjcl/sjcl.js")
 
                 resource(remotePath = "materialize.min.css", resource = "materialize/materialize.min.css")
