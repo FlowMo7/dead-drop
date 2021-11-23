@@ -33,6 +33,7 @@ private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
         }
         meta(name = "robots", content = "index, follow")
         meta(name = "og:title", content = TITLE)
+        meta(name = "og:image", content="/android-chrome-512x512.png")
         meta(name = "description", content = "Create one-time links for securely sending data")
         meta(name = "keywords", content = "drop,password,encrypt,secure,send")
         meta(name = "theme-color", content = COLOR)
