@@ -61,7 +61,7 @@ tag latest private registry:
 tag latest docker hub:
   stage: tag_image
   script:
-    - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD registry.moetz.dev
+    - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
     - docker pull $COMPONENT_IMAGE_DOCKER_HUB
     - docker tag $COMPONENT_IMAGE_DOCKER_HUB $COMPONENT_LATEST_IMAGE_DOCKER_HUB
     - docker push $COMPONENT_LATEST_IMAGE_DOCKER_HUB
