@@ -1,7 +1,7 @@
 variables:
-  COMPONENT_IMAGE_PRIVATE_REGISTRY_PRIVATE_REGISTRY: registry.moetz.dev/dead-drop:$CI_BUILD_REF_NAME
+  COMPONENT_IMAGE_PRIVATE_REGISTRY: registry.moetz.dev/dead-drop:$CI_BUILD_REF_NAME
   COMPONENT_LATEST_IMAGE_PRIVATE_REGISTRY: registry.moetz.dev/dead-drop:latest
-  COMPONENT_IMAGE_PRIVATE_REGISTRY_DOCKER_HUB: flowmo7/dead-drop:$CI_BUILD_REF_NAME
+  COMPONENT_IMAGE_DOCKER_HUB: flowmo7/dead-drop:$CI_BUILD_REF_NAME
   COMPONENT_LATEST_IMAGE_DOCKER_HUB: flowmo7/dead-drop:latest
 
 stages:
