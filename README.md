@@ -22,7 +22,8 @@ Possible environment variables:
 * `DATA_DIRECTORY`: The directory to store the data in (within the docker image), e.g. `/var/dead-drop/data`
 * `ENCRYPTION_KEY_PATH`: The file-path to store the _server-side_ encryption key at (within the docker image),
   e.g. `/var/dead-drop/key/key.secret`
-* `FILE_KEEP_TIME_IN_HOURS`: The number of hours to keep a drop-record. Defaults to 24.
+* `FILE_KEEP_TIME_IN_HOURS`: The number of hours to keep a drop-record. Defaults to `24`.
+* `SHOW_GITHUB_LINK_IN_FOOTER`: Whether the GitHub link should be visible in the footer. Defaults to `true`.
 
 ## Example docker-compose.yml
 

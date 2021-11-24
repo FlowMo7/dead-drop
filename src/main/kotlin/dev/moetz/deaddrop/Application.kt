@@ -24,6 +24,9 @@ fun main() {
         ?.toIntOrNull()
         ?: 24/* 24 hours */
 
+    val showGithubLinkInFooter =
+        System.getenv("SHOW_GITHUB_LINK_IN_FOOTER")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
+
     val encryptionManager = EncryptionManager(File(encryptionKeyPath))
     val dataRepository = DataRepository(
         dataFolderPath = dataDirectory,
@@ -57,7 +60,7 @@ fun main() {
             gzip()
             deflate()
         }
-        configure(domain, isHttps, keepFilesTimeInHours)
+        configure(domain, isHttps, keepFilesTimeInHours, showGithubLinkInFooter)
         configureApi(dataRepository, isHttps, domain)
     }.start(wait = true)
 }

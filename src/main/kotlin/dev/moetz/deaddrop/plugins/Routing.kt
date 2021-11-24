@@ -12,7 +12,7 @@ private const val TITLE = "Dead-Drop: Send secure information"
 private const val TITLE_SHORT = "Dead-Drop"
 private const val COLOR = "#ff9800"
 
-private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
+private inline fun HTML.siteSkeleton(showGithubLinkInFooter: Boolean, crossinline block: DIV.() -> Unit) {
     head {
         charset("utf-8")
         title(TITLE)
@@ -63,14 +63,20 @@ private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
         footer(classes = "page-footer orange lighten-5") {
             div(classes = "container") {
                 div(classes = "row") {
-                    div(classes = "col s6") {
-                        a(
-                            classes = "black-text",
-                            href = "https://github.com/FlowMo7/dead-drop"
-                        ) { +"Open Source on GitHub" }
-                    }
-                    div(classes = "col s6") {
-                        a(classes = "black-text right", href = "/info") { +"How is this safe?" }
+                    if (showGithubLinkInFooter) {
+                        div(classes = "col s6") {
+                            a(
+                                classes = "black-text",
+                                href = "https://github.com/FlowMo7/dead-drop"
+                            ) { +"Open Source on GitHub" }
+                        }
+                        div(classes = "col s6") {
+                            a(classes = "black-text right", href = "/info") { +"How is this safe?" }
+                        }
+                    } else {
+                        div(classes = "col s12") {
+                            a(classes = "black-text right", href = "/info") { +"How is this safe?" }
+                        }
                     }
                 }
             }
@@ -78,7 +84,12 @@ private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
     }
 }
 
-fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours: Int) {
+fun Application.configure(
+    domain: String,
+    isHttps: Boolean,
+    keepFilesTimeInHours: Int,
+    showGithubLinkInFooter: Boolean
+) {
 
     routing {
 
@@ -90,7 +101,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
 
         get {
             call.respondHtml {
-                siteSkeleton {
+                siteSkeleton(showGithubLinkInFooter) {
                     br()
                     div(classes = "section") {
                         id = "send_div"
@@ -221,7 +232,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
         get("pickup/{id}") {
             val dropId = call.parameters["id"]
             call.respondHtml {
-                siteSkeleton {
+                siteSkeleton(showGithubLinkInFooter) {
 
                     div(classes = "section") {
                         id = "container_get_drop"
@@ -315,7 +326,7 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
 
         get("info") {
             call.respondHtml {
-                siteSkeleton {
+                siteSkeleton(showGithubLinkInFooter) {
                     div(classes = "section") {
                         h3(classes = "orange-text") { +"How is this safe?" }
                         div {
