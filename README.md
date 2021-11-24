@@ -29,7 +29,7 @@ Possible environment variables:
 ```yaml
 services:
   dead-drop:
-    image: "flowmo7/dead-drop:latest"
+    image: "flowmo7/dead-drop:master"
     restart: unless-stopped
     ports:
       - 8080:8080 #Should be behind an SSL reverse proxy
