@@ -66,8 +66,8 @@ private inline fun HTML.siteSkeleton(crossinline block: DIV.() -> Unit) {
                     div(classes = "col s6") {
                         a(
                             classes = "black-text",
-                            href = "https://gitlab.moetz.dev/florian/deaddrop"
-                        ) { +"Open Source on Gitlab" }
+                            href = "https://github.com/FlowMo7/dead-drop"
+                        ) { +"Open Source on GitHub" }
                     }
                     div(classes = "col s6") {
                         a(classes = "black-text right", href = "/info") { +"How is this safe?" }
@@ -356,14 +356,14 @@ fun Application.configure(domain: String, isHttps: Boolean, keepFilesTimeInHours
                                     +"The code is "
                                     a(
                                         classes = "orange-text",
-                                        href = "https://gitlab.moetz.dev/florian/deaddrop"
+                                        href = "https://github.com/FlowMo7/dead-drop"
                                     ) { +"open source" }
                                     +", and you can easily inspect what is going on on this website with your developer tools."
                                     br()
                                     +"Furthermore, feel free to host your "
                                     a(
                                         classes = "orange-text",
-                                        href = "https://gitlab.moetz.dev/florian/deaddrop"
+                                        href = "https://github.com/FlowMo7/dead-drop"
                                     ) { +"own instance of this service" }
                                     +", so that we do not even get to see your encrypted data at any time, so that you do not have to rely on us not trying to decrypt your data."
                                 }
