@@ -12,7 +12,7 @@ This is the source-code of [drop.moetz.dev](https://drop.moetz.dev).
 
 ## Setup using Docker
 
-The docker image can be found here: `registry.moetz.dev/dead-drop:latest`.
+The docker image can be found here: [hub.docker.com/r/flowmo7/dead-drop](https://hub.docker.com/r/flowmo7/dead-drop).
 
 Possible environment variables:
 
@@ -29,7 +29,7 @@ Possible environment variables:
 ```yaml
 services:
   dead-drop:
-    image: "registry.moetz.dev/dead-drop:latest"
+    image: "flowmo7/dead-drop:latest"
     restart: unless-stopped
     ports:
       - 8080:8080 #Should be behind an SSL reverse proxy
