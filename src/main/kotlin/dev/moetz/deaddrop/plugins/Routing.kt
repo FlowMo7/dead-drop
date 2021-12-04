@@ -1,5 +1,6 @@
 package dev.moetz.deaddrop.plugins
 
+import dev.moetz.deaddrop.combinePartsToUrl
 import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.http.*
@@ -86,6 +87,7 @@ private inline fun HTML.siteSkeleton(showGithubLinkInFooter: Boolean, crossinlin
 
 fun Application.configure(
     domain: String,
+    pathPrefix: String?,
     isHttps: Boolean,
     keepFilesTimeInHours: Int,
     showGithubLinkInFooter: Boolean
@@ -219,7 +221,8 @@ fun Application.configure(
                         div(classes = "row") {
                             div(classes = "col s12") {
                                 a(classes = "waves-effect waves-light btn-small white orange-text right") {
-                                    onClick = "window.location.assign('${if (isHttps) "https" else "http"}://$domain/')"
+                                    val url = combinePartsToUrl(isHttps, domain, pathPrefix)
+                                    onClick = "window.location.assign('$url')"
                                     +"Make another drop"
                                 }
                             }

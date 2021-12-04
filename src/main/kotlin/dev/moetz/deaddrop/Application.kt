@@ -15,6 +15,7 @@ import java.io.File
 fun main() {
 
     val domain = System.getenv("DOMAIN")?.takeIf { it.isNotBlank() } ?: "localhost:8080"
+    val pathPrefix = System.getenv("PATH_PREFIX")?.takeIf { it.isNotBlank() }
     val isHttps = System.getenv("IS_HTTPS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
     val dataDirectory = "/var/dead-drop/data" // "./data" //for development purpose
     val encryptionKeyPath = "/var/dead-drop/key/key.secret"// "./config/key.secret" //for development purpose
@@ -60,7 +61,7 @@ fun main() {
             gzip()
             deflate()
         }
-        configure(domain, isHttps, keepFilesTimeInHours, showGithubLinkInFooter)
-        configureApi(dataRepository, isHttps, domain)
+        configure(domain, pathPrefix, isHttps, keepFilesTimeInHours, showGithubLinkInFooter)
+        configureApi(dataRepository, isHttps, domain, pathPrefix)
     }.start(wait = true)
 }

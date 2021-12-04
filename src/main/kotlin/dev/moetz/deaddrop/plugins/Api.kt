@@ -1,5 +1,6 @@
 package dev.moetz.deaddrop.plugins
 
+import dev.moetz.deaddrop.combinePartsToUrl
 import dev.moetz.deaddrop.data.DataRepository
 import io.ktor.application.*
 import io.ktor.http.*
@@ -11,6 +12,7 @@ fun Application.configureApi(
     dataRepository: DataRepository,
     isHttps: Boolean,
     domain: String,
+    pathPrefix: String?,
 ) {
     routing {
 
@@ -20,10 +22,13 @@ fun Application.configureApi(
                 try {
                     val content = call.receiveText()
                     val id = dataRepository.addDrop(content)
+
+                    val pickupUrl = combinePartsToUrl(isHttps, domain, pathPrefix) + "pickup/$id"
+
                     call.respondText(
                         contentType = ContentType.Application.Json,
                         status = HttpStatusCode.OK,
-                        text = "{\"pickupUrl\": \"${if (isHttps) "https" else "http"}://$domain/pickup/$id\"}"
+                        text = "{\"pickupUrl\": \"$pickupUrl\"}"
                     )
                 } catch (throwable: Throwable) {
                     throwable.printStackTrace()
