@@ -1,4 +1,4 @@
-package dev.moetz.isxyz
+package dev.moetz.deaddrop
 
 import dev.moetz.deaddrop.data.DataRepository
 import dev.moetz.deaddrop.plugins.configureApi
