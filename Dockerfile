@@ -1,4 +1,4 @@
-FROM anapsix/alpine-java
+FROM openjdk:8-jre-alpine
 
 COPY ./build/libs/DeadDrop.jar /DeadDrop.jar
 
