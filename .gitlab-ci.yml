@@ -13,7 +13,7 @@ stages:
 build application:
   stage: build_application
   script:
-    - ./gradlew clean build shadowJar
+    - ./gradlew clean build test shadowJar
   artifacts:
     paths:
       - build/libs/DeadDrop.jar
