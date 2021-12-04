@@ -1,16 +1,16 @@
 "use strict";
 
-function encryptAndPostDrop(plainData, onComplete) {
+function encryptAndPostDrop(apiBaseUrl, plainData, onComplete) {
     let generatedPassword = generateStringSequence(16);
     let encrypted = sjcl.encrypt(generatedPassword, plainData);
 
-    post('/api/drop', encrypted, function(data) {
+    post(apiBaseUrl + 'drop', encrypted, function(data) {
         onComplete(data.pickupUrl, generatedPassword);
     });
 }
 
-function fetchDropAndDecrypt(id, password, onLoaded, onError) {
-    get('/api/drop/' + id, function(statusCode, data) {
+function fetchDropAndDecrypt(apiBaseUrl, id, password, onLoaded, onError) {
+    get(apiBaseUrl + 'drop/' + id, function(statusCode, data) {
         if (statusCode === 200) {
             try {
                 let decrypted = sjcl.decrypt(password, data);

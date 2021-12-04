@@ -1,7 +1,7 @@
 "use strict";
 
-function sendDrop(data) {
-    encryptAndPostDrop(data, function(pickupUrl, password) {
+function sendDrop(apiBaseUrl, data) {
+    encryptAndPostDrop(apiBaseUrl, data, function(pickupUrl, password) {
         document.getElementById('drop_content').value = '';
         showDropLink(pickupUrl, password);
     });
@@ -14,8 +14,9 @@ function showDropLink(pickupUrl, password) {
     document.getElementById('drop_share_password').innerHTML = password;
 }
 
-function getDrop(id, password) {
+function getDrop(apiBaseUrl, id, password) {
     fetchDropAndDecrypt(
+        apiBaseUrl,
         id,
         password,
         function(data) {

@@ -13,7 +13,13 @@ private const val TITLE = "Dead-Drop: Send secure information"
 private const val TITLE_SHORT = "Dead-Drop"
 private const val COLOR = "#ff9800"
 
-private inline fun HTML.siteSkeleton(showGithubLinkInFooter: Boolean, crossinline block: DIV.() -> Unit) {
+private inline fun HTML.siteSkeleton(
+    isHttps: Boolean,
+    domain: String,
+    pathPrefix: String?,
+    showGithubLinkInFooter: Boolean,
+    crossinline block: DIV.() -> Unit
+) {
     head {
         charset("utf-8")
         title(TITLE)
@@ -48,7 +54,7 @@ private inline fun HTML.siteSkeleton(showGithubLinkInFooter: Boolean, crossinlin
             nav(classes = "orange") {
                 div(classes = "nav-wrapper") {
                     span(classes = "brand-logo center") {
-                        a(href = "/") { unsafe { +"Dead&nbsp;Drop" } }
+                        a(href = combinePartsToUrl(isHttps, domain, pathPrefix)) { unsafe { +"Dead&nbsp;Drop" } }
                     }
                 }
             }
@@ -61,7 +67,7 @@ private inline fun HTML.siteSkeleton(showGithubLinkInFooter: Boolean, crossinlin
             }
         }
 
-        footer(classes = "page-footer orange lighten-5") {
+        footer(classes = "page-footer white") {
             div(classes = "container") {
                 div(classes = "row") {
                     if (showGithubLinkInFooter) {
@@ -72,11 +78,17 @@ private inline fun HTML.siteSkeleton(showGithubLinkInFooter: Boolean, crossinlin
                             ) { +"Open Source on GitHub" }
                         }
                         div(classes = "col s6") {
-                            a(classes = "black-text right", href = "/info") { +"How is this safe?" }
+                            a(
+                                classes = "black-text right",
+                                href = "${combinePartsToUrl(isHttps, domain, pathPrefix)}info"
+                            ) { +"How is this safe?" }
                         }
                     } else {
                         div(classes = "col s12") {
-                            a(classes = "black-text right", href = "/info") { +"How is this safe?" }
+                            a(
+                                classes = "black-text right",
+                                href = "${combinePartsToUrl(isHttps, domain, pathPrefix)}info"
+                            ) { +"How is this safe?" }
                         }
                     }
                 }
@@ -103,7 +115,7 @@ fun Application.configure(
 
         get {
             call.respondHtml {
-                siteSkeleton(showGithubLinkInFooter) {
+                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter) {
                     br()
                     div(classes = "section") {
                         id = "send_div"
@@ -143,7 +155,7 @@ fun Application.configure(
                             }
                             div(classes = "col s12") {
                                 a(classes = "waves-effect waves-light btn orange right") {
-                                    onClick = "sendDrop(document.getElementById('drop_content').value)"
+                                    onClick = "sendDrop('${combinePartsToUrl(isHttps, domain, pathPrefix)}api/', document.getElementById('drop_content').value)"
                                     +"Make the drop!"
                                 }
                             }
@@ -235,7 +247,7 @@ fun Application.configure(
         get("pickup/{id}") {
             val dropId = call.parameters["id"]
             call.respondHtml {
-                siteSkeleton(showGithubLinkInFooter) {
+                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter) {
 
                     div(classes = "section") {
                         id = "container_get_drop"
@@ -264,7 +276,7 @@ fun Application.configure(
                             }
                             div(classes = "col s12") {
                                 a(classes = "waves-effect waves-light btn orange") {
-                                    onClick = "getDrop('$dropId', document.getElementById('drop_password').value)"
+                                    onClick = "getDrop('${combinePartsToUrl(isHttps, domain, pathPrefix)}api/', '$dropId', document.getElementById('drop_password').value)"
                                     +"Get the drop"
                                 }
                             }
@@ -329,7 +341,7 @@ fun Application.configure(
 
         get("info") {
             call.respondHtml {
-                siteSkeleton(showGithubLinkInFooter) {
+                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter) {
                     div(classes = "section") {
                         h3(classes = "orange-text") { +"How is this safe?" }
                         div {
