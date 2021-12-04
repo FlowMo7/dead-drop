@@ -20,17 +20,18 @@ private inline fun HTML.siteSkeleton(
     showGithubLinkInFooter: Boolean,
     crossinline block: DIV.() -> Unit
 ) {
+    val baseUrl = combinePartsToUrl(isHttps, domain, pathPrefix)
     head {
         charset("utf-8")
         title(TITLE)
-        link(href = "/static/materialize.min.css", rel = "stylesheet", type = "text/css")
-        script(src = "/static/sjcl.js") {
+        link(href = "${baseUrl}static/materialize.min.css", rel = "stylesheet", type = "text/css")
+        script(src = "${baseUrl}static/sjcl.js") {
 
         }
-        script(src = "/static/drop.js") {
+        script(src = "${baseUrl}static/drop.js") {
 
         }
-        script(src = "/static/frontend.js") {
+        script(src = "${baseUrl}static/frontend.js") {
 
         }
         style {
@@ -44,17 +45,17 @@ private inline fun HTML.siteSkeleton(
         meta(name = "keywords", content = "drop,password,encrypt,secure,send")
         meta(name = "theme-color", content = COLOR)
         meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
-        link(href = "/apple-touch-icon.png", rel = "apple-touch-icon") { sizes = "180x180" }
-        link(href = "/favicon-32x32.png", type = "image/png", rel = "icon") { sizes = "32x32" }
-        link(href = "/favicon-16x16.png", type = "image/png", rel = "icon") { sizes = "16x16" }
-        link(href = "/site.webmanifest", rel = "manifest")
+        link(href = "${baseUrl}apple-touch-icon.png", rel = "apple-touch-icon") { sizes = "180x180" }
+        link(href = "${baseUrl}favicon-32x32.png", type = "image/png", rel = "icon") { sizes = "32x32" }
+        link(href = "${baseUrl}favicon-16x16.png", type = "image/png", rel = "icon") { sizes = "16x16" }
+        link(href = "${baseUrl}site.webmanifest", rel = "manifest")
     }
     body {
         header {
             nav(classes = "orange") {
                 div(classes = "nav-wrapper") {
                     span(classes = "brand-logo center") {
-                        a(href = combinePartsToUrl(isHttps, domain, pathPrefix)) { unsafe { +"Dead&nbsp;Drop" } }
+                        a(href = baseUrl) { unsafe { +"Dead&nbsp;Drop" } }
                     }
                 }
             }
@@ -80,14 +81,14 @@ private inline fun HTML.siteSkeleton(
                         div(classes = "col s6") {
                             a(
                                 classes = "black-text right",
-                                href = "${combinePartsToUrl(isHttps, domain, pathPrefix)}info"
+                                href = "${baseUrl}info"
                             ) { +"How is this safe?" }
                         }
                     } else {
                         div(classes = "col s12") {
                             a(
                                 classes = "black-text right",
-                                href = "${combinePartsToUrl(isHttps, domain, pathPrefix)}info"
+                                href = "${baseUrl}info"
                             ) { +"How is this safe?" }
                         }
                     }
