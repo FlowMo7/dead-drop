@@ -15,14 +15,14 @@ import java.io.File
 fun main() {
 
     val domain = System.getenv("DOMAIN")?.takeIf { it.isNotBlank() } ?: "localhost:8080"
-    val isHttps = System.getenv("IS_HTTPS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: false
-    val dataDirectory = System.getenv("DATA_DIRECTORY")?.takeIf { it.isNotBlank() } ?: "./data"
-    val encryptionKeyPath = System.getenv("ENCRYPTION_KEY_PATH")?.takeIf { it.isNotBlank() } ?: "./config/key.secret"
+    val isHttps = System.getenv("IS_HTTPS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
+    val dataDirectory = "/var/dead-drop/data" // "./data" //for development purpose
+    val encryptionKeyPath = "/var/dead-drop/key/key.secret"// "./config/key.secret" //for development purpose
 
     val keepFilesTimeInHours = System.getenv("FILE_KEEP_TIME_IN_HOURS")
         ?.takeIf { it.isNotBlank() }
         ?.toIntOrNull()
-        ?: 24/* 24 hours */
+        ?: 24
 
     val showGithubLinkInFooter =
         System.getenv("SHOW_GITHUB_LINK_IN_FOOTER")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true

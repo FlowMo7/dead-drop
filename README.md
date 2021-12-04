@@ -10,22 +10,26 @@ encrypted data on the server (while never sharing the password with the server),
 
 This is the source-code of [drop.moetz.dev](https://drop.moetz.dev).
 
-## Setup using Docker
+## Setup
 
 The docker image can be found here: [hub.docker.com/r/flowmo7/dead-drop](https://hub.docker.com/r/flowmo7/dead-drop).
 
 Possible environment variables:
 
 * `DOMAIN`: the domain this application is available at, e.g. `drop.example.org`
-* `IS_HTTPS`: Whether this application is available as HTTPS / behind an HTTPS reverse proxy (which it should be),
-  e.g. `true`
-* `DATA_DIRECTORY`: The directory to store the data in (within the docker image), e.g. `/var/dead-drop/data`
-* `ENCRYPTION_KEY_PATH`: The file-path to store the _server-side_ encryption key at (within the docker image),
-  e.g. `/var/dead-drop/key/key.secret`
+* `IS_HTTPS`: Whether this application is available as HTTPS / behind an HTTPS reverse proxy (which it should be). Default to `true`.
 * `FILE_KEEP_TIME_IN_HOURS`: The number of hours to keep a drop-record. Defaults to `24`.
 * `SHOW_GITHUB_LINK_IN_FOOTER`: Whether the GitHub link should be visible in the footer. Defaults to `true`.
 
-## Example docker-compose.yml
+### Data persistence
+
+If you want to persist the encrypted storage, and map it out of the docker container, thw following mounting points are available:
+
+* `/var/dead-drop/data`: Is the directory that contains the encrypted data (for at most 24 hours)
+* `/var/dead-drop/key/key.secret`: Is the file that contains the key for the server-side encryption (the data stored in 
+the data directory is encrypted another time before persisted in the given path).
+
+### Example docker-compose.yml
 
 ```yaml
 services:
@@ -36,9 +40,6 @@ services:
       - 8080:8080 #Should be behind an SSL reverse proxy
     environment:
       - DOMAIN=drop.example.org
-      - IS_HTTPS=true
-      - DATA_DIRECTORY=/var/dead-drop/data
-      - ENCRYPTION_KEY_PATH=/var/dead-drop/key/key.secret
     volumes:
       - /srv/docker/dead-drop/data:/var/dead-drop/data:rw
       - /srv/docker/dead-drop/key:/var/dead-drop/key:rw
