@@ -1,0 +1,44 @@
+:root {
+    --color-text: #000;
+    --color-background: #fff;
+    --color-link: #000000;
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+    :root {
+        --color-background: #FFFFFF;
+        --color-text: #000000;
+        --color-link: #000000;
+    }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-background: #000000;
+        --color-text: #FFFFFF;
+        --color-link: #ff9800;
+    }
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
+.page-footer {
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
+.link-color {
+    color: var(--color-link);
+}

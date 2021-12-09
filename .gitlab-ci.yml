@@ -28,10 +28,6 @@ build and push private registry:
     - docker push $COMPONENT_IMAGE_PRIVATE_REGISTRY
   tags:
     - docker
-  only:
-    - develop
-    - master
-    - tags
 
 build and push docker hub:
   stage: build_image

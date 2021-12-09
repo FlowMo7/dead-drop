@@ -23,7 +23,7 @@ fun Application.configureApi(
                     val content = call.receiveText()
                     val id = dataRepository.addDrop(content)
 
-                    val pickupUrl = combinePartsToUrl(isHttps, domain, pathPrefix) + "pickup/$id"
+                    val pickupUrl = combinePartsToUrl(isHttps, domain, pathPrefix, false) + "pickup/$id"
 
                     call.respondText(
                         contentType = ContentType.Application.Json,
