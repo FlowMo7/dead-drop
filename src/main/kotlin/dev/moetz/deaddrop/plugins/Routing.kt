@@ -29,30 +29,32 @@ private inline fun HTML.siteSkeleton(
         link(href = "${baseUrl}static/materialize.min.css", rel = "stylesheet", type = "text/css")
 
         style {
-            +":root {"
-            +"--color-text: #000000;"
-            +"--color-background: #ffffff;"
-            +"--color-link: #000000;"
-            +"}"
-            +"/* light mode */"
-            +"@media (prefers-color-scheme: light) {"
-            +":root {"
-            +"--color-background: #FFFFFF;"
-            +"--color-text: #000000;"
-            +"--color-link: #000000;"
-            +"}"
-            +"}"
-            +"/* dark mode */"
-            +"@media (prefers-color-scheme: dark) {"
-            +":root {"
-            +"--color-background: #000000;"
-            +"--color-text: #FFFFFF;"
-            +"--color-link: #$colorCode;"
-            +"}"
-            +"}"
-            +"a { color:#$colorCode; }"
-            +"h3 { color:#$colorCode; }"
-            +"h5 { color:#$colorCode; }"
+            unsafe {
+                +":root {"
+                +"--color-text: #000000;"
+                +"--color-background: #ffffff;"
+                +"--color-link: #000000;"
+                +"}"
+                +"/* light mode */"
+                +"@media (prefers-color-scheme: light) {"
+                +":root {"
+                +"--color-background: #FFFFFF;"
+                +"--color-text: #000000;"
+                +"--color-link: #000000;"
+                +"}"
+                +"}"
+                +"/* dark mode */"
+                +"@media (prefers-color-scheme: dark) {"
+                +":root {"
+                +"--color-background: #000000;"
+                +"--color-text: #FFFFFF;"
+                +"--color-link: #$colorCode;"
+                +"}"
+                +"}"
+                +"a { color:#$colorCode; }"
+                +"h3 { color:#$colorCode; }"
+                +"h5 { color:#$colorCode; }"
+            }
         }
         link(href = "${baseUrl}static/styles.css", rel = "stylesheet", type = "text/css")
         script(src = "${baseUrl}static/sjcl.js") {
@@ -187,7 +189,14 @@ fun Application.configure(
                                     placeholder = "Message to encrypt"
                                 }
                             }
-                            div(classes = "col s12") {
+                            div(classes = "col s8") {
+                                span(classes = "red-text") {
+                                    id = "error_message"
+                                    hidden = true
+                                    +"There was an error creating your drop. Please try again."
+                                }
+                            }
+                            div(classes = "col s4") {
                                 a(classes = "waves-effect waves-light btn right") {
                                     style = "background-color:#$colorCode;"
                                     onClick = "sendDrop('${

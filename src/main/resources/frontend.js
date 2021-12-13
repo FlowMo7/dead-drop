@@ -1,10 +1,18 @@
 "use strict";
 
 function sendDrop(apiBaseUrl, data) {
-    encryptAndPostDrop(apiBaseUrl, data, function(pickupUrl, password) {
-        document.getElementById('drop_content').value = '';
-        showDropLink(pickupUrl, password);
-    });
+    encryptAndPostDrop(
+        apiBaseUrl,
+        data,
+        function(pickupUrl, password) {
+            document.getElementById('error_message').style.display = 'none';
+            document.getElementById('drop_content').value = '';
+            showDropLink(pickupUrl, password);
+        },
+        function(statusCode) {
+            document.getElementById('error_message').style.display = 'block';
+        }
+    );
 }
 
 function showDropLink(pickupUrl, password) {
