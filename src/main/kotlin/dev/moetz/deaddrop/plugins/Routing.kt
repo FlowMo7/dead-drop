@@ -11,7 +11,6 @@ import kotlinx.html.*
 
 private const val TITLE = "Dead-Drop: Send secure information"
 private const val TITLE_SHORT = "Dead-Drop"
-private const val COLOR = "#ff9800"
 
 private inline fun HTML.siteSkeleton(
     isHttps: Boolean,
@@ -19,6 +18,8 @@ private inline fun HTML.siteSkeleton(
     pathPrefix: String?,
     showGithubLinkInFooter: Boolean,
     useRelativePaths: Boolean,
+    colorCode: String,
+    showLinkToInfoPage: Boolean = true,
     crossinline block: DIV.() -> Unit
 ) {
     val baseUrl = combinePartsToUrl(isHttps, domain, pathPrefix, useRelativePaths)
@@ -26,6 +27,33 @@ private inline fun HTML.siteSkeleton(
         charset("utf-8")
         title(TITLE)
         link(href = "${baseUrl}static/materialize.min.css", rel = "stylesheet", type = "text/css")
+
+        style {
+            +":root {"
+            +"--color-text: #000000;"
+            +"--color-background: #ffffff;"
+            +"--color-link: #000000;"
+            +"}"
+            +"/* light mode */"
+            +"@media (prefers-color-scheme: light) {"
+            +":root {"
+            +"--color-background: #FFFFFF;"
+            +"--color-text: #000000;"
+            +"--color-link: #000000;"
+            +"}"
+            +"}"
+            +"/* dark mode */"
+            +"@media (prefers-color-scheme: dark) {"
+            +":root {"
+            +"--color-background: #000000;"
+            +"--color-text: #FFFFFF;"
+            +"--color-link: #$colorCode;"
+            +"}"
+            +"}"
+            +"a { color:#$colorCode; }"
+            +"h3 { color:#$colorCode; }"
+            +"h5 { color:#$colorCode; }"
+        }
         link(href = "${baseUrl}static/styles.css", rel = "stylesheet", type = "text/css")
         script(src = "${baseUrl}static/sjcl.js") {
 
@@ -41,7 +69,7 @@ private inline fun HTML.siteSkeleton(
         meta(name = "og:title", content = TITLE)
         meta(name = "description", content = "Create one-time links for securely sending data")
         meta(name = "keywords", content = "drop,password,encrypt,secure,send")
-        meta(name = "theme-color", content = COLOR)
+        meta(name = "theme-color", content = "#$colorCode")
         meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
         link(href = "${baseUrl}apple-touch-icon.png", rel = "apple-touch-icon") { sizes = "180x180" }
         link(href = "${baseUrl}favicon-32x32.png", type = "image/png", rel = "icon") { sizes = "32x32" }
@@ -50,7 +78,8 @@ private inline fun HTML.siteSkeleton(
     }
     body {
         header {
-            nav(classes = "orange") {
+            nav {
+                style = "background-color: #$colorCode;"
                 div(classes = "nav-wrapper") {
                     span(classes = "brand-logo center") {
                         a(href = baseUrl) { unsafe { +"Dead&nbsp;Drop" } }
@@ -77,17 +106,21 @@ private inline fun HTML.siteSkeleton(
                             ) { +"Open Source on GitHub" }
                         }
                         div(classes = "col s6") {
-                            a(
-                                classes = "right link-color",
-                                href = "${baseUrl}info"
-                            ) { +"How is this safe?" }
+                            if (showLinkToInfoPage) {
+                                a(
+                                    classes = "right link-color",
+                                    href = "${baseUrl}info"
+                                ) { +"How is this safe?" }
+                            }
                         }
                     } else {
                         div(classes = "col s12") {
-                            a(
-                                classes = "right link-color",
-                                href = "${baseUrl}info"
-                            ) { +"How is this safe?" }
+                            if (showLinkToInfoPage) {
+                                a(
+                                    classes = "right link-color",
+                                    href = "${baseUrl}info"
+                                ) { +"How is this safe?" }
+                            }
                         }
                     }
                 }
@@ -102,7 +135,8 @@ fun Application.configure(
     isHttps: Boolean,
     keepFilesTimeInHours: Int,
     showGithubLinkInFooter: Boolean,
-    useRelativePaths: Boolean
+    useRelativePaths: Boolean,
+    colorCode: String,
 ) {
 
     routing {
@@ -115,7 +149,7 @@ fun Application.configure(
 
         get {
             call.respondHtml {
-                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter, useRelativePaths) {
+                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter, useRelativePaths, colorCode) {
                     br()
                     div(classes = "section") {
                         id = "send_div"
@@ -154,8 +188,16 @@ fun Application.configure(
                                 }
                             }
                             div(classes = "col s12") {
-                                a(classes = "waves-effect waves-light btn orange right") {
-                                    onClick = "sendDrop('${combinePartsToUrl(isHttps, domain, pathPrefix, useRelativePaths)}api/', document.getElementById('drop_content').value)"
+                                a(classes = "waves-effect waves-light btn right") {
+                                    style = "background-color:#$colorCode;"
+                                    onClick = "sendDrop('${
+                                        combinePartsToUrl(
+                                            isHttps,
+                                            domain,
+                                            pathPrefix,
+                                            useRelativePaths
+                                        )
+                                    }api/', document.getElementById('drop_content').value)"
                                     +"Make the drop!"
                                 }
                             }
@@ -232,7 +274,8 @@ fun Application.configure(
 
                         div(classes = "row") {
                             div(classes = "col s12") {
-                                a(classes = "waves-effect waves-light btn-small white orange-text right") {
+                                a(classes = "waves-effect waves-light btn-small right") {
+                                    style = "background-color:#$colorCode;"
                                     val url = combinePartsToUrl(isHttps, domain, pathPrefix, useRelativePaths)
                                     onClick = "window.location.assign('$url')"
                                     +"Make another drop"
@@ -247,7 +290,7 @@ fun Application.configure(
         get("pickup/{id}") {
             val dropId = call.parameters["id"]
             call.respondHtml {
-                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter, useRelativePaths) {
+                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter, useRelativePaths, colorCode) {
 
                     div(classes = "section") {
                         id = "container_get_drop"
@@ -275,8 +318,15 @@ fun Application.configure(
                                 }
                             }
                             div(classes = "col s12") {
-                                a(classes = "waves-effect waves-light btn orange") {
-                                    onClick = "getDrop('${combinePartsToUrl(isHttps, domain, pathPrefix, useRelativePaths)}api/', '$dropId', document.getElementById('drop_password').value)"
+                                a(classes = "waves-effect waves-light btn") {
+                                    onClick = "getDrop('${
+                                        combinePartsToUrl(
+                                            isHttps,
+                                            domain,
+                                            pathPrefix,
+                                            useRelativePaths
+                                        )
+                                    }api/', '$dropId', document.getElementById('drop_password').value)"
                                     +"Get the drop"
                                 }
                             }
@@ -341,9 +391,9 @@ fun Application.configure(
 
         get("info") {
             call.respondHtml {
-                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter, useRelativePaths) {
+                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter, useRelativePaths, colorCode, false) {
                     div(classes = "section") {
-                        h3(classes = "orange-text") { +"How is this safe?" }
+                        h3 { +"How is this safe?" }
                         div {
                             div(classes = "row") {
                                 div("col s12") {
@@ -373,24 +423,15 @@ fun Application.configure(
                                     br()
 
                                     +"The encryption is algorithm used is "
-                                    a(
-                                        classes = "orange-text",
-                                        href = "https://github.com/bitwiseshiftleft/sjcl"
-                                    ) { +"github.com/bitwiseshiftleft/sjcl" }
+                                    a(href = "https://github.com/bitwiseshiftleft/sjcl") { +"github.com/bitwiseshiftleft/sjcl" }
                                     +", which is a JavaScript crypto library developed at Stanford."
                                     br()
                                     +"The code is "
-                                    a(
-                                        classes = "orange-text",
-                                        href = "https://github.com/FlowMo7/dead-drop"
-                                    ) { +"open source" }
+                                    a(href = "https://github.com/FlowMo7/dead-drop") { +"open source" }
                                     +", and you can easily inspect what is going on on this website with your developer tools."
                                     br()
                                     +"Furthermore, feel free to host your "
-                                    a(
-                                        classes = "orange-text",
-                                        href = "https://github.com/FlowMo7/dead-drop"
-                                    ) { +"own instance of this service" }
+                                    a(href = "https://github.com/FlowMo7/dead-drop") { +"own instance of this service" }
                                     +", so that we do not even get to see your encrypted data at any time, so that you do not have to rely on us not trying to decrypt your data."
                                 }
                             }
@@ -402,7 +443,7 @@ fun Application.configure(
 
         get("site.webmanifest") {
             call.respondText(contentType = ContentType.parse("application/manifest+json")) {
-                """{"name":"$TITLE","short_name":"$TITLE_SHORT","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"$COLOR","background_color":"#ffffff","display":"standalone"}"""
+                """{"name":"$TITLE","short_name":"$TITLE_SHORT","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#$colorCode","background_color":"#ffffff","display":"standalone"}"""
             }
         }
 

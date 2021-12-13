@@ -21,6 +21,13 @@ fun main() {
     val dataDirectory = "/var/dead-drop/data" // "./data" //for development purpose
     val encryptionKeyPath = "/var/dead-drop/key/key.secret"// "./config/key.secret" //for development purpose
 
+    //color code customization currently only works with colors where white text is visible on.
+    val colorCode = System.getenv("COLOR_CODE")
+        ?.takeIf { it.isNotBlank() }
+        ?.let { colorCode -> colorCode.filter { it.isDigit() || it.lowercaseChar() in 'a'..'f' } }
+        ?.takeIf { it.length == 3 || it.length == 6 }
+        ?: "ff9800"
+
     val keepFilesTimeInHours = System.getenv("FILE_KEEP_TIME_IN_HOURS")
         ?.takeIf { it.isNotBlank() }
         ?.toIntOrNull()
@@ -62,7 +69,15 @@ fun main() {
             gzip()
             deflate()
         }
-        configure(domain, pathPrefix, isHttps, keepFilesTimeInHours, showGithubLinkInFooter, useRelativePaths)
+        configure(
+            domain,
+            pathPrefix,
+            isHttps,
+            keepFilesTimeInHours,
+            showGithubLinkInFooter,
+            useRelativePaths,
+            colorCode
+        )
         configureApi(dataRepository, isHttps, domain, pathPrefix)
     }.start(wait = true)
 }
