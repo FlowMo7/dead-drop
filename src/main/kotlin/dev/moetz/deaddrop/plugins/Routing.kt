@@ -319,6 +319,7 @@ fun Application.configure(
                             }
                             div(classes = "col s12") {
                                 a(classes = "waves-effect waves-light btn") {
+                                    style = "background-color:#$colorCode;"
                                     onClick = "getDrop('${
                                         combinePartsToUrl(
                                             isHttps,
