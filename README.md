@@ -25,7 +25,7 @@ Possible environment variables:
 
 ### Data persistence
 
-If you want to persist the encrypted storage, and map it out of the docker container, thw following mounting points are available:
+If you want to persist the encrypted storage, and map it out of the docker container, the following mounting points are available:
 
 * `/var/dead-drop/data`: Is the directory that contains the encrypted data (for at most 24 hours)
 * `/var/dead-drop/key/key.secret`: Is the file that contains the key for the server-side encryption (the data stored in 
