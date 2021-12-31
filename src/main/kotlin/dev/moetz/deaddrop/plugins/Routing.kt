@@ -1,6 +1,7 @@
 package dev.moetz.deaddrop.plugins
 
 import dev.moetz.deaddrop.combinePartsToUrl
+import dev.moetz.deaddrop.template.SiteTemplate
 import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.http.*
@@ -9,127 +10,6 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.*
 
-private const val TITLE = "Dead-Drop: Send secure information"
-private const val TITLE_SHORT = "Dead-Drop"
-
-private inline fun HTML.siteSkeleton(
-    isHttps: Boolean,
-    domain: String,
-    pathPrefix: String?,
-    showGithubLinkInFooter: Boolean,
-    useRelativePaths: Boolean,
-    colorCode: String,
-    showLinkToInfoPage: Boolean = true,
-    crossinline block: DIV.() -> Unit
-) {
-    val baseUrl = combinePartsToUrl(isHttps, domain, pathPrefix, useRelativePaths)
-    head {
-        charset("utf-8")
-        title(TITLE)
-        link(href = "${baseUrl}static/materialize.min.css", rel = "stylesheet", type = "text/css")
-
-        style {
-            unsafe {
-                +":root {"
-                +"--color-text: #000000;"
-                +"--color-background: #ffffff;"
-                +"--color-link: #000000;"
-                +"}"
-                +"/* light mode */"
-                +"@media (prefers-color-scheme: light) {"
-                +":root {"
-                +"--color-background: #FFFFFF;"
-                +"--color-text: #000000;"
-                +"--color-link: #000000;"
-                +"}"
-                +"}"
-                +"/* dark mode */"
-                +"@media (prefers-color-scheme: dark) {"
-                +":root {"
-                +"--color-background: #000000;"
-                +"--color-text: #FFFFFF;"
-                +"--color-link: #$colorCode;"
-                +"}"
-                +"}"
-                +"a { color:#$colorCode; }"
-                +"h3 { color:#$colorCode; }"
-                +"h5 { color:#$colorCode; }"
-            }
-        }
-        link(href = "${baseUrl}static/styles.css", rel = "stylesheet", type = "text/css")
-        script(src = "${baseUrl}static/sjcl.js") {
-
-        }
-        script(src = "${baseUrl}static/drop.js") {
-
-        }
-        script(src = "${baseUrl}static/frontend.js") {
-
-        }
-
-        meta(name = "robots", content = "index, follow")
-        meta(name = "og:title", content = TITLE)
-        meta(name = "description", content = "Create one-time links for securely sending data")
-        meta(name = "keywords", content = "drop,password,encrypt,secure,send")
-        meta(name = "theme-color", content = "#$colorCode")
-        meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
-        link(href = "${baseUrl}apple-touch-icon.png", rel = "apple-touch-icon") { sizes = "180x180" }
-        link(href = "${baseUrl}favicon-32x32.png", type = "image/png", rel = "icon") { sizes = "32x32" }
-        link(href = "${baseUrl}favicon-16x16.png", type = "image/png", rel = "icon") { sizes = "16x16" }
-        link(href = "${baseUrl}site.webmanifest", rel = "manifest")
-    }
-    body {
-        header {
-            nav {
-                style = "background-color: #$colorCode;"
-                div(classes = "nav-wrapper") {
-                    span(classes = "brand-logo center") {
-                        a(href = baseUrl) { unsafe { +"Dead&nbsp;Drop" } }
-                    }
-                }
-            }
-        }
-        main {
-            div(classes = "general-container") {
-                div(classes = "container") {
-                    block.invoke(this)
-                }
-            }
-        }
-
-        footer(classes = "page-footer") {
-            div(classes = "container") {
-                div(classes = "row") {
-                    if (showGithubLinkInFooter) {
-                        div(classes = "col s6") {
-                            a(
-                                classes = "link-color",
-                                href = "https://github.com/FlowMo7/dead-drop"
-                            ) { +"Open Source on GitHub" }
-                        }
-                        div(classes = "col s6") {
-                            if (showLinkToInfoPage) {
-                                a(
-                                    classes = "right link-color",
-                                    href = "${baseUrl}info"
-                                ) { +"How is this safe?" }
-                            }
-                        }
-                    } else {
-                        div(classes = "col s12") {
-                            if (showLinkToInfoPage) {
-                                a(
-                                    classes = "right link-color",
-                                    href = "${baseUrl}info"
-                                ) { +"How is this safe?" }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 fun Application.configure(
     domain: String,
@@ -139,6 +19,8 @@ fun Application.configure(
     showGithubLinkInFooter: Boolean,
     useRelativePaths: Boolean,
     colorCode: String,
+    siteTitle: String,
+    siteTitleShort: String
 ) {
 
     routing {
@@ -150,8 +32,17 @@ fun Application.configure(
         }
 
         get {
-            call.respondHtml {
-                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter, useRelativePaths, colorCode) {
+            call.respondHtmlTemplate(
+                SiteTemplate(
+                    pathPrefix = pathPrefix,
+                    showGithubLinkInFooter = showGithubLinkInFooter,
+                    colorCode = colorCode,
+                    showLinkToInfoPage = true,
+                    siteTitle = siteTitle,
+                    siteTitleShort = siteTitleShort,
+                )
+            ) {
+                content {
                     br()
                     div(classes = "section") {
                         id = "send_div"
@@ -285,7 +176,7 @@ fun Application.configure(
                             div(classes = "col s12") {
                                 a(classes = "waves-effect waves-light btn-small right") {
                                     style = "background-color:#$colorCode;"
-                                    val url = combinePartsToUrl(isHttps, domain, pathPrefix, useRelativePaths)
+                                    val url = combinePartsToUrl(isHttps, domain, pathPrefix, true)
                                     onClick = "window.location.assign('$url')"
                                     +"Make another drop"
                                 }
@@ -298,8 +189,17 @@ fun Application.configure(
 
         get("pickup/{id}") {
             val dropId = call.parameters["id"]
-            call.respondHtml {
-                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter, useRelativePaths, colorCode) {
+            call.respondHtmlTemplate(
+                SiteTemplate(
+                    pathPrefix = pathPrefix,
+                    showGithubLinkInFooter = showGithubLinkInFooter,
+                    colorCode = colorCode,
+                    showLinkToInfoPage = true,
+                    siteTitle = siteTitle,
+                    siteTitleShort = siteTitleShort,
+                )
+            ) {
+                content {
 
                     div(classes = "section") {
                         id = "container_get_drop"
@@ -400,8 +300,17 @@ fun Application.configure(
         }
 
         get("info") {
-            call.respondHtml {
-                siteSkeleton(isHttps, domain, pathPrefix, showGithubLinkInFooter, useRelativePaths, colorCode, false) {
+            call.respondHtmlTemplate(
+                SiteTemplate(
+                    pathPrefix = pathPrefix,
+                    showGithubLinkInFooter = showGithubLinkInFooter,
+                    colorCode = colorCode,
+                    showLinkToInfoPage = false,
+                    siteTitle = siteTitle,
+                    siteTitleShort = siteTitleShort,
+                )
+            ) {
+                content {
                     div(classes = "section") {
                         h3 { +"How is this safe?" }
                         div {
@@ -453,7 +362,7 @@ fun Application.configure(
 
         get("site.webmanifest") {
             call.respondText(contentType = ContentType.parse("application/manifest+json")) {
-                """{"name":"$TITLE","short_name":"$TITLE_SHORT","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#$colorCode","background_color":"#ffffff","display":"standalone"}"""
+                """{"name":"$siteTitle","short_name":"$siteTitleShort","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#$colorCode","background_color":"#ffffff","display":"standalone"}"""
             }
         }
 

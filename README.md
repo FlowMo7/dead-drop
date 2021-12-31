@@ -22,6 +22,8 @@ Possible environment variables:
 * `FILE_KEEP_TIME_IN_HOURS`: The number of hours to keep a drop-record. Defaults to `24`.
 * `SHOW_GITHUB_LINK_IN_FOOTER`: Whether the GitHub link should be visible in the footer. Defaults to `true`.
 * `COLOR_CODE`: The hex-color-code the page should be styled in. Only colors on which white text is readable are supported yet. Without the leading '#'. Defaults to `ff9800`.
+* `SITE_TITLE`: The title of the site. Defaults to `Dead-Drop: Send secure information`.
+* `SITE_TITLE_SHORT`: The title of the site in short. Defaults to `Dead-Drop`.
 
 ### Data persistence
 

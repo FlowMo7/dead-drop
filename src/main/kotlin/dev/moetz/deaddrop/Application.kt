@@ -20,6 +20,8 @@ fun main() {
     val isHttps = System.getenv("IS_HTTPS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
     val dataDirectory = "/var/dead-drop/data" // "./data" //for development purpose
     val encryptionKeyPath = "/var/dead-drop/key/key.secret"// "./config/key.secret" //for development purpose
+    val siteTitle = System.getenv("SITE_TITLE")?.takeIf { it.isNotBlank() } ?: "Dead-Drop: Send secure information"
+    val siteTitleShort = System.getenv("SITE_TITLE_SHORT")?.takeIf { it.isNotBlank() } ?: "Dead-Drop"
 
     //color code customization currently only works with colors where white text is visible on.
     val colorCode = System.getenv("COLOR_CODE")
@@ -70,13 +72,15 @@ fun main() {
             deflate()
         }
         configure(
-            domain,
-            pathPrefix,
-            isHttps,
-            keepFilesTimeInHours,
-            showGithubLinkInFooter,
-            useRelativePaths,
-            colorCode
+            domain = domain,
+            pathPrefix = pathPrefix,
+            isHttps = isHttps,
+            keepFilesTimeInHours = keepFilesTimeInHours,
+            showGithubLinkInFooter = showGithubLinkInFooter,
+            useRelativePaths = useRelativePaths,
+            colorCode = colorCode,
+            siteTitle = siteTitle,
+            siteTitleShort = siteTitleShort
         )
         configureApi(dataRepository, isHttps, domain, pathPrefix)
     }.start(wait = true)
