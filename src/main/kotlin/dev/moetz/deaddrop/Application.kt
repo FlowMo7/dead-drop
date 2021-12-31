@@ -55,6 +55,7 @@ fun main() {
                     ContentType.Text.CSS,
                     ContentType.Text.JavaScript,
                     ContentType.Application.JavaScript,
+                    ContentType("application", "manifest+json"),
                     ContentType.Image.PNG -> {
                         CachingOptions(
                             CacheControl.MaxAge(
