@@ -361,24 +361,20 @@ fun Application.configure(
             }
         }
 
-        preCompressed {
+        route("static") {
+            resource(remotePath = "frontend.js", resource = "frontend.js")
+            resource(remotePath = "drop.js", resource = "drop.js")
+            resource(remotePath = "sjcl.js", resource = "sjcl/sjcl.js")
+
+            resource(remotePath = "materialize.min.css", resource = "materialize/materialize.min.css")
+            resource(remotePath = "styles.css", resource = "styles.css")
+
             resource(remotePath = "android-chrome-192x192.png", resource = "icon/android-chrome-192x192.png")
             resource(remotePath = "android-chrome-512x512.png", resource = "icon/android-chrome-512x512.png")
             resource(remotePath = "apple-touch-icon.png", resource = "icon/apple-touch-icon.png")
             resource(remotePath = "favicon.ico", resource = "icon/favicon.ico")
             resource(remotePath = "favicon-16x16.png", resource = "icon/favicon-16x16.png")
             resource(remotePath = "favicon-32x32.png", resource = "icon/favicon-32x32.png")
-        }
-
-        static("static") {
-            preCompressed {
-                resource(remotePath = "frontend.js", resource = "frontend.js")
-                resource(remotePath = "drop.js", resource = "drop.js")
-                resource(remotePath = "sjcl.js", resource = "sjcl/sjcl.js")
-
-                resource(remotePath = "materialize.min.css", resource = "materialize/materialize.min.css")
-                resource(remotePath = "styles.css", resource = "styles.css")
-            }
         }
 
     }
