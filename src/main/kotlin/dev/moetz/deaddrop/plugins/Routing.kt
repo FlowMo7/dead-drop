@@ -1,6 +1,7 @@
 package dev.moetz.deaddrop.plugins
 
-import dev.moetz.deaddrop.combinePartsToUrl
+import dev.moetz.deaddrop.combinePartsToFullUrl
+import dev.moetz.deaddrop.combinePartsToPathPrefix
 import dev.moetz.deaddrop.template.SiteTemplate
 import io.ktor.application.*
 import io.ktor.html.*
@@ -17,7 +18,6 @@ fun Application.configure(
     isHttps: Boolean,
     keepFilesTimeInHours: Int,
     showGithubLinkInFooter: Boolean,
-    useRelativePaths: Boolean,
     colorCode: String,
     siteTitle: String,
     siteTitleShort: String
@@ -91,11 +91,10 @@ fun Application.configure(
                                 a(classes = "waves-effect waves-light btn right") {
                                     style = "background-color:#$colorCode;"
                                     onClick = "sendDrop('${
-                                        combinePartsToUrl(
+                                        combinePartsToFullUrl(
                                             isHttps,
                                             domain,
                                             pathPrefix,
-                                            useRelativePaths
                                         )
                                     }api/', document.getElementById('drop_content').value)"
                                     +"Make the drop!"
@@ -176,8 +175,7 @@ fun Application.configure(
                             div(classes = "col s12") {
                                 a(classes = "waves-effect waves-light btn-small right") {
                                     style = "background-color:#$colorCode;"
-                                    val url = combinePartsToUrl(isHttps, domain, pathPrefix, true)
-                                    onClick = "window.location.assign('$url')"
+                                    onClick = "window.location.assign('${combinePartsToPathPrefix(pathPrefix)}')"
                                     +"Make another drop"
                                 }
                             }
@@ -229,14 +227,11 @@ fun Application.configure(
                             div(classes = "col s12") {
                                 a(classes = "waves-effect waves-light btn") {
                                     style = "background-color:#$colorCode;"
-                                    onClick = "getDrop('${
-                                        combinePartsToUrl(
-                                            isHttps,
-                                            domain,
-                                            pathPrefix,
-                                            useRelativePaths
-                                        )
-                                    }api/', '$dropId', document.getElementById('drop_password').value)"
+                                    onClick = "getDrop(" +
+                                            "'${combinePartsToFullUrl(isHttps, domain, pathPrefix)}api/', " +
+                                            "'$dropId', " +
+                                            "document.getElementById('drop_password').value" +
+                                            ")"
                                     +"Get the drop"
                                 }
                             }

@@ -1,6 +1,6 @@
 package dev.moetz.deaddrop.plugins
 
-import dev.moetz.deaddrop.combinePartsToUrl
+import dev.moetz.deaddrop.combinePartsToFullUrl
 import dev.moetz.deaddrop.data.DataRepository
 import io.ktor.application.*
 import io.ktor.http.*
@@ -23,7 +23,7 @@ fun Application.configureApi(
                     val content = call.receiveText()
                     val id = dataRepository.addDrop(content)
 
-                    val pickupUrl = combinePartsToUrl(isHttps, domain, pathPrefix, false) + "pickup/$id"
+                    val pickupUrl = combinePartsToFullUrl(isHttps, domain, pathPrefix) + "pickup/$id"
 
                     call.respondText(
                         contentType = ContentType.Application.Json,

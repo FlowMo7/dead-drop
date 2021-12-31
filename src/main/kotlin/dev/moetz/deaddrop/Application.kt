@@ -15,7 +15,6 @@ import java.io.File
 fun main() {
 
     val domain = System.getenv("DOMAIN")?.takeIf { it.isNotBlank() } ?: "localhost:8080"
-    val useRelativePaths = System.getenv("USE_RELATIVE_PATHS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
     val pathPrefix = System.getenv("PATH_PREFIX")?.takeIf { it.isNotBlank() }
     val isHttps = System.getenv("IS_HTTPS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
     val dataDirectory = "/var/dead-drop/data" // "./data" //for development purpose
@@ -77,7 +76,6 @@ fun main() {
             isHttps = isHttps,
             keepFilesTimeInHours = keepFilesTimeInHours,
             showGithubLinkInFooter = showGithubLinkInFooter,
-            useRelativePaths = useRelativePaths,
             colorCode = colorCode,
             siteTitle = siteTitle,
             siteTitleShort = siteTitleShort

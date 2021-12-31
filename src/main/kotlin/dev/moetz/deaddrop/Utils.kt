@@ -1,37 +1,40 @@
 package dev.moetz.deaddrop
 
-fun combinePartsToUrl(isHttps: Boolean, domain: String, pathPrefix: String?, useRelativePaths: Boolean): String {
+fun combinePartsToFullUrl(isHttps: Boolean, domain: String, pathPrefix: String?): String {
     return buildString {
-        if(useRelativePaths) {
-            if (pathPrefix != null) {
-                if (pathPrefix.startsWith('/').not()) {
-                    append('/')
-                }
-                append(pathPrefix)
-                if (pathPrefix.endsWith('/').not()) {
-                    append("/")
-                }
-            } else {
+
+        if (isHttps) {
+            append("https://")
+        } else {
+            append("http://")
+        }
+        append(domain)
+        if (pathPrefix != null) {
+            if (pathPrefix.startsWith('/').not()) {
+                append('/')
+            }
+            append(pathPrefix)
+            if (pathPrefix.endsWith('/').not()) {
                 append("/")
             }
         } else {
-            if (isHttps) {
-                append("https://")
-            } else {
-                append("http://")
+            append("/")
+        }
+    }
+}
+
+fun combinePartsToPathPrefix(pathPrefix: String?): String {
+    return buildString {
+        if (pathPrefix != null) {
+            if (pathPrefix.startsWith('/').not()) {
+                append('/')
             }
-            append(domain)
-            if (pathPrefix != null) {
-                if (pathPrefix.startsWith('/').not()) {
-                    append('/')
-                }
-                append(pathPrefix)
-                if (pathPrefix.endsWith('/').not()) {
-                    append("/")
-                }
-            } else {
+            append(pathPrefix)
+            if (pathPrefix.endsWith('/').not()) {
                 append("/")
             }
+        } else {
+            append("/")
         }
     }
 }
