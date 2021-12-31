@@ -63,6 +63,10 @@ fun main() {
                             )
                         )
                     }
+                    ContentType.Application.Json,
+                    ContentType.Text.Plain -> {
+                        CachingOptions(CacheControl.NoCache(null))
+                    }
                     else -> null
                 }
             }
