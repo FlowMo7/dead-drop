@@ -52,10 +52,13 @@ fun main() {
         install(CachingHeaders) {
             options { outgoingContent ->
                 when (outgoingContent.contentType?.withoutParameters()) {
-                    ContentType.Text.CSS, ContentType.Text.JavaScript -> {
+                    ContentType.Text.CSS,
+                    ContentType.Text.JavaScript,
+                    ContentType.Application.JavaScript,
+                    ContentType.Image.PNG -> {
                         CachingOptions(
                             CacheControl.MaxAge(
-                                maxAgeSeconds = 15 * 60,    //15 minutes
+                                maxAgeSeconds = 24 * 60 * 60,    //24 hours
                                 visibility = CacheControl.Visibility.Public
                             )
                         )
