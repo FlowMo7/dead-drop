@@ -52,7 +52,7 @@ services:
 ## Acknowledgments
 
 This project is heavily inspired by [BillKeenan/dead-drop-python](https://github.com/BillKeenan/dead-drop-python), which
-I heavily used (self-hosted) before creating this service.
+I used (self-hosted) before creating this service.
 
 # LICENSE
 
