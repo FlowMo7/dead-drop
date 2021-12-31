@@ -341,7 +341,7 @@ fun Application.configure(
                                     br()
                                     br()
 
-                                    +"The encryption is algorithm used is "
+                                    +"The encryption algorithm used is "
                                     a(href = "https://github.com/bitwiseshiftleft/sjcl") { +"github.com/bitwiseshiftleft/sjcl" }
                                     +", which is a JavaScript crypto library developed at Stanford."
                                     br()
