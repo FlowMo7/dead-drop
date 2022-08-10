@@ -14,7 +14,8 @@ import java.io.File
 
 fun main() {
 
-    val domain = System.getenv("DOMAIN")?.takeIf { it.isNotBlank() } ?: "localhost:8080"
+    val port = System.getenv("PORT")?.takeIf { it.isNotBlank() } ?: "8080"
+    val domain = System.getenv("DOMAIN")?.takeIf { it.isNotBlank() } ?: "localhost:" + port
     val pathPrefix = System.getenv("PATH_PREFIX")?.takeIf { it.isNotBlank() }
     val isHttps = System.getenv("IS_HTTPS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
     val dataDirectory = "/var/dead-drop/data" // "./data" //for development purpose
@@ -45,7 +46,7 @@ fun main() {
         timePeriodToSweepOverdueFilesInSeconds = (60L * 60) /* every hour */
     )
 
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
+    embeddedServer(Netty, port = port.toInt(), host = "0.0.0.0") {
         install(DefaultHeaders)
         install(AutoHeadResponse)
         install(XForwardedHeaderSupport)
