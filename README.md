@@ -16,7 +16,8 @@ The docker image can be found here: [hub.docker.com/r/flowmo7/dead-drop](https:/
 
 Possible environment variables:
 
-* `DOMAIN`: the domain this application is available at, e.g. `drop.example.org`
+* `PORT`: The port the server listens on. Defaults to `8080`.
+* `DOMAIN`: The domain this application is available at, e.g. `drop.example.org`.
 * `IS_HTTPS`: Whether this application is available as HTTPS / behind an HTTPS reverse proxy (which it should be). Default to `true`.
 * `PATH_PREFIX`: When the application is available on a sub-path of the given domain (routed by a reverse proxy, e.g.), the path needs to be set here. Defaults to no path.
 * `FILE_KEEP_TIME_IN_HOURS`: The number of hours to keep a drop-record. Defaults to `24`.
