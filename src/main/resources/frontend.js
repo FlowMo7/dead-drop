@@ -22,13 +22,19 @@ function showDropLink(pickupUrl, password) {
     document.getElementById('drop_share_password').innerHTML = password;
 }
 
+function htmlEncode(raw) {
+    return raw.replace(/[\u00A0-\u9999<>\&]/g, function(i) {
+        return '&#'+i.charCodeAt(0)+';';
+    });
+}
+
 function getDrop(apiBaseUrl, id, password) {
     fetchDropAndDecrypt(
         apiBaseUrl,
         id,
         password,
         function(data) {
-            document.getElementById('drop_content').innerHTML = data;
+            document.getElementById('drop_content').innerHTML = htmlEncode(data);
             document.getElementById('drop_content_section').style.display = 'block';
             document.getElementById('container_get_drop').style.display = 'none';
         },
