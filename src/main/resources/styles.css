@@ -10,6 +10,11 @@ body {
     color: var(--color-text);
 }
 
+.input-field-colors {
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
 .page-footer {
     background-color: var(--color-background);
     color: var(--color-text);

@@ -40,7 +40,7 @@ class PickupTemplate(
 
             div("row") {
                 div("input-field col s12") {
-                    textInput(classes = "validate") {
+                    textInput(classes = "validate input-field-colors") {
                         id = "drop_password"
                         placeholder = "Enter the password here"
                     }
