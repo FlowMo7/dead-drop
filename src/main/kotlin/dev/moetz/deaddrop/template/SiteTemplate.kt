@@ -1,20 +1,18 @@
 package dev.moetz.deaddrop.template
 
-import io.ktor.html.*
+import io.ktor.server.html.*
 import kotlinx.html.*
 
-class SiteTemplate(
-    private val pathPrefix: String?,
-    private val showGithubLinkInFooter: Boolean,
-    private val colorCode: String,
-    private val showLinkToInfoPage: Boolean = true,
-    private val siteTitle: String,
-    private val siteTitleShort: String,
+abstract class SiteTemplate(
+    protected val pathPrefix: String?,
+    protected val showGithubLinkInFooter: Boolean,
+    protected val colorCode: String,
+    protected val showLinkToInfoPage: Boolean = true,
+    protected val siteTitle: String,
+    protected val siteTitleShort: String,
 ) : Template<HTML> {
 
-    val content = Placeholder<FlowContent>()
-
-    private val combinedPathPrefix: String = buildString {
+    protected val combinedPathPrefix: String = buildString {
         if (pathPrefix != null) {
             if (pathPrefix.startsWith('/').not()) {
                 append('/')
@@ -27,6 +25,8 @@ class SiteTemplate(
             append("/")
         }
     }
+
+    abstract fun FlowContent.content()
 
     override fun HTML.apply() {
         head {
@@ -98,7 +98,7 @@ class SiteTemplate(
             main {
                 div(classes = "general-container") {
                     div(classes = "container") {
-                        insert(content)
+                        content()
                     }
                 }
             }
@@ -111,7 +111,10 @@ class SiteTemplate(
                                 a(
                                     classes = "link-color",
                                     href = "https://github.com/FlowMo7/dead-drop"
-                                ) { +"Open Source on GitHub" }
+                                ) {
+                                    target = "_blank"
+                                    +"Open Source on GitHub"
+                                }
                             }
                             div(classes = "col s6") {
                                 if (showLinkToInfoPage) {

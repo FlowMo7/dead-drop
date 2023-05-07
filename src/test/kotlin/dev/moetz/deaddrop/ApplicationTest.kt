@@ -39,7 +39,10 @@ class ApplicationTest {
 
                 coVerify { dataRepository.addDrop("some-content") }
                 assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("{\"pickupUrl\": \"https://drop.moetz.dev/pickup/some-id\"}", response.content)
+                assertEquals(
+                    "{\"id\":\"some-id\",\"pickupUrl\":\"https://drop.moetz.dev/pickup/some-id\"}",
+                    response.content
+                )
             }
         }
     }
@@ -63,7 +66,10 @@ class ApplicationTest {
 
                 coVerify { dataRepository.addDrop("some-content") }
                 assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("{\"pickupUrl\": \"https://drop.moetz.dev/some-path/pickup/some-id\"}", response.content)
+                assertEquals(
+                    "{\"id\":\"some-id\",\"pickupUrl\":\"https://drop.moetz.dev/some-path/pickup/some-id\"}",
+                    response.content
+                )
             }
         }
     }
@@ -87,7 +93,10 @@ class ApplicationTest {
 
                 coVerify { dataRepository.addDrop("some-content") }
                 assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("{\"pickupUrl\": \"https://drop.moetz.dev/some-path/pickup/some-id\"}", response.content)
+                assertEquals(
+                    "{\"id\":\"some-id\",\"pickupUrl\":\"https://drop.moetz.dev/some-path/pickup/some-id\"}",
+                    response.content
+                )
             }
         }
     }
@@ -111,7 +120,10 @@ class ApplicationTest {
 
                 coVerify { dataRepository.addDrop("some-content") }
                 assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("{\"pickupUrl\": \"https://drop.moetz.dev/some-path/pickup/some-id\"}", response.content)
+                assertEquals(
+                    "{\"id\":\"some-id\",\"pickupUrl\":\"https://drop.moetz.dev/some-path/pickup/some-id\"}",
+                    response.content
+                )
             }
         }
     }
@@ -135,7 +147,10 @@ class ApplicationTest {
 
                 coVerify { dataRepository.addDrop("some-content") }
                 assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("{\"pickupUrl\": \"https://drop.moetz.dev/some-path/pickup/some-id\"}", response.content)
+                assertEquals(
+                    "{\"id\":\"some-id\",\"pickupUrl\":\"https://drop.moetz.dev/some-path/pickup/some-id\"}",
+                    response.content
+                )
             }
         }
     }
@@ -159,7 +174,10 @@ class ApplicationTest {
 
                 coVerify { dataRepository.addDrop("some-content") }
                 assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("{\"pickupUrl\": \"https://drop.example.com/pickup/some-id\"}", response.content)
+                assertEquals(
+                    "{\"id\":\"some-id\",\"pickupUrl\":\"https://drop.example.com/pickup/some-id\"}",
+                    response.content
+                )
             }
         }
     }
@@ -183,7 +201,10 @@ class ApplicationTest {
 
                 coVerify { dataRepository.addDrop("some-content") }
                 assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("{\"pickupUrl\": \"http://drop.example.com/pickup/some-id\"}", response.content)
+                assertEquals(
+                    "{\"id\":\"some-id\",\"pickupUrl\":\"http://drop.example.com/pickup/some-id\"}",
+                    response.content
+                )
             }
         }
     }
@@ -201,7 +222,6 @@ class ApplicationTest {
             )
         }) {
             handleRequest(method = HttpMethod.Get, uri = "/api/drop/some-id").apply {
-
                 coVerify { dataRepository.getDrop("some-id") }
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertEquals("some-content", response.content)
@@ -222,7 +242,6 @@ class ApplicationTest {
             )
         }) {
             handleRequest(method = HttpMethod.Get, uri = "/api/drop/some-id").apply {
-
                 coVerify { dataRepository.getDrop("some-id") }
                 assertEquals(HttpStatusCode.NotFound, response.status())
                 assertEquals(null, response.content)
@@ -243,7 +262,6 @@ class ApplicationTest {
             )
         }) {
             handleRequest(method = HttpMethod.Get, uri = "/api/drop/some-id").apply {
-
                 coVerify { dataRepository.getDrop("some-id") }
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
                 assertEquals(null, response.content)

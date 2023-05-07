@@ -4,22 +4,27 @@ import dev.moetz.deaddrop.data.DataRepository
 import dev.moetz.deaddrop.data.EncryptionManager
 import dev.moetz.deaddrop.plugins.configure
 import dev.moetz.deaddrop.plugins.configureApi
-import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.content.*
+import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.autohead.*
+import io.ktor.server.plugins.cachingheaders.*
+import io.ktor.server.plugins.compression.*
+import io.ktor.server.plugins.conditionalheaders.*
+import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.plugins.forwardedheaders.*
 import java.io.File
 
 fun main() {
 
     val port = System.getenv("PORT")?.takeIf { it.isNotBlank() } ?: "8080"
-    val domain = System.getenv("DOMAIN")?.takeIf { it.isNotBlank() } ?: "localhost:" + port
+    val domain = System.getenv("DOMAIN")?.takeIf { it.isNotBlank() } ?: "localhost:$port"
     val pathPrefix = System.getenv("PATH_PREFIX")?.takeIf { it.isNotBlank() }
-    val isHttps = System.getenv("IS_HTTPS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
-    val dataDirectory = "/var/dead-drop/data" // "./data" //for development purpose
-    val encryptionKeyPath = "/var/dead-drop/key/key.secret"// "./config/key.secret" //for development purpose
+    val isHttps = System.getenv("IS_HTTPS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: false
+    val dataDirectory = "./data" //for development purpose
+    val encryptionKeyPath = "./config/key.secret" //for development purpose
     val siteTitle = System.getenv("SITE_TITLE")?.takeIf { it.isNotBlank() } ?: "Dead-Drop: Send secure information"
     val siteTitleShort = System.getenv("SITE_TITLE_SHORT")?.takeIf { it.isNotBlank() } ?: "Dead-Drop"
 
@@ -49,9 +54,9 @@ fun main() {
     embeddedServer(Netty, port = port.toInt(), host = "0.0.0.0") {
         install(DefaultHeaders)
         install(AutoHeadResponse)
-        install(XForwardedHeaderSupport)
+        install(XForwardedHeaders)
         install(CachingHeaders) {
-            options { outgoingContent ->
+            options { _, outgoingContent ->
                 when (outgoingContent.contentType?.withoutParameters()) {
                     ContentType.Text.CSS,
                     ContentType.Text.JavaScript,
@@ -65,10 +70,12 @@ fun main() {
                             )
                         )
                     }
+
                     ContentType.Application.Json,
                     ContentType.Text.Plain -> {
                         CachingOptions(CacheControl.NoCache(null))
                     }
+
                     else -> null
                 }
             }
@@ -76,13 +83,17 @@ fun main() {
         install(ConditionalHeaders)
 
         install(Compression) {
-            gzip()
-            deflate()
+            gzip {
+                priority = 1.0
+            }
+            deflate {
+                priority = 10.0
+                minimumSize(1024)
+            }
         }
+
         configure(
-            domain = domain,
             pathPrefix = pathPrefix,
-            isHttps = isHttps,
             keepFilesTimeInHours = keepFilesTimeInHours,
             showGithubLinkInFooter = showGithubLinkInFooter,
             colorCode = colorCode,

@@ -1,28 +1,28 @@
 "use strict";
 
-function encryptAndPostDrop(apiBaseUrl, plainData, onComplete, onError) {
+function encryptAndPostDrop(url, plainData, onComplete, onError) {
     let generatedPassword = generateStringSequence(16);
     let encrypted = sjcl.encrypt(generatedPassword, plainData);
 
     post(
-        apiBaseUrl + 'drop',
+        url,
         encrypted,
-        function(data) {
+        function (data) {
             onComplete(data.pickupUrl, generatedPassword);
         },
-        function(statusCode) {
+        function (statusCode) {
             onError(statusCode)
         }
     );
 }
 
-function fetchDropAndDecrypt(apiBaseUrl, id, password, onLoaded, onError) {
-    get(apiBaseUrl + 'drop/' + id, function(statusCode, data) {
+function fetchDropAndDecrypt(url, password, onLoaded, onError) {
+    get(url, function (statusCode, data) {
         if (statusCode === 200) {
             try {
                 let decrypted = sjcl.decrypt(password, data);
                 onLoaded(decrypted);
-            } catch(e) {
+            } catch (e) {
                 onError();
             }
         } else {
@@ -32,8 +32,8 @@ function fetchDropAndDecrypt(apiBaseUrl, id, password, onLoaded, onError) {
 }
 
 function generateStringSequence(length) {
-    let result           = '';
-    const characters     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let charactersLength = characters.length;
     for (var i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -45,10 +45,10 @@ function post(path, content, onComplete, onError) {
     let request = new XMLHttpRequest();
     request.open("POST", path, true);
     request.setRequestHeader('Content-Type', 'application/json');
-    request.onload = function() {
+    request.onload = function () {
         onComplete(JSON.parse(this.responseText));
     };
-    request.onerror = function() {
+    request.onerror = function () {
         onError(0);
     };
     request.onreadystatechange = function () {
@@ -63,7 +63,7 @@ function post(path, content, onComplete, onError) {
 function get(path, onComplete) {
     let request = new XMLHttpRequest();
     request.open("GET", path, true);
-    request.onload = function() {
+    request.onload = function () {
         onComplete(this.status, this.responseText);
     };
     request.send();

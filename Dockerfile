@@ -1,9 +1,9 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:19-jdk-alpine3.16
 
 EXPOSE ${PORT:-8080}
 
 RUN apk --no-cache add curl
-HEALTHCHECK CMD curl -f http://0.0.0.0:${PORT} || exit 1
+HEALTHCHECK CMD curl -f http://0.0.0.0:${PORT}/status || exit 1
 
 COPY ./build/libs/DeadDrop.jar /DeadDrop.jar
 

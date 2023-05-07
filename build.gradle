@@ -1,8 +1,8 @@
 plugins {
     id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.31'
-    id "com.github.johnrengelman.shadow" version "7.1.0"
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.31'
+    id 'org.jetbrains.kotlin.jvm'
+    id "com.github.johnrengelman.shadow"
+    id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 group "dev.moetz.deaddrop"
@@ -14,17 +14,22 @@ repositories {
 }
 
 dependencies {
-    implementation "io.ktor:ktor-server-core:$ktor_version"
-    implementation "io.ktor:ktor-auth:$ktor_version"
-    implementation "io.ktor:ktor-server-netty:$ktor_version"
-    implementation "io.ktor:ktor-html-builder:$ktor_version"
-    implementation "ch.qos.logback:logback-classic:$logback_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version"
+    implementation Ktor.server.core
+    implementation Ktor.server.netty
+    implementation Ktor.server.htmlBuilder
+    implementation KotlinX.serialization.json
+    implementation 'io.ktor:ktor-server-default-headers-jvm:_'
+    implementation 'io.ktor:ktor-server-auto-head-response-jvm:_'
+    implementation 'io.ktor:ktor-server-caching-headers-jvm:_'
+    implementation 'io.ktor:ktor-server-forwarded-header-jvm:_'
+    implementation 'io.ktor:ktor-server-conditional-headers-jvm:_'
+    implementation 'io.ktor:ktor-server-compression-jvm:_'
 
+    implementation "ch.qos.logback:logback-classic:_"
 
-    testImplementation "io.ktor:ktor-server-tests:$ktor_version"
-    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    testImplementation "io.mockk:mockk:1.12.1"
+    testImplementation "io.ktor:ktor-server-tests:_"
+    testImplementation Kotlin.test
+    testImplementation Testing.mockK
 }
 
 task copyShadowLibs(type: Copy) {

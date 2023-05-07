@@ -18,21 +18,25 @@ Possible environment variables:
 
 * `PORT`: The port the server listens on. Defaults to `8080`.
 * `DOMAIN`: The domain this application is available at, e.g. `drop.example.org`.
-* `IS_HTTPS`: Whether this application is available as HTTPS / behind an HTTPS reverse proxy (which it should be). Default to `true`.
-* `PATH_PREFIX`: When the application is available on a sub-path of the given domain (routed by a reverse proxy, e.g.), the path needs to be set here. Defaults to no path.
+* `IS_HTTPS`: Whether this application is available as HTTPS / behind an HTTPS reverse proxy (which it should be).
+  Default to `true`.
+* `PATH_PREFIX`: When the application is available on a sub-path of the given domain (routed by a reverse proxy, e.g.),
+  the path needs to be set here. Defaults to no path.
 * `FILE_KEEP_TIME_IN_HOURS`: The number of hours to keep a drop-record. Defaults to `24`.
 * `SHOW_GITHUB_LINK_IN_FOOTER`: Whether the GitHub link should be visible in the footer. Defaults to `true`.
-* `COLOR_CODE`: The hex-color-code the page should be styled in. Only colors on which white text is readable are supported yet. Without the leading '#'. Defaults to `ff9800`.
+* `COLOR_CODE`: The hex-color-code the page should be styled in. Only colors on which white text is readable are
+  supported yet. Without the leading '#'. Defaults to `ff9800`.
 * `SITE_TITLE`: The title of the site. Defaults to `Dead-Drop: Send secure information`.
 * `SITE_TITLE_SHORT`: The title of the site in short. Defaults to `Dead-Drop`.
 
 ### Data persistence
 
-If you want to persist the encrypted storage, and map it out of the docker container, the following mounting points are available:
+If you want to persist the encrypted storage, and map it out of the docker container, the following mounting points are
+available:
 
 * `/var/dead-drop/data`: Is the directory that contains the encrypted data (for at most 24 hours)
-* `/var/dead-drop/key/key.secret`: Is the file that contains the key for the server-side encryption (the data stored in 
-the data directory is encrypted another time before persisted in the given path).
+* `/var/dead-drop/key/key.secret`: Is the file that contains the key for the server-side encryption (the data stored in
+  the data directory is encrypted another time before persisted in the given path).
 
 ### Example docker-compose.yml
 
@@ -43,8 +47,6 @@ services:
     restart: unless-stopped
     ports:
       - 8080:8080 #Should be behind an SSL reverse proxy
-    environment:
-      - DOMAIN=drop.example.org
     volumes:
       - /srv/docker/dead-drop/data:/var/dead-drop/data:rw
       - /srv/docker/dead-drop/key:/var/dead-drop/key:rw
