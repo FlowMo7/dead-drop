@@ -22,9 +22,9 @@ fun main() {
     val port = System.getenv("PORT")?.takeIf { it.isNotBlank() } ?: "8080"
     val domain = System.getenv("DOMAIN")?.takeIf { it.isNotBlank() } ?: "localhost:$port"
     val pathPrefix = System.getenv("PATH_PREFIX")?.takeIf { it.isNotBlank() }
-    val isHttps = System.getenv("IS_HTTPS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: false
-    val dataDirectory = "./data" //for development purpose
-    val encryptionKeyPath = "./config/key.secret" //for development purpose
+    val isHttps = System.getenv("IS_HTTPS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
+    val dataDirectory = "/var/dead-drop/data" // "./data" //for development purpose
+    val encryptionKeyPath = "/var/dead-drop/key/key.secret"// "./config/key.secret" //for development purpose
     val siteTitle = System.getenv("SITE_TITLE")?.takeIf { it.isNotBlank() } ?: "Dead-Drop: Send secure information"
     val siteTitleShort = System.getenv("SITE_TITLE_SHORT")?.takeIf { it.isNotBlank() } ?: "Dead-Drop"
 
