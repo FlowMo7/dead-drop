@@ -13,10 +13,10 @@ stages:
 build application:
   stage: build_application
   script:
-    - ./gradlew clean build test shadowJar
+    - ./gradlew clean build test distZip
   artifacts:
     paths:
-      - build/libs/DeadDrop.jar
+      - build/distributions/dead-drop-0.0.1.zip
   tags:
     - maven
 

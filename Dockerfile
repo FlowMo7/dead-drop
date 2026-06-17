@@ -1,10 +1,18 @@
-FROM openjdk:19-jdk-alpine3.16
+FROM openjdk:22-jdk-bullseye
 
 EXPOSE ${PORT:-8080}
 
-RUN apk --no-cache add curl
+RUN apt-get -y update && \
+    apt-get install -y --no-install-recommends curl dumb-init
+
 HEALTHCHECK CMD curl -f http://127.0.0.1:${PORT}/status || exit 1
 
-COPY ./build/libs/DeadDrop.jar /DeadDrop.jar
+COPY ./build/distributions/dead-drop-0.0.1.zip /usr/src/dead-drop-0.0.1.zip
 
-CMD ["java", "-jar", "DeadDrop.jar"]
+RUN unzip /usr/src/dead-drop-0.0.1.zip -d /usr/src &&  \
+    rm /usr/src/dead-drop-0.0.1.zip && \
+    mv /usr/src/dead-drop-0.0.1 /var/dead-drop
+
+WORKDIR /var/dead-drop
+
+CMD ["dumb-init", "bin/dead-drop"]

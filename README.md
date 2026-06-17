@@ -60,7 +60,7 @@ I used (self-hosted) before creating this service.
 # LICENSE
 
 ```
-Copyright 2021 Florian Mötz
+Copyright 2026 Florian Mötz
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
