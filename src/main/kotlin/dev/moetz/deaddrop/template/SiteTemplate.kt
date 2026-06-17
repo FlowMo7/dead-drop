@@ -1,13 +1,30 @@
 package dev.moetz.deaddrop.template
 
 import io.ktor.server.html.*
-import kotlinx.html.*
+import kotlinx.html.FlowContent
+import kotlinx.html.HTML
+import kotlinx.html.a
+import kotlinx.html.body
+import kotlinx.html.div
+import kotlinx.html.footer
+import kotlinx.html.head
+import kotlinx.html.header
+import kotlinx.html.link
+import kotlinx.html.main
+import kotlinx.html.meta
+import kotlinx.html.nav
+import kotlinx.html.script
+import kotlinx.html.span
+import kotlinx.html.style
+import kotlinx.html.title
+import kotlinx.html.unsafe
 
 abstract class SiteTemplate(
     protected val pathPrefix: String?,
     protected val showGithubLinkInFooter: Boolean,
     protected val colorCode: String,
     protected val showLinkToInfoPage: Boolean = true,
+    protected val privacyPolicyLink: String?,
     protected val siteTitle: String,
     protected val siteTitleShort: String,
 ) : Template<HTML> {
@@ -106,31 +123,41 @@ abstract class SiteTemplate(
             footer(classes = "page-footer") {
                 div(classes = "container") {
                     div(classes = "row") {
-                        if (showGithubLinkInFooter) {
-                            div(classes = "col s6") {
+                        val footerLinks = buildList<Pair<String, String>> {
+
+                            if (showGithubLinkInFooter) {
+                                add(Pair("Open Source on GitHub", "https://github.com/FlowMo7/dead-drop"))
+                            }
+
+                            if (privacyPolicyLink != null) {
+                                add(Pair("Privacy Policy", privacyPolicyLink))
+                            }
+
+                            if (showLinkToInfoPage) {
+                                add(Pair("How is this safe?", "${combinedPathPrefix}info"))
+                            }
+                        }
+
+                        val size = when (footerLinks.size) {
+                            0, 1 -> "s12"
+                            2 -> "s6"
+                            3 -> "s4"
+                            4 -> "s3"
+                            else -> "s2"
+                        }
+                        footerLinks.forEachIndexed { index, (label, link) ->
+                            val align = when (index) {
+                                0 -> "left-align"
+                                footerLinks.lastIndex -> "right-align"
+                                else -> "center-align"
+                            }
+                            div(classes = "col $size $align") {
                                 a(
                                     classes = "link-color",
-                                    href = "https://github.com/FlowMo7/dead-drop"
+                                    href = link,
                                 ) {
                                     target = "_blank"
-                                    +"Open Source on GitHub"
-                                }
-                            }
-                            div(classes = "col s6") {
-                                if (showLinkToInfoPage) {
-                                    a(
-                                        classes = "right link-color",
-                                        href = "${combinedPathPrefix}info"
-                                    ) { +"How is this safe?" }
-                                }
-                            }
-                        } else {
-                            div(classes = "col s12") {
-                                if (showLinkToInfoPage) {
-                                    a(
-                                        classes = "right link-color",
-                                        href = "${combinedPathPrefix}info"
-                                    ) { +"How is this safe?" }
+                                    +label
                                 }
                             }
                         }

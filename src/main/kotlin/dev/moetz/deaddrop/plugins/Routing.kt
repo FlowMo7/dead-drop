@@ -17,7 +17,8 @@ fun Application.configure(
     showGithubLinkInFooter: Boolean,
     colorCode: String,
     siteTitle: String,
-    siteTitleShort: String
+    siteTitleShort: String,
+    sitePrivacyPolicyLink: String?,
 ) {
 
     routing {
@@ -43,6 +44,7 @@ fun Application.configure(
                     showLinkToInfoPage = true,
                     siteTitle = siteTitle,
                     siteTitleShort = siteTitleShort,
+                    sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                     keepFilesTimeInHours = keepFilesTimeInHours,
                 )
             ) {
@@ -66,6 +68,7 @@ fun Application.configure(
                         showLinkToInfoPage = true,
                         siteTitle = siteTitle,
                         siteTitleShort = siteTitleShort,
+                        sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                         dropId = dropId,
                     )
                 ) {
@@ -83,6 +86,7 @@ fun Application.configure(
                     showLinkToInfoPage = false,
                     siteTitle = siteTitle,
                     siteTitleShort = siteTitleShort,
+                    sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                     keepFilesTimeInHours = keepFilesTimeInHours,
                 )
             ) {

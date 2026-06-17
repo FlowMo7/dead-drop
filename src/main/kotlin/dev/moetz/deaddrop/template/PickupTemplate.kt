@@ -9,6 +9,7 @@ class PickupTemplate(
     showLinkToInfoPage: Boolean = true,
     siteTitle: String,
     siteTitleShort: String,
+    sitePrivacyPolicyLink: String?,
     private val dropId: String?,
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
@@ -17,6 +18,7 @@ class PickupTemplate(
     showLinkToInfoPage = showLinkToInfoPage,
     siteTitle = siteTitle,
     siteTitleShort = siteTitleShort,
+    privacyPolicyLink = sitePrivacyPolicyLink,
 ) {
 
     override fun FlowContent.content() {

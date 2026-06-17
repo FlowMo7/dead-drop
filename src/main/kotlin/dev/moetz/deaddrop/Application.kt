@@ -27,6 +27,7 @@ fun main() {
     val encryptionKeyPath = "/var/dead-drop/key/key.secret"// "./config/key.secret" //for development purpose
     val siteTitle = System.getenv("SITE_TITLE")?.takeIf { it.isNotBlank() } ?: "Dead-Drop: Send secure information"
     val siteTitleShort = System.getenv("SITE_TITLE_SHORT")?.takeIf { it.isNotBlank() } ?: "Dead-Drop"
+    val sitePrivacyPolicyLink = System.getenv("SITE_PRIVACY_POLICY")?.takeIf { it.isNotBlank() }
 
     //color code customization currently only works with colors where white text is visible on.
     val colorCode = System.getenv("COLOR_CODE")
@@ -98,7 +99,8 @@ fun main() {
             showGithubLinkInFooter = showGithubLinkInFooter,
             colorCode = colorCode,
             siteTitle = siteTitle,
-            siteTitleShort = siteTitleShort
+            siteTitleShort = siteTitleShort,
+            sitePrivacyPolicyLink = sitePrivacyPolicyLink,
         )
         configureApi(dataRepository, isHttps, domain, pathPrefix)
     }.start(wait = true)

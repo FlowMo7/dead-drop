@@ -1,7 +1,20 @@
 package dev.moetz.deaddrop.template
 
 import dev.moetz.deaddrop.combinePartsToPathPrefix
-import kotlinx.html.*
+import kotlinx.html.FlowContent
+import kotlinx.html.a
+import kotlinx.html.b
+import kotlinx.html.br
+import kotlinx.html.div
+import kotlinx.html.h5
+import kotlinx.html.hidden
+import kotlinx.html.id
+import kotlinx.html.onClick
+import kotlinx.html.p
+import kotlinx.html.span
+import kotlinx.html.style
+import kotlinx.html.textArea
+import kotlinx.html.unsafe
 
 class IndexTemplate(
     pathPrefix: String?,
@@ -10,6 +23,7 @@ class IndexTemplate(
     showLinkToInfoPage: Boolean = true,
     siteTitle: String,
     siteTitleShort: String,
+    sitePrivacyPolicyLink: String?,
     private val keepFilesTimeInHours: Int,
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
@@ -18,6 +32,7 @@ class IndexTemplate(
     showLinkToInfoPage = showLinkToInfoPage,
     siteTitle = siteTitle,
     siteTitleShort = siteTitleShort,
+    privacyPolicyLink = sitePrivacyPolicyLink,
 ) {
 
     override fun FlowContent.content() {
@@ -66,7 +81,10 @@ class IndexTemplate(
                         +"There was an error creating your drop. Please try again."
                     }
                 }
-                div(classes = "col s4") {
+            }
+
+            div(classes = "row") {
+                div(classes = "col s12 right-align") {
                     a(classes = "waves-effect waves-light btn right") {
                         style = "background-color:#$colorCode;"
                         onClick = "sendDrop(document.getElementById('drop_content').value)"
