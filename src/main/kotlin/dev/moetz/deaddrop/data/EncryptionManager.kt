@@ -13,6 +13,15 @@ class EncryptionManager(
     private val secretKeyFile: File
 ) {
 
+    init {
+        if (secretKeyFile.parentFile.exists().not()) {
+            secretKeyFile.parentFile.mkdirs()
+            if (secretKeyFile.parentFile.exists().not()) {
+                throw IllegalStateException("Could not create directory for secret key at '${secretKeyFile.parentFile.absolutePath}'.")
+            }
+        }
+    }
+
     private val secretKeyFileLock = Any()
     private fun getOrCreateSecretKey(): SecretKey {
         return synchronized(secretKeyFileLock) {
@@ -22,12 +31,6 @@ class EncryptionManager(
             } else {
                 val key = createSecretKey()
                 val encodedKey = key.encoded.base64Encode()
-                if (secretKeyFile.parentFile.exists().not()) {
-                    secretKeyFile.parentFile.mkdirs()
-                    if (secretKeyFile.parentFile.exists().not()) {
-                        throw IllegalStateException("Could not create directory ${secretKeyFile.parentFile.absolutePath}")
-                    }
-                }
                 secretKeyFile.createNewFile()
                 if (secretKeyFile.exists().not()) {
                     throw IllegalStateException("Could not create file at ${secretKeyFile.absolutePath}")
