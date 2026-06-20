@@ -68,3 +68,11 @@ function get(path, onComplete) {
     };
     request.send();
 }
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function () {
+        M.toast({html: 'Text copied!', 'classes': 'green-text'});
+    }, function (err) {
+        M.toast({html: 'Error copying text to clipboard.', 'classes': 'red-text'});
+    });
+}

@@ -106,6 +106,9 @@ fun Application.configure(
             resource(remotePath = "sjcl.js", resource = "sjcl/sjcl.js")
 
             resource(remotePath = "materialize.min.css", resource = "materialize/materialize.min.css")
+            resource(remotePath = "materialize.min.js", resource = "materialize/materialize.min.js")
+            resource(remotePath = "MaterialIcons.css", resource = "materialize/MaterialIcons.css")
+            resource(remotePath = "MaterialIcons-Regular.ttf", resource = "materialize/MaterialIcons-Regular.ttf")
             resource(remotePath = "styles.css", resource = "styles.css")
         }
 

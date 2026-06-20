@@ -1,25 +1,3 @@
 main {
     flex: 1 0 auto;
 }
-
-body {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-    background-color: var(--color-background);
-    color: var(--color-text);
-}
-
-.input-field-colors {
-    background-color: var(--color-background);
-    color: var(--color-text);
-}
-
-.page-footer {
-    background-color: var(--color-background);
-    color: var(--color-text);
-}
-
-.link-color {
-    color: var(--color-link);
-}

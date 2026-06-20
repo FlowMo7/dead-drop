@@ -9,6 +9,7 @@ import kotlinx.html.div
 import kotlinx.html.footer
 import kotlinx.html.head
 import kotlinx.html.header
+import kotlinx.html.id
 import kotlinx.html.link
 import kotlinx.html.main
 import kotlinx.html.meta
@@ -58,28 +59,14 @@ abstract class SiteTemplate(
                     +"--color-background: #ffffff;"
                     +"--color-link: #000000;"
                     +"}"
-                    +"/* light mode */"
-                    +"@media (prefers-color-scheme: light) {"
-                    +":root {"
-                    +"--color-background: #FFFFFF;"
-                    +"--color-text: #000000;"
-                    +"--color-link: #000000;"
-                    +"}"
-                    +"}"
-                    +"/* dark mode */"
-                    +"@media (prefers-color-scheme: dark) {"
-                    +":root {"
-                    +"--color-background: #000000;"
-                    +"--color-text: #FFFFFF;"
-                    +"--color-link: #$colorCode;"
-                    +"}"
-                    +"}"
-                    +"a { color:#$colorCode; }"
-                    +"h3 { color:#$colorCode; }"
-                    +"h5 { color:#$colorCode; }"
+                    +"body {background-color: #202123;color: #fff;nav {background-color: #26A69A;}.card {background-color: rgba(255,255,255,0.2);}.btn {background-color: #EE6F73;}.divider {opacity: 0.2;}.sidenav {background-color: #2D2D31;li {a {&:not(.subheader){color: #89B2F5;&:hover {background-color: #3B4043;}}&.subheader {color:#9AA0A6;}.material-icons {color: #9AA0A6;}}}}.collection {border: 1px solid rgba(255,255,255,0.2);.collection-item {background-color: rgba(255,255,255,0.2);border-bottom: 1px solid rgba(255,255,255,0.2);}}}"
                 }
             }
             link(href = "${combinedPathPrefix}static/styles.css", rel = "stylesheet", type = "text/css")
+            link(href = "${combinedPathPrefix}static/MaterialIcons.css", rel = "stylesheet", type = "text/css")
+            script(src = "${combinedPathPrefix}static/materialize.min.js") {
+
+            }
             script(src = "${combinedPathPrefix}static/sjcl.js") {
 
             }
@@ -103,11 +90,16 @@ abstract class SiteTemplate(
         }
         body {
             header {
-                nav {
-                    style = "background-color: #$colorCode;"
-                    div(classes = "nav-wrapper") {
-                        span(classes = "brand-logo center") {
-                            a(href = combinedPathPrefix) { +siteTitleShort }
+                nav(classes = "orange darken-1 nav-extended") {
+                    div(classes = "container") {
+                        div(classes = "nav-wrapper") {
+                            a(classes = "brand-logo center") {
+                                id = "logo-container"
+                                span {
+                                    style = "text-wrap: nowrap;"
+                                    +siteTitleShort
+                                }
+                            }
                         }
                     }
                 }
@@ -120,44 +112,46 @@ abstract class SiteTemplate(
                 }
             }
 
-            footer(classes = "page-footer") {
-                div(classes = "container") {
-                    div(classes = "row") {
-                        val footerLinks = buildList<Pair<String, String>> {
+            footer(classes = "page-footer orange") {
+                div(classes = "footer-copyright") {
+                    div(classes = "container") {
+                        div(classes = "row") {
+                            val footerLinks = buildList<Pair<String, String>> {
 
-                            if (showGithubLinkInFooter) {
-                                add(Pair("Open Source on GitHub", "https://github.com/FlowMo7/dead-drop"))
+                                if (showGithubLinkInFooter) {
+                                    add(Pair("Open Source on GitHub", "https://github.com/FlowMo7/dead-drop"))
+                                }
+
+                                if (privacyPolicyLink != null) {
+                                    add(Pair("Privacy Policy", privacyPolicyLink))
+                                }
+
+                                if (showLinkToInfoPage) {
+                                    add(Pair("How is this safe?", "${combinedPathPrefix}info"))
+                                }
                             }
 
-                            if (privacyPolicyLink != null) {
-                                add(Pair("Privacy Policy", privacyPolicyLink))
+                            val size = when (footerLinks.size) {
+                                0, 1 -> "s12"
+                                2 -> "s6"
+                                3 -> "s4"
+                                4 -> "s3"
+                                else -> "s2"
                             }
-
-                            if (showLinkToInfoPage) {
-                                add(Pair("How is this safe?", "${combinedPathPrefix}info"))
-                            }
-                        }
-
-                        val size = when (footerLinks.size) {
-                            0, 1 -> "s12"
-                            2 -> "s6"
-                            3 -> "s4"
-                            4 -> "s3"
-                            else -> "s2"
-                        }
-                        footerLinks.forEachIndexed { index, (label, link) ->
-                            val align = when (index) {
-                                0 -> "left-align"
-                                footerLinks.lastIndex -> "right-align"
-                                else -> "center-align"
-                            }
-                            div(classes = "col $size $align") {
-                                a(
-                                    classes = "link-color",
-                                    href = link,
-                                ) {
-                                    target = "_blank"
-                                    +label
+                            footerLinks.forEachIndexed { index, (label, link) ->
+                                val align = when (index) {
+                                    0 -> "left-align"
+                                    footerLinks.lastIndex -> "right-align"
+                                    else -> "center-align"
+                                }
+                                div(classes = "col $size $align") {
+                                    a(
+                                        classes = "black-text",
+                                        href = link,
+                                    ) {
+                                        target = "_blank"
+                                        +label
+                                    }
                                 }
                             }
                         }

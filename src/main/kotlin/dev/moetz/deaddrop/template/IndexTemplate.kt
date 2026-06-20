@@ -8,6 +8,7 @@ import kotlinx.html.br
 import kotlinx.html.div
 import kotlinx.html.h5
 import kotlinx.html.hidden
+import kotlinx.html.i
 import kotlinx.html.id
 import kotlinx.html.onClick
 import kotlinx.html.p
@@ -67,8 +68,8 @@ class IndexTemplate(
 
             div(classes = "row") {
                 div(classes = "col s12") {
-                    textArea(cols = "70", rows = "8") {
-                        style = "min-height:200px;padding:10px;color:var(--color-text);"
+                    textArea(cols = "70", rows = "8", classes = "white-text") {
+                        style = "min-height:200px;padding:10px;"
                         name = "message"
                         id = "drop_content"
                         placeholder = "Message to encrypt"
@@ -85,9 +86,11 @@ class IndexTemplate(
 
             div(classes = "row") {
                 div(classes = "col s12 right-align") {
-                    a(classes = "waves-effect waves-light btn right") {
-                        style = "background-color:#$colorCode;"
+                    a(classes = "waves-effect waves-light btn right orange black-text") {
                         onClick = "sendDrop(document.getElementById('drop_content').value)"
+                        i(classes = "material-icons right") {
+                            +"send"
+                        }
                         +"Make the drop!"
                     }
                 }
@@ -101,7 +104,7 @@ class IndexTemplate(
             div("row") {
                 div(classes = "col s12") {
                     h5(classes = "green-text center") {
-                        +"Drop made!"
+                        +"✅ Drop made!"
                     }
                 }
             }
@@ -121,7 +124,10 @@ class IndexTemplate(
                 div(classes = "col s12") {
                     div(classes = "card") {
                         div(classes = "card-content black-text grey lighten-3") {
-                            span(classes = "card-title") { +"Hi," }
+                            id = "share-card"
+                            span(classes = "card-title") {
+                                +"Hi,"
+                            }
                             p {
                                 id = "message_to_share_drop"
 
@@ -163,11 +169,22 @@ class IndexTemplate(
             }
 
             div(classes = "row") {
-                div(classes = "col s12") {
-                    a(classes = "waves-effect waves-light btn-small right") {
-                        style = "background-color:#$colorCode;"
+                div(classes = "col s6 left-align") {
+                    a(classes = "waves-effect waves-light btn-small orange black-text") {
                         onClick = "window.location.assign('${combinePartsToPathPrefix(pathPrefix)}')"
+                        i(classes = "material-icons left") {
+                            +"refresh"
+                        }
                         +"Make another drop"
+                    }
+                }
+                div(classes = "col s6 right-align") {
+                    a(classes = "waves-effect waves-light btn-small blue white-text") {
+                        onClick = "copyToClipboard(document.getElementById('message_to_share_drop').innerHTML);"
+                        i(classes = "material-icons right") {
+                            +"content_copy"
+                        }
+                        +"Copy message "
                     }
                 }
             }
