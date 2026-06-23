@@ -38,8 +38,7 @@ class Localization(
 
     @OptIn(ExperimentalSerializationApi::class)
     private val entries: Map<String, String> by lazy {
-        val classloader = Thread.currentThread().contextClassLoader
-        classloader.getResourceAsStream("./locales/${currentLanguage.identifier}/strings.json")!!.use { stream ->
+        this.javaClass.getResourceAsStream("./locales/${currentLanguage.identifier}/strings.json")!!.use { stream ->
             json.decodeFromStream(
                 MapSerializer<String, String>(String.serializer(), String.serializer()),
                 stream,
