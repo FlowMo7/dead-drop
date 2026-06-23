@@ -1,5 +1,6 @@
 package dev.moetz.deaddrop.template
 
+import dev.moetz.deaddrop.Localization
 import kotlinx.html.FlowContent
 import kotlinx.html.a
 import kotlinx.html.br
@@ -16,6 +17,8 @@ class InfoTemplate(
     siteTitle: String,
     siteTitleShort: String,
     sitePrivacyPolicyLink: String?,
+    localization: Localization,
+    hl: String?,
     private val keepFilesTimeInHours: Int,
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
@@ -25,62 +28,63 @@ class InfoTemplate(
     siteTitle = siteTitle,
     siteTitleShort = siteTitleShort,
     privacyPolicyLink = sitePrivacyPolicyLink,
+    localization = localization,
+    hl = hl,
 ) {
 
     override fun FlowContent.content() {
         div(classes = "section") {
             div(classes = "row") {
                 div("col s12") {
-                    h3 { +"How is this safe?" }
+                    h3 { +localization["info_title"] }
                 }
             }
             div(classes = "row") {
                 div("col s12") {
-                    +"Here are the steps this platform does with your message:"
+                    +localization["info_kicker"]
                 }
             }
             div(classes = "row") {
                 div("col s12") {
                     unsafe { +"&bullet;&nbsp;" }
-                    +"Once you click on "
-                    i { +"Make the drop!" }
-                    +", the message is encrypted in your browser with a password generated in your browser."
+                    +localization["info_bullet_point_1_before_link"]
+                    i { +localization["index_btn_make_the_drop"] }
+                    +localization["info_bullet_point_1_after_link"]
                     br()
                     unsafe { +"&bullet;&nbsp;" }
-                    +"This means, that the data does not leave your browser unencrypted, as well as your password."
+                    +localization["info_bullet_point_2"]
                     br()
                     unsafe { +"&bullet;&nbsp;" }
-                    +"The encrypted data is then sent to the backend, where it is stored for a maximum of $keepFilesTimeInHours hours (or when the drop is fetched, whichever is earlier)."
+                    +localization.get("info_bullet_point_3", keepFilesTimeInHours)
                     br()
                     unsafe { +"&bullet;&nbsp;" }
-                    +"When getting the drop, the encrypted data is fetched from the server (and instantly deleted when doing so), and is only encrypted in the browser. So, also here, the inserted password never leaves the browser."
+                    +localization["info_bullet_point_4"]
                     br()
                     unsafe { +"&bullet;&nbsp;" }
-                    +"So the server (we) cannot see your message, as we never get the password for it."
+                    +localization["info_bullet_point_5"]
+                }
 
-                    br()
-                    br()
-
-                    +"The encryption algorithm used is "
+                div("col s12") {
+                    +localization["info_encryption_before_link"]
                     a(href = "https://github.com/bitwiseshiftleft/sjcl") {
                         target = "_blank"
                         +"github.com/bitwiseshiftleft/sjcl"
                     }
-                    +", which is a JavaScript crypto library developed at Stanford."
+                    +localization["info_encryption_after_link"]
                     br()
-                    +"The code is "
+                    +localization["info_open_source_before_link"]
                     a(href = "https://github.com/FlowMo7/dead-drop") {
                         target = "_blank"
-                        +"open source"
+                        +localization["info_open_source_link_text"]
                     }
-                    +", and you can easily inspect what is going on on this website with your developer tools."
+                    +localization["info_open_source_after_link"]
                     br()
-                    +"Furthermore, feel free to host your "
+                    +localization["info_self_host_before_link"]
                     a(href = "https://github.com/FlowMo7/dead-drop") {
                         target = "_blank"
-                        +"own instance of this service"
+                        +localization["info_self_host_link_text"]
                     }
-                    +", so that we do not even get to see your encrypted data at any time, so that you do not have to rely on us not trying to decrypt your data."
+                    +localization["info_self_host_after_link"]
                 }
             }
         }

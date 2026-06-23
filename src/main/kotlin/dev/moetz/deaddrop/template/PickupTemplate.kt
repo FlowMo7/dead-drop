@@ -1,6 +1,20 @@
 package dev.moetz.deaddrop.template
 
-import kotlinx.html.*
+import dev.moetz.deaddrop.Localization
+import kotlinx.html.FlowContent
+import kotlinx.html.a
+import kotlinx.html.b
+import kotlinx.html.br
+import kotlinx.html.div
+import kotlinx.html.h3
+import kotlinx.html.hidden
+import kotlinx.html.i
+import kotlinx.html.id
+import kotlinx.html.onClick
+import kotlinx.html.pre
+import kotlinx.html.style
+import kotlinx.html.textInput
+import kotlinx.html.unsafe
 
 class PickupTemplate(
     pathPrefix: String?,
@@ -10,6 +24,8 @@ class PickupTemplate(
     siteTitle: String,
     siteTitleShort: String,
     sitePrivacyPolicyLink: String?,
+    localization: Localization,
+    hl: String?,
     private val dropId: String?,
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
@@ -19,6 +35,8 @@ class PickupTemplate(
     siteTitle = siteTitle,
     siteTitleShort = siteTitleShort,
     privacyPolicyLink = sitePrivacyPolicyLink,
+    localization = localization,
+    hl = hl,
 ) {
 
     override fun FlowContent.content() {
@@ -27,24 +45,26 @@ class PickupTemplate(
 
             div("row") {
                 div("col s12") {
-                    +"Enter the password you got provided with this link."
+                    +localization["pickup_kicker"]
                 }
             }
             div("row") {
                 div("col s12") {
-                    +"This will only work "
-                    b { +"once" }
-                    +"! Clicking "
-                    i { +"Get the drop" }
-                    +" will delete the message permanently, regardless of whether the password was correct or not."
+                    val text = localization["pickup_description_before_button_text"]
+                    val parts = text.split(localization["pickup_description_once_word_to_make_bold"])
+                    +parts[0]
+                    b { +localization["pickup_description_once_word_to_make_bold"] }
+                    +parts[1]
+                    i { +localization["pickup_btn_get_the_drop"] }
+                    +localization["pickup_description_after_button_text"]
                 }
             }
 
             div("row") {
                 div("input-field col s12") {
-                    textInput(classes = "validate input-field-colors") {
+                    textInput(classes = "validate white-text") {
                         id = "drop_password"
-                        placeholder = "Enter the password here"
+                        placeholder = localization["pickup_password_placeholder"]
                     }
                 }
                 div(classes = "col s12") {
@@ -54,7 +74,7 @@ class PickupTemplate(
                                 "'$dropId', " +
                                 "document.getElementById('drop_password').value" +
                                 ")"
-                        +"Get the drop"
+                        +localization["pickup_btn_get_the_drop"]
                     }
                 }
             }
@@ -65,7 +85,7 @@ class PickupTemplate(
             hidden = true
 
             h3 {
-                +"Your drop:"
+                +localization["pickup_you_drop_title"]
             }
 
             div(classes = "divider") {
@@ -87,27 +107,29 @@ class PickupTemplate(
             hidden = true
 
             div(classes = "row") {
-                h3(classes = "red-text") {
-                    +"Error"
+                div(classes = "col s12") {
+                    h3(classes = "red-text") {
+                        +localization["pickup_error_title"]
+                    }
                 }
             }
             div(classes = "row") {
                 div(classes = "col s12") {
-                    +"There was an error getting your drop. This can either be:"
+                    +localization["pickup_error_description_kicker"]
                     br()
                     br()
-
-                    +"The drop has already been fetched. You can only open / get a drop once. If you didn't get the drop yet, it might be that someone else tried (and if they got the password, may have succeeded) to get your drop. If you are unsure, you should consider that the dropped content is no longer safe in this scenario."
-
-                    br()
-                    br()
-                    +"The entered password was wrong. You can only open / get a drop once, and if you enter the wrong password, the drop is gone forever. If you didn't get the drop yet, it might be that someone else tried (and if they got the password, may have succeeded) to get your drop. If you are unsure, you should consider that the dropped content is no longer safe in this scenario."
+                    unsafe { +"&bullet;&nbsp;" }
+                    +localization["pickup_error_description_bullet_point_1"]
 
                     br()
                     br()
-                    b {
-                        +"In each case, if neither you nor the creator of the drop took actions that could lead to this scenario, please consider that the content of your drop may be in malicious hands as of now."
-                    }
+                    unsafe { +"&bullet;&nbsp;" }
+                    +localization["pickup_error_description_bullet_point_2"]
+                }
+                div(classes = "col s12") {
+                    br()
+                    br()
+                    b { +localization["pickup_error_description_bottom_line"] }
                 }
             }
         }

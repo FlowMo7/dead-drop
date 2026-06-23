@@ -1,5 +1,6 @@
 package dev.moetz.deaddrop.template
 
+import dev.moetz.deaddrop.Localization
 import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
@@ -28,6 +29,8 @@ abstract class SiteTemplate(
     protected val privacyPolicyLink: String?,
     protected val siteTitle: String,
     protected val siteTitleShort: String,
+    protected val localization: Localization,
+    protected val hl: String?,
 ) : Template<HTML> {
 
     protected val combinedPathPrefix: String = buildString {
@@ -119,15 +122,30 @@ abstract class SiteTemplate(
                             val footerLinks = buildList<Pair<String, String>> {
 
                                 if (showGithubLinkInFooter) {
-                                    add(Pair("Open Source on GitHub", "https://github.com/FlowMo7/dead-drop"))
+                                    add(
+                                        Pair(
+                                            localization["footer_open_source_on_github"],
+                                            "https://github.com/FlowMo7/dead-drop"
+                                        )
+                                    )
                                 }
 
                                 if (privacyPolicyLink != null) {
-                                    add(Pair("Privacy Policy", privacyPolicyLink))
+                                    add(
+                                        Pair(
+                                            localization["footer_privacy_policy"],
+                                            privacyPolicyLink
+                                        )
+                                    )
                                 }
 
                                 if (showLinkToInfoPage) {
-                                    add(Pair("How is this safe?", "${combinedPathPrefix}info"))
+                                    add(
+                                        Pair(
+                                            localization["footer_link_to_info_page"],
+                                            "${combinedPathPrefix}info${if (hl != null) "?hl=$hl" else ""}"
+                                        )
+                                    )
                                 }
                             }
 

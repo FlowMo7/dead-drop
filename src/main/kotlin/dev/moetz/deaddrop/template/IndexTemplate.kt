@@ -1,6 +1,6 @@
 package dev.moetz.deaddrop.template
 
-import dev.moetz.deaddrop.combinePartsToPathPrefix
+import dev.moetz.deaddrop.Localization
 import kotlinx.html.FlowContent
 import kotlinx.html.a
 import kotlinx.html.b
@@ -25,6 +25,8 @@ class IndexTemplate(
     siteTitle: String,
     siteTitleShort: String,
     sitePrivacyPolicyLink: String?,
+    localization: Localization,
+    hl: String?,
     private val keepFilesTimeInHours: Int,
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
@@ -34,6 +36,8 @@ class IndexTemplate(
     siteTitle = siteTitle,
     siteTitleShort = siteTitleShort,
     privacyPolicyLink = sitePrivacyPolicyLink,
+    localization = localization,
+    hl = hl,
 ) {
 
     override fun FlowContent.content() {
@@ -44,25 +48,25 @@ class IndexTemplate(
 
             div(classes = "row") {
                 div(classes = "col s12") {
-                    +"Want to send something private? A password, love-note or something else, no-one else than the recipient should see?"
+                    +localization["index_description_first_line"]
                     br()
                     br()
-                    +"This service will:"
-                    br()
-                    unsafe { +"&bullet;&nbsp;" }
-                    +"Encrypt your message in your browser with a randomly generated password."
+                    +localization["index_description_second_line"]
                     br()
                     unsafe { +"&bullet;&nbsp;" }
-                    +"Upload the encrypted message to the server (while not sharing the password with the server)"
+                    +localization["index_description_bullet_point_1"]
                     br()
                     unsafe { +"&bullet;&nbsp;" }
-                    +"Display the password as well as a link to get the message back, which you can then share with your recipient."
+                    +localization["index_description_bullet_point_2"]
+                    br()
+                    unsafe { +"&bullet;&nbsp;" }
+                    +localization["index_description_bullet_point_3"]
                 }
             }
 
             div(classes = "row") {
                 div(classes = "col s12") {
-                    +"Enter your message below:"
+                    +localization["index_enter_message_below"]
                 }
             }
 
@@ -72,14 +76,14 @@ class IndexTemplate(
                         style = "min-height:200px;padding:10px;"
                         name = "message"
                         id = "drop_content"
-                        placeholder = "Message to encrypt"
+                        placeholder = localization["index_enter_message_placeholder"]
                     }
                 }
-                div(classes = "col s8") {
+                div(classes = "col s8 offset-s2 center-align") {
                     span(classes = "red-text") {
                         id = "error_message"
                         hidden = true
-                        +"There was an error creating your drop. Please try again."
+                        +localization["index_error_creating_drop"]
                     }
                 }
             }
@@ -91,7 +95,7 @@ class IndexTemplate(
                         i(classes = "material-icons right") {
                             +"send"
                         }
-                        +"Make the drop!"
+                        +localization["index_btn_make_the_drop"]
                     }
                 }
             }
@@ -104,19 +108,13 @@ class IndexTemplate(
             div("row") {
                 div(classes = "col s12") {
                     h5(classes = "green-text center") {
-                        +"✅ Drop made!"
+                        +"✅ ${localization["index_drop_made_success"]}"
                     }
                 }
             }
             div("row") {
                 div(classes = "col s12") {
-                    +"Your recipient needs the link as well as the password to get the drop."
-                }
-                div(classes = "col s12") {
-                    +"It might be best to just fully copy the message below to your recipient."
-                }
-                div(classes = "col s12") {
-                    +"Note, that for additional security, the link and password may be sent on separate channels (e.g. mail and a messenger)"
+                    +localization["index_drop_made_description"]
                 }
             }
 
@@ -126,21 +124,21 @@ class IndexTemplate(
                         div(classes = "card-content black-text grey lighten-3") {
                             id = "share-card"
                             span(classes = "card-title") {
-                                +"Hi,"
+                                +localization["drop_message_1_greeting"]
                             }
                             p {
                                 id = "message_to_share_drop"
 
-                                +"I'm sending you some secure information."
+                                +localization["drop_message_2_kicker"]
                                 br()
-                                +"Location: "
+                                +localization["drop_message_3_link"]
                                 b {
                                     span {
                                         id = "drop_share_link"
                                     }
                                 }
                                 br()
-                                +"Password: "
+                                +localization["drop_message_4_password"]
 
                                 b {
                                     span {
@@ -150,41 +148,62 @@ class IndexTemplate(
                                 br()
                                 br()
 
-                                b { +"Warning!" }
+                                b { +localization["drop_message_5_warning"] }
                                 br()
 
-                                +"This drop will only work "
-                                b { +"once" }
-                                +", so be careful with the password, and make sure to copy the data immediately."
+                                +localization["drop_message_6_description_1"]
                                 br()
 
-                                +"After you pick it up (either successfully or with e.g. a wrong password), the data will self-destruct and won't be available anymore."
+                                +localization["drop_message_7_description_2"]
                                 br()
 
-                                +"This link will only work for $keepFilesTimeInHours hours, after that, the data will self-destruct as well."
+                                +localization.get("drop_message_8_description_3_time", keepFilesTimeInHours)
                             }
                         }
                     }
                 }
             }
 
+            val message = buildString {
+                append(localization["drop_message_1_greeting"])
+                appendLine()
+                append(localization["drop_message_2_kicker"])
+                appendLine()
+                append(localization["drop_message_3_link"])
+                append("\" + document.getElementById('drop_share_link').innerHTML + \"")
+                appendLine()
+                append(localization["drop_message_4_password"])
+                append("\" + document.getElementById('drop_share_password').innerHTML + \"")
+                appendLine()
+                appendLine()
+                append(localization["drop_message_5_warning"])
+                appendLine()
+                append(localization["drop_message_6_description_1"])
+                appendLine()
+                append(localization["drop_message_7_description_2"])
+                appendLine()
+                append(localization.get("drop_message_8_description_3_time", keepFilesTimeInHours))
+            }.replace("\n", "\\n")
+
             div(classes = "row") {
-                div(classes = "col s6 left-align") {
-                    a(classes = "waves-effect waves-light btn-small orange black-text") {
-                        onClick = "window.location.assign('${combinePartsToPathPrefix(pathPrefix)}')"
-                        i(classes = "material-icons left") {
-                            +"refresh"
-                        }
-                        +"Make another drop"
-                    }
-                }
-                div(classes = "col s6 right-align") {
-                    a(classes = "waves-effect waves-light btn-small blue white-text") {
-                        onClick = "copyToClipboard(document.getElementById('message_to_share_drop').innerHTML);"
+                div(classes = "col s12 m6 l6 left-align") {
+                    a(classes = "waves-effect waves-light btn blue white-text") {
+                        style = "margin-bottom: 12px"
+                        onClick = "copyToClipboard(\"$message\");"
                         i(classes = "material-icons right") {
                             +"content_copy"
                         }
-                        +"Copy message "
+                        +localization["index_btn_copy_message"]
+                    }
+                }
+
+                div(classes = "col s12 m6 l6 right-align") {
+                    a(classes = "waves-effect waves-light btn orange black-text") {
+                        onClick = "window.location.reload();"
+                        i(classes = "material-icons left") {
+                            +"refresh"
+                        }
+                        +localization["index_btn_make_another_drop"]
                     }
                 }
             }

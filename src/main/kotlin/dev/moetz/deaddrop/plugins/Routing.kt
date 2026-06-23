@@ -1,5 +1,6 @@
 package dev.moetz.deaddrop.plugins
 
+import dev.moetz.deaddrop.Localization
 import dev.moetz.deaddrop.template.IndexTemplate
 import dev.moetz.deaddrop.template.InfoTemplate
 import dev.moetz.deaddrop.template.PickupTemplate
@@ -7,8 +8,45 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.html.*
 import io.ktor.server.http.content.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.pipeline.*
+
+
+fun PipelineContext<Unit, ApplicationCall>.localization(): Localization {
+    val languageFromHlQueryParameter = call.request.queryParameters["hl"]
+        ?.takeIf { it.isNotBlank() }
+        ?.let { hl ->
+            Localization.Language.entries.firstOrNull { language ->
+                language.identifier.equals(hl, ignoreCase = true)
+            }
+        }
+
+    val languageFromAcceptLanguageHeader = call.request.acceptLanguageItems()
+        .firstNotNullOfOrNull { headerValue ->
+            Localization.Language.entries.firstOrNull { language ->
+                language.identifier.equals(headerValue.value, ignoreCase = true)
+            }
+        }
+    return Localization(
+        currentLanguage = languageFromHlQueryParameter
+            ?: languageFromAcceptLanguageHeader
+            ?: Localization.Language.EN
+    )
+}
+
+fun PipelineContext<Unit, ApplicationCall>.hlParameterIfPresentAndValidLanguage(): String? {
+    val languageFromHlQueryParameter = call.request.queryParameters["hl"]
+        ?.takeIf { it.isNotBlank() }
+        ?.let { hl ->
+            Localization.Language.entries.firstOrNull { language ->
+                language.identifier.equals(hl, ignoreCase = true)
+            }
+        }
+
+    return languageFromHlQueryParameter?.identifier
+}
 
 
 fun Application.configure(
@@ -36,19 +74,26 @@ fun Application.configure(
         }
 
         get {
-            call.respondHtmlTemplate(
-                IndexTemplate(
-                    pathPrefix = pathPrefix,
-                    showGithubLinkInFooter = showGithubLinkInFooter,
-                    colorCode = colorCode,
-                    showLinkToInfoPage = true,
-                    siteTitle = siteTitle,
-                    siteTitleShort = siteTitleShort,
-                    sitePrivacyPolicyLink = sitePrivacyPolicyLink,
-                    keepFilesTimeInHours = keepFilesTimeInHours,
-                )
-            ) {
+            try {
+                call.respondHtmlTemplate(
+                    IndexTemplate(
+                        pathPrefix = pathPrefix,
+                        showGithubLinkInFooter = showGithubLinkInFooter,
+                        colorCode = colorCode,
+                        showLinkToInfoPage = true,
+                        siteTitle = siteTitle,
+                        siteTitleShort = siteTitleShort,
+                        sitePrivacyPolicyLink = sitePrivacyPolicyLink,
+                        keepFilesTimeInHours = keepFilesTimeInHours,
+                        localization = localization(),
+                        hl = hlParameterIfPresentAndValidLanguage(),
+                    )
+                ) {
 
+                }
+            } catch (throwable: Throwable) {
+                throwable.printStackTrace()
+                throw throwable
             }
         }
 
@@ -69,6 +114,8 @@ fun Application.configure(
                         siteTitle = siteTitle,
                         siteTitleShort = siteTitleShort,
                         sitePrivacyPolicyLink = sitePrivacyPolicyLink,
+                        localization = localization(),
+                        hl = hlParameterIfPresentAndValidLanguage(),
                         dropId = dropId,
                     )
                 ) {
@@ -88,6 +135,8 @@ fun Application.configure(
                     siteTitleShort = siteTitleShort,
                     sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                     keepFilesTimeInHours = keepFilesTimeInHours,
+                    localization = localization(),
+                    hl = hlParameterIfPresentAndValidLanguage(),
                 )
             ) {
 
