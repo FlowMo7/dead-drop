@@ -16,6 +16,7 @@ import io.ktor.server.plugins.conditionalheaders.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.forwardedheaders.*
 import java.io.File
+import kotlin.time.Duration.Companion.hours
 
 fun main() {
 
@@ -48,8 +49,8 @@ fun main() {
     val dataRepository = DataRepository(
         dataFolderPath = dataDirectory,
         encryptionManager = encryptionManager,
-        keepFilesTimeInSeconds = (60L * 60 * keepFilesTimeInHours),
-        timePeriodToSweepOverdueFilesInSeconds = (60L * 60) /* every hour */
+        keepFilesTime = keepFilesTimeInHours.hours,
+        timePeriodToSweepOverdueFiles = 1.hours,
     )
 
     val shynet = Shynet(

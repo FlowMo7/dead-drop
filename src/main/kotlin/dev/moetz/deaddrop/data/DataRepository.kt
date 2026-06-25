@@ -1,22 +1,27 @@
+@file:OptIn(ExperimentalTime::class)
+
 package dev.moetz.deaddrop.data
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import java.io.File
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.*
+import kotlin.time.Clock
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 class DataRepository(
     private val dataFolderPath: String,
     private val encryptionManager: EncryptionManager,
-    private val keepFilesTimeInSeconds: Long,
-    private val timePeriodToSweepOverdueFilesInSeconds: Long
+    private val keepFilesTime: Duration,
+    private val timePeriodToSweepOverdueFiles: Duration,
 ) {
 
     private val dataFolder: File
@@ -37,20 +42,22 @@ class DataRepository(
     private val dataFolderCreateMutex = Mutex()
 
     init {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.Default) {
             while (isActive) {
-                delay(1000 * timePeriodToSweepOverdueFilesInSeconds)
+                delay(timePeriodToSweepOverdueFiles)
                 cleanUpOverdueFiles()
             }
         }
     }
 
     private suspend fun cleanUpOverdueFiles() {
-        val cutOffDateTime = LocalDateTime.now().minusSeconds(keepFilesTimeInSeconds)
-        dataFolder.listFiles()?.toList()
-            .orEmpty()
-            .filter { file -> file.lastModifiedAsLocalDateTime().isBefore(cutOffDateTime) }
-            .forEach { file -> file.delete() }
+        withContext(Dispatchers.IO) {
+            val cutOffDateTime = Clock.System.now().minus(keepFilesTime)
+            dataFolder.listFiles()?.toList()
+                .orEmpty()
+                .filter { file -> file.lastModifiedAsInstant() < cutOffDateTime }
+                .forEach { file -> file.delete() }
+        }
     }
 
     private suspend fun getNewDropFile(): File {
@@ -75,8 +82,8 @@ class DataRepository(
     }
 
     private fun File.isOverdue(): Boolean {
-        val cutOffDateTime = LocalDateTime.now().minusSeconds(keepFilesTimeInSeconds)
-        return this.lastModifiedAsLocalDateTime().isBefore(cutOffDateTime)
+        val cutOffDateTime = Clock.System.now().minus(keepFilesTime)
+        return this.lastModifiedAsInstant() < cutOffDateTime
     }
 
     suspend fun getDrop(id: String): String? {
@@ -98,9 +105,9 @@ class DataRepository(
         }
     }
 
-    private fun File.lastModifiedAsLocalDateTime(): LocalDateTime {
+    private fun File.lastModifiedAsInstant(): Instant {
         val timestamp = this.lastModified()
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
+        return Instant.fromEpochMilliseconds(timestamp)
     }
 
 }

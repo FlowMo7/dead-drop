@@ -3,13 +3,20 @@ package dev.moetz.deaddrop.data
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.io.File
 import java.time.ZonedDateTime
+import kotlin.time.Duration.Companion.seconds
 
 class DataRepositoryTest {
 
@@ -33,8 +40,8 @@ class DataRepositoryTest {
         dataRepository = DataRepository(
             dataFolderPath = dataFolderPath.absolutePath,
             encryptionManager = encryptionManager,
-            keepFilesTimeInSeconds = 100,
-            timePeriodToSweepOverdueFilesInSeconds = 100
+            keepFilesTime = 100.seconds,
+            timePeriodToSweepOverdueFiles = 100.seconds,
         )
 
         every { encryptionManager.encrypt(any()) } returns "encryptedContent"
@@ -57,8 +64,8 @@ class DataRepositoryTest {
         dataRepository = DataRepository(
             dataFolderPath = dataFolderPath.absolutePath,
             encryptionManager = encryptionManager,
-            keepFilesTimeInSeconds = 100,
-            timePeriodToSweepOverdueFilesInSeconds = 100
+            keepFilesTime = 100.seconds,
+            timePeriodToSweepOverdueFiles = 100.seconds,
         )
 
         every { encryptionManager.encrypt(any()) } returns "encryptedContent12"
@@ -85,8 +92,8 @@ class DataRepositoryTest {
         dataRepository = DataRepository(
             dataFolderPath = dataFolderPath.absolutePath,
             encryptionManager = encryptionManager,
-            keepFilesTimeInSeconds = 100,
-            timePeriodToSweepOverdueFilesInSeconds = 100
+            keepFilesTime = 100.seconds,
+            timePeriodToSweepOverdueFiles = 100.seconds,
         )
 
         every { encryptionManager.decrypt("encryptedContent123") } returns "some-content".toByteArray(Charsets.UTF_8)
@@ -110,8 +117,8 @@ class DataRepositoryTest {
         dataRepository = DataRepository(
             dataFolderPath = dataFolderPath.absolutePath,
             encryptionManager = encryptionManager,
-            keepFilesTimeInSeconds = 100,
-            timePeriodToSweepOverdueFilesInSeconds = 100
+            keepFilesTime = 100.seconds,
+            timePeriodToSweepOverdueFiles = 100.seconds,
         )
 
         every { encryptionManager.decrypt("encryptedContent123") } returns "some-content".toByteArray(Charsets.UTF_8)
@@ -132,8 +139,8 @@ class DataRepositoryTest {
         dataRepository = DataRepository(
             dataFolderPath = dataFolderPath.absolutePath,
             encryptionManager = encryptionManager,
-            keepFilesTimeInSeconds = 100,
-            timePeriodToSweepOverdueFilesInSeconds = 100
+            keepFilesTime = 100.seconds,
+            timePeriodToSweepOverdueFiles = 100.seconds,
         )
 
         val dropContent = dataRepository.getDrop("ASDF1234")
@@ -141,6 +148,63 @@ class DataRepositoryTest {
         coVerify(exactly = 0) { encryptionManager.decrypt(any()) }
 
         assertNull(dropContent)
+    }
+
+    @Test
+    fun `cleanUpOverdueFiles removes files older than keepFilesTimeInSeconds`() = runBlocking {
+        dataFolderPath = File("./dataFolderPath-test-cleanup").also { it.mkdirs() }
+
+        val fileOverdue1 = File(dataFolderPath, "file-overdue-1").also {
+            it.writeText("old content 1")
+            it.setLastModified(System.currentTimeMillis() - 101_000) // 101 seconds ago
+        }
+
+        val fileNotOverdue = File(dataFolderPath, "file-not-overdue").also {
+            it.writeText("recent content")
+            it.setLastModified(System.currentTimeMillis() - 50_000) // 50 seconds ago
+        }
+
+        val fileOverdue2 = File(dataFolderPath, "file-overdue-2").also {
+            it.writeText("old content 2")
+            it.setLastModified(System.currentTimeMillis() - 150_000) // 150 seconds ago
+        }
+
+        // Create repository with short sweep period
+        dataRepository = DataRepository(
+            dataFolderPath = dataFolderPath.absolutePath,
+            encryptionManager = encryptionManager,
+            keepFilesTime = 100.seconds,
+            timePeriodToSweepOverdueFiles = 2.seconds,
+        )
+
+        // Wait for cleanup to run (2s sweep period + buffer)
+        delay(3000)
+
+        // Assert overdue files are deleted
+        assertFalse(fileOverdue1.exists())
+        assertFalse(fileOverdue2.exists())
+
+        // Assert non-overdue file still exists
+        assertTrue(fileNotOverdue.exists())
+    }
+
+    @Test
+    fun `cleanUpOverdueFiles handles empty directory without errors`() = runBlocking {
+        dataFolderPath = File("./dataFolderPath-test-empty").also { it.mkdirs() }
+
+        dataRepository = DataRepository(
+            dataFolderPath = dataFolderPath.absolutePath,
+            encryptionManager = encryptionManager,
+            keepFilesTime = 100.seconds,
+            timePeriodToSweepOverdueFiles = 2.seconds,
+        )
+
+        // Wait for cleanup to run
+        delay(3000)
+
+        // Assert no errors and folder still exists
+        assertTrue(dataFolderPath.exists())
+        assertTrue(dataFolderPath.isDirectory)
     }
 
 
