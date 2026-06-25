@@ -1,6 +1,7 @@
 package dev.moetz.deaddrop.template
 
 import dev.moetz.deaddrop.Localization
+import dev.moetz.deaddrop.Shynet
 import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
@@ -30,6 +31,7 @@ abstract class SiteTemplate(
     protected val siteTitle: String,
     protected val siteTitleShort: String,
     protected val localization: Localization,
+    protected val shynet: Shynet,
     protected val hl: String?,
 ) : Template<HTML> {
 
@@ -176,6 +178,8 @@ abstract class SiteTemplate(
                     }
                 }
             }
+
+            shynet.attachToBody(this)
         }
 
     }

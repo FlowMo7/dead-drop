@@ -1,6 +1,7 @@
 package dev.moetz.deaddrop.plugins
 
 import dev.moetz.deaddrop.Localization
+import dev.moetz.deaddrop.Shynet
 import dev.moetz.deaddrop.template.IndexTemplate
 import dev.moetz.deaddrop.template.InfoTemplate
 import dev.moetz.deaddrop.template.PickupTemplate
@@ -57,6 +58,7 @@ fun Application.configure(
     siteTitle: String,
     siteTitleShort: String,
     sitePrivacyPolicyLink: String?,
+    shynet: Shynet,
 ) {
 
     routing {
@@ -86,6 +88,7 @@ fun Application.configure(
                         sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                         keepFilesTimeInHours = keepFilesTimeInHours,
                         localization = localization(),
+                        shynet = shynet,
                         hl = hlParameterIfPresentAndValidLanguage(),
                     )
                 ) {
@@ -115,6 +118,7 @@ fun Application.configure(
                         siteTitleShort = siteTitleShort,
                         sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                         localization = localization(),
+                        shynet = shynet,
                         hl = hlParameterIfPresentAndValidLanguage(),
                         dropId = dropId,
                     )
@@ -136,6 +140,7 @@ fun Application.configure(
                     sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                     keepFilesTimeInHours = keepFilesTimeInHours,
                     localization = localization(),
+                    shynet = shynet,
                     hl = hlParameterIfPresentAndValidLanguage(),
                 )
             ) {

@@ -1,6 +1,7 @@
 package dev.moetz.deaddrop.template
 
 import dev.moetz.deaddrop.Localization
+import dev.moetz.deaddrop.Shynet
 import kotlinx.html.FlowContent
 import kotlinx.html.a
 import kotlinx.html.br
@@ -18,6 +19,7 @@ class InfoTemplate(
     siteTitleShort: String,
     sitePrivacyPolicyLink: String?,
     localization: Localization,
+    shynet: Shynet,
     hl: String?,
     private val keepFilesTimeInHours: Int,
 ) : SiteTemplate(
@@ -29,6 +31,7 @@ class InfoTemplate(
     siteTitleShort = siteTitleShort,
     privacyPolicyLink = sitePrivacyPolicyLink,
     localization = localization,
+    shynet = shynet,
     hl = hl,
 ) {
 

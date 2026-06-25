@@ -28,6 +28,10 @@ Possible environment variables:
   supported yet. Without the leading '#'. Defaults to `ff9800`.
 * `SITE_TITLE`: The title of the site. Defaults to `Dead-Drop: Send secure information`.
 * `SITE_TITLE_SHORT`: The title of the site in short. Defaults to `Dead-Drop`.
+* `SHYNET_HOST`: The host of the shynet-instance, if shynet tracking should be enabled. Default: `null`
+* `SHYNET_ID`: The id of the shynet site, if shynet tracking should be enabled. Default: `null`
+* `DO_NOT_TRACK`: Whether shynet tracking should be disabled (default: `false`). Note that this only has an effect if
+  `SHYNET_HOST` and `SHYNET_ID` are set. If those values are not set, tracking is disabled anyway.
 
 ### Data persistence
 

@@ -52,6 +52,12 @@ fun main() {
         timePeriodToSweepOverdueFilesInSeconds = (60L * 60) /* every hour */
     )
 
+    val shynet = Shynet(
+        host = System.getenv("SHYNET_HOST"),
+        id = System.getenv("SHYNET_ID"),
+        doNotTrack = System.getenv("DO_NOT_TRACK")?.takeIf { it.isNotBlank() }?.toBooleanStrictOrNull() ?: false,
+    )
+
     embeddedServer(Netty, port = port.toInt(), host = "0.0.0.0") {
         install(DefaultHeaders)
         install(AutoHeadResponse)
@@ -101,6 +107,7 @@ fun main() {
             siteTitle = siteTitle,
             siteTitleShort = siteTitleShort,
             sitePrivacyPolicyLink = sitePrivacyPolicyLink,
+            shynet = shynet,
         )
         configureApi(dataRepository, isHttps, domain, pathPrefix)
     }.start(wait = true)
