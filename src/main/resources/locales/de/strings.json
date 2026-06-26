@@ -29,7 +29,7 @@
   "pickup_description_once_word_to_make_bold": "einmal!",
   "pickup_btn_get_the_drop": "Drop abfragen",
   "pickup_password_placeholder": "Füge das Passwort hier ein",
-  "pickup_you_drop_title": "Dein Drop:",
+  "pickup_you_drop_title": "Die entschlüsselte Nachricht",
   "pickup_error_title": "Fehler!",
   "pickup_error_description_kicker": "Ein Fehler ist bei laden des Drops aufgetreten. Das kann mehrere Gründe haben:",
   "pickup_error_description_bullet_point_1": "Der Drop wurde bereits geladen. Du kannst jeden Drop nur ein einziges mal laden. Wenn du den Drop noch nicht geladen hast, kann es sein, dass jemand anderes versucht hat deinen Drop zu laden (und kann damit mit dem richtigen Passwort deine Nachricht dann entschlüsseln). Wenn du dir unsicher bist, ob du den Drop schon abgefragt hast, solltest du den Inhalt des Drops nicht mehr als sicher ansehen.",

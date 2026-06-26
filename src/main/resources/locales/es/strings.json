@@ -29,7 +29,7 @@
   "pickup_description_once_word_to_make_bold": "una vez",
   "pickup_btn_get_the_drop": "Obtener el envío",
   "pickup_password_placeholder": "Introduce aquí la contraseña",
-  "pickup_you_drop_title": "Tu envío:",
+  "pickup_you_drop_title": "El mensaje secreto",
   "pickup_error_title": "¡Error!",
   "pickup_error_description_kicker": "Se produjo un error al recuperar tu envío. Puede deberse a una de estas causas:",
   "pickup_error_description_bullet_point_1": "El envío ya ha sido recuperado. Solo puedes abrir o recuperar un envío una vez. Si aún no lo habías recuperado, es posible que otra persona lo haya intentado (y, si tenía la contraseña, puede que lo haya conseguido). Si tienes dudas, deberías asumir que el contenido del envío ya no es seguro.",

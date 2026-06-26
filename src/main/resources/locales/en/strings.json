@@ -29,7 +29,7 @@
   "pickup_description_once_word_to_make_bold": "once",
   "pickup_btn_get_the_drop": "Get the drop",
   "pickup_password_placeholder": "Enter the password here",
-  "pickup_you_drop_title": "Your drop:",
+  "pickup_you_drop_title": "The encrypted message",
   "pickup_error_title": "Error!",
   "pickup_error_description_kicker": "There was an error getting your drop. This can either be:",
   "pickup_error_description_bullet_point_1": "The drop has already been fetched. You can only open / get a drop once. If you didn't get the drop yet, it might be that someone else tried (and if they got the password, may have succeeded) to get your drop. If you are unsure, you should consider that the dropped content is no longer safe in this scenario.",

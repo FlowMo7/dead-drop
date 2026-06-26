@@ -13,6 +13,7 @@ import kotlinx.html.i
 import kotlinx.html.id
 import kotlinx.html.onClick
 import kotlinx.html.pre
+import kotlinx.html.style
 import kotlinx.html.textInput
 import kotlinx.html.unsafe
 
@@ -62,7 +63,7 @@ class PickupTemplate(
                         placeholder = localization["pickup_password_placeholder"]
                     }
                 }
-                div(classes = "col s12") {
+                div(classes = "col s12 right-align") {
                     a(classes = "waves-effect waves-light btn orange") {
                         onClick = "getDrop(" +
                                 "'$dropId', " +
@@ -78,18 +79,31 @@ class PickupTemplate(
             id = "drop_content_section"
             hidden = true
 
-            h3 {
-                +localization["pickup_you_drop_title"]
-            }
-
-            div(classes = "divider") {
-
+            div("row") {
+                div("col s12") {
+                    h3 { +localization["pickup_you_drop_title"] }
+                }
             }
 
             div(classes = "row") {
                 div(classes = "col s12") {
-                    pre {
-                        id = "drop_content"
+                    div(classes = "card-panel grey darken-3") {
+                        pre {
+                            id = "drop_content"
+                        }
+                    }
+                }
+            }
+
+            div(classes = "row") {
+                div(classes = "col s12 right-align") {
+                    a(classes = "waves-effect waves-light btn blue white-text") {
+                        style = "margin-bottom: 12px"
+                        onClick = "copyToClipboard(document.getElementById('drop_content').innerHTML);"
+                        i(classes = "material-icons left") {
+                            +"content_copy"
+                        }
+                        +localization["index_btn_copy_message"]
                     }
                 }
             }

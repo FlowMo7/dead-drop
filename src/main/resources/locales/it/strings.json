@@ -29,7 +29,7 @@
   "pickup_description_once_word_to_make_bold": "una sola volta",
   "pickup_btn_get_the_drop": "Recupera il messaggio",
   "pickup_password_placeholder": "Inserisci qui la password",
-  "pickup_you_drop_title": "Il tuo messaggio:",
+  "pickup_you_drop_title": "Il messaggio segreto",
   "pickup_error_title": "Errore!",
   "pickup_error_description_kicker": "Si è verificato un errore durante il recupero del messaggio. Le possibili cause sono:",
   "pickup_error_description_bullet_point_1": "Il messaggio è già stato recuperato. Puoi aprire o recuperare un messaggio una sola volta. Se non lo hai ancora recuperato, è possibile che qualcun altro abbia provato ad accedervi (e, se conosceva la password, potrebbe esserci riuscito). In caso di dubbio, considera che il contenuto del messaggio non è più sicuro.",

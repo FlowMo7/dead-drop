@@ -29,7 +29,7 @@
   "pickup_description_once_word_to_make_bold": "jednou",
   "pickup_btn_get_the_drop": "Získat zprávu",
   "pickup_password_placeholder": "Sem zadej heslo",
-  "pickup_you_drop_title": "Tvoje zpráva:",
+  "pickup_you_drop_title": "Tajná zpráva",
   "pickup_error_title": "Chyba!",
   "pickup_error_description_kicker": "Při získávání zprávy došlo k chybě. Může to být z těchto důvodů:",
   "pickup_error_description_bullet_point_1": "Zpráva už byla vyzvednuta. Každou zprávu lze otevřít nebo získat pouze jednou. Pokud jsi ji ještě nevyzvedl(a), je možné, že se o to pokusil někdo jiný (a pokud znal heslo, mohl být úspěšný). Pokud si nejsi jistý(á), považuj obsah zprávy za kompromitovaný.",

@@ -29,7 +29,7 @@
   "pickup_description_once_word_to_make_bold": "raz",
   "pickup_btn_get_the_drop": "Pobierz wiadomość",
   "pickup_password_placeholder": "Wpisz tutaj hasło",
-  "pickup_you_drop_title": "Twoja wiadomość:",
+  "pickup_you_drop_title": "Tajna wiadomość",
   "pickup_error_title": "Błąd!",
   "pickup_error_description_kicker": "Wystąpił błąd podczas pobierania wiadomości. Możliwe przyczyny:",
   "pickup_error_description_bullet_point_1": "Wiadomość została już odebrana. Można ją otworzyć lub pobrać tylko raz. Jeśli jeszcze tego nie zrobiłeś(-aś), możliwe, że ktoś inny próbował uzyskać do niej dostęp (a jeśli znał hasło, mógł odczytać jej zawartość). W takiej sytuacji należy założyć, że zawartość wiadomości nie jest już bezpieczna.",
