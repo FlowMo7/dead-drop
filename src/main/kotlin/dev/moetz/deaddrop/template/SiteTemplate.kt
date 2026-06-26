@@ -167,7 +167,7 @@ abstract class SiteTemplate(
                                         +"Language:"
                                         unsafe { +"&nbsp;" }
                                         Localization.Language.entries.forEachIndexed { index, language ->
-                                            a(classes = "orange-text text-lighten-3") {
+                                            a(classes = "orange-text text-lighten-5") {
                                                 style = buildString {
                                                     append("cursor:pointer")
                                                     if (localization.currentLanguage == language) {

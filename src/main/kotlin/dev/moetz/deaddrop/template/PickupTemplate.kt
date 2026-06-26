@@ -2,20 +2,7 @@ package dev.moetz.deaddrop.template
 
 import dev.moetz.deaddrop.Localization
 import dev.moetz.deaddrop.Shynet
-import kotlinx.html.FlowContent
-import kotlinx.html.a
-import kotlinx.html.b
-import kotlinx.html.br
-import kotlinx.html.div
-import kotlinx.html.h3
-import kotlinx.html.hidden
-import kotlinx.html.i
-import kotlinx.html.id
-import kotlinx.html.onClick
-import kotlinx.html.pre
-import kotlinx.html.style
-import kotlinx.html.textInput
-import kotlinx.html.unsafe
+import kotlinx.html.*
 
 class PickupTemplate(
     pathPrefix: String?,
@@ -37,38 +24,33 @@ class PickupTemplate(
 
     override fun FlowContent.content() {
         div(classes = "section") {
+            div(classes = "row") {
+                div(classes = "col s12 center-align") {
+                    h4 { +"\uD83D\uDD12 ${localization["pickup_title"]} \uD83D\uDD12" }
+                }
+                div(classes = "col s12") {
+                    +localization["pickup_kicker_1"]
+                    br()
+                    br()
+                    +"⚠ ${localization["pickup_kicker_2"]}"
+                }
+            }
+        }
+        div(classes = "section") {
             id = "container_get_drop"
 
-            div("row") {
-                div("col s12") {
-                    +localization["pickup_kicker"]
-                }
-            }
-            div("row") {
-                div("col s12") {
-                    val text = localization["pickup_description_before_button_text"]
-                    val parts = text.split(localization["pickup_description_once_word_to_make_bold"])
-                    +parts[0]
-                    b { +localization["pickup_description_once_word_to_make_bold"] }
-                    +parts[1]
-                    i { +localization["pickup_btn_get_the_drop"] }
-                    +localization["pickup_description_after_button_text"]
-                }
-            }
-
-            div("row") {
-                div("input-field col s12") {
-                    textInput(classes = "validate white-text") {
+            div("row valign-wrapper") {
+                div("input-field col s12 m8 l8") {
+                    textInput(classes = "white-text") {
                         id = "drop_password"
                         placeholder = localization["pickup_password_placeholder"]
+                        pattern = ".{1,}"
+                        onKeyDown = "onPickupKeyDown('$dropId', event)"
                     }
                 }
-                div(classes = "col s12 right-align") {
+                div(classes = "col s12 m4 l4 right-align") {
                     a(classes = "waves-effect waves-light btn orange") {
-                        onClick = "getDrop(" +
-                                "'$dropId', " +
-                                "document.getElementById('drop_password').value" +
-                                ")"
+                        onClick = "getDrop('$dropId', document.getElementById('drop_password').value)"
                         +localization["pickup_btn_get_the_drop"]
                     }
                 }
@@ -81,7 +63,7 @@ class PickupTemplate(
 
             div("row") {
                 div("col s12") {
-                    h3 { +localization["pickup_you_drop_title"] }
+                    h3 { +localization["pickup_your_drop_title"] }
                 }
             }
 
@@ -93,9 +75,6 @@ class PickupTemplate(
                         }
                     }
                 }
-            }
-
-            div(classes = "row") {
                 div(classes = "col s12 right-align") {
                     a(classes = "waves-effect waves-light btn blue white-text") {
                         style = "margin-bottom: 12px"
@@ -115,29 +94,45 @@ class PickupTemplate(
             hidden = true
 
             div(classes = "row") {
-                div(classes = "col s12") {
+                div(classes = "col s12 center-align") {
                     h3(classes = "red-text") {
+                        i(classes = "small material-icons red-text") {
+                            +"error"
+                        }
+                        unsafe { +"&nbsp;" }
                         +localization["pickup_error_title"]
+                        unsafe { +"&nbsp;" }
+                        i(classes = "small material-icons red-text") {
+                            +"error"
+                        }
                     }
+                }
+                div(classes = "col s12 center-align") {
+                    h5 { +localization["pickup_error_subtitle"] }
                 }
             }
             div(classes = "row") {
-                div(classes = "col s12") {
-                    +localization["pickup_error_description_kicker"]
+                div(classes = "col s12 m6 l6") {
+                    h5 { +localization["pickup_error_possible_reasons"] }
                     br()
+                    +"• ${localization["pickup_error_possible_reasons_bullet_point_1"]}"
                     br()
-                    unsafe { +"&bullet;&nbsp;" }
-                    +localization["pickup_error_description_bullet_point_1"]
-
-                    br()
-                    br()
-                    unsafe { +"&bullet;&nbsp;" }
-                    +localization["pickup_error_description_bullet_point_2"]
+                    +"• ${localization["pickup_error_possible_reasons_bullet_point_2"]}"
                 }
-                div(classes = "col s12") {
+
+                div(classes = "col s12 m6 l6") {
+                    h5 { +localization["pickup_error_security_warning"] }
                     br()
-                    br()
-                    b { +localization["pickup_error_description_bottom_line"] }
+                    +localization["pickup_error_security_warning_text"]
+                }
+            }
+        }
+
+        div(classes = "row") {
+            div(classes = "col s12 left-align") {
+                a(classes = "orange-text") {
+                    href = combinedPathPrefix
+                    +localization["pickup_hint_encrypt_yourself"]
                 }
             }
         }
