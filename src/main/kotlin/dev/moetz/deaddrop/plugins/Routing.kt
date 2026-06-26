@@ -3,7 +3,6 @@ package dev.moetz.deaddrop.plugins
 import dev.moetz.deaddrop.Localization
 import dev.moetz.deaddrop.Shynet
 import dev.moetz.deaddrop.template.IndexTemplate
-import dev.moetz.deaddrop.template.InfoTemplate
 import dev.moetz.deaddrop.template.PickupTemplate
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -78,12 +77,10 @@ fun Application.configure(
                     IndexTemplate(
                         pathPrefix = pathPrefix,
                         showGithubLinkInFooter = showGithubLinkInFooter,
-                        showLinkToInfoPage = true,
                         sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                         keepFilesTimeInHours = keepFilesTimeInHours,
                         localization = localization(),
                         shynet = shynet,
-                        hl = hlParameterIfPresentAndValidLanguage(),
                     )
                 ) {
 
@@ -106,33 +103,14 @@ fun Application.configure(
                     PickupTemplate(
                         pathPrefix = pathPrefix,
                         showGithubLinkInFooter = showGithubLinkInFooter,
-                        showLinkToInfoPage = true,
                         sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                         localization = localization(),
                         shynet = shynet,
-                        hl = hlParameterIfPresentAndValidLanguage(),
                         dropId = dropId,
                     )
                 ) {
 
                 }
-            }
-        }
-
-        get("info") {
-            call.respondHtmlTemplate(
-                InfoTemplate(
-                    pathPrefix = pathPrefix,
-                    showGithubLinkInFooter = showGithubLinkInFooter,
-                    showLinkToInfoPage = false,
-                    sitePrivacyPolicyLink = sitePrivacyPolicyLink,
-                    keepFilesTimeInHours = keepFilesTimeInHours,
-                    localization = localization(),
-                    shynet = shynet,
-                    hl = hlParameterIfPresentAndValidLanguage(),
-                )
-            ) {
-
             }
         }
 
@@ -161,6 +139,11 @@ fun Application.configure(
         resource(remotePath = "favicon.ico", resource = "icon/favicon.ico")
         resource(remotePath = "favicon-16x16.png", resource = "icon/favicon-16x16.png")
         resource(remotePath = "favicon-32x32.png", resource = "icon/favicon-32x32.png")
+
+        resource(remotePath = "icon/encrypted-browser.svg", resource = "icon/encrypted-browser.svg")
+        resource(remotePath = "icon/encrypted-upload.svg", resource = "icon/encrypted-upload.svg")
+        resource(remotePath = "icon/pass-key.svg", resource = "icon/pass-key.svg")
+        resource(remotePath = "icon/decrypt.svg", resource = "icon/decrypt.svg")
 
     }
 }

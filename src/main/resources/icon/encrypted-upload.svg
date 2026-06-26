@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 96 96"
+     fill="none"
+     stroke="#FFFFFF"
+     stroke-width="3"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+
+    <!-- Server -->
+    <rect x="28" y="8" width="40" height="10" rx="3"/>
+    <rect x="28" y="20" width="40" height="10" rx="3"/>
+    <circle cx="60" cy="13" r="1.5" fill="#FFFFFF" stroke="none"/>
+    <circle cx="60" cy="25" r="1.5" fill="#FFFFFF" stroke="none"/>
+
+    <!-- Upload arrow -->
+    <path d="M48 58V34"/>
+    <path d="M42 40l6-6 6 6"/>
+
+    <!-- Lock -->
+    <path d="M38 66v-5a10 10 0 0 1 20 0v5"/>
+    <rect x="34" y="66" width="28" height="18" rx="4"/>
+    <circle cx="48" cy="74" r="2" fill="#FFFFFF" stroke="none"/>
+    <path d="M48 76v4"/>
+
+    <!-- Connection line -->
+    <path d="M48 30v4"/>
+
+    <!-- Optional encrypted data particles -->
+    <circle cx="48" cy="46" r="1.5" fill="#FFFFFF" stroke="none"/>
+    <circle cx="48" cy="52" r="1.5" fill="#FFFFFF" stroke="none"/>
+
+</svg>

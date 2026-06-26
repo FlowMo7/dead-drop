@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 96 96"
+     width="96"
+     height="96"
+     fill="none">
+
+    <!-- Browser window -->
+    <rect x="8" y="12"
+          width="80"
+          height="72"
+          rx="8"
+          stroke="#FFFFFF"
+          stroke-width="3"/>
+
+    <!-- Browser toolbar -->
+    <line x1="8" y1="28" x2="88" y2="28"
+          stroke="#FFFFFF"
+          stroke-width="3"/>
+
+    <!-- Window controls -->
+    <circle cx="18" cy="20" r="2.5" fill="#FFFFFF"/>
+    <circle cx="26" cy="20" r="2.5" fill="#FFFFFF"/>
+    <circle cx="34" cy="20" r="2.5" fill="#FFFFFF"/>
+
+    <!-- Address bar -->
+    <rect x="42" y="16"
+          width="38"
+          height="8"
+          rx="4"
+          stroke="#FFFFFF"
+          stroke-width="2"/>
+
+    <!-- Binary background -->
+    <g fill="#FFFFFF"
+       font-family="monospace"
+       font-size="6"
+       opacity="0.35">
+
+        <text x="16" y="42">101001</text>
+        <text x="54" y="42">010110</text>
+        <text x="16" y="50">011010</text>
+        <text x="54" y="50">101001</text>
+        <text x="16" y="58">110010</text>
+        <text x="54" y="58">001101</text>
+    </g>
+
+    <!-- Lock shackle -->
+    <path d="M38 50v-5a10 10 0 0 1 20 0v5"
+          stroke="#FFFFFF"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <!-- Lock body -->
+    <rect x="34"
+          y="50"
+          width="28"
+          height="20"
+          rx="4"
+          stroke="#FFFFFF"
+          stroke-width="3"/>
+
+    <!-- Keyhole -->
+    <circle cx="48" cy="58" r="2"
+            fill="#FFFFFF"/>
+    <line x1="48"
+          y1="60"
+          x2="48"
+          y2="65"
+          stroke="#FFFFFF"
+          stroke-width="2"
+          stroke-linecap="round"/>
+
+</svg>

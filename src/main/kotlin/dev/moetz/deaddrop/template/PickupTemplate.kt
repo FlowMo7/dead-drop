@@ -19,20 +19,16 @@ import kotlinx.html.unsafe
 class PickupTemplate(
     pathPrefix: String?,
     showGithubLinkInFooter: Boolean,
-    showLinkToInfoPage: Boolean = true,
     sitePrivacyPolicyLink: String?,
     localization: Localization,
     shynet: Shynet,
-    hl: String?,
     private val dropId: String?,
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
     showGithubLinkInFooter = showGithubLinkInFooter,
-    showLinkToInfoPage = showLinkToInfoPage,
     privacyPolicyLink = sitePrivacyPolicyLink,
     localization = localization,
     shynet = shynet,
-    hl = hl,
 ) {
 
     override fun FlowContent.content() {

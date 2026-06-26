@@ -26,11 +26,9 @@ import kotlinx.html.unsafe
 abstract class SiteTemplate(
     protected val pathPrefix: String?,
     protected val showGithubLinkInFooter: Boolean,
-    protected val showLinkToInfoPage: Boolean = true,
     protected val privacyPolicyLink: String?,
     protected val localization: Localization,
     protected val shynet: Shynet,
-    protected val hl: String?,
 ) : Template<HTML> {
 
     protected val combinedPathPrefix: String = buildString {
@@ -135,15 +133,6 @@ abstract class SiteTemplate(
                                         Pair(
                                             localization["footer_privacy_policy"],
                                             privacyPolicyLink
-                                        )
-                                    )
-                                }
-
-                                if (showLinkToInfoPage) {
-                                    add(
-                                        Pair(
-                                            localization["footer_link_to_info_page"],
-                                            "${combinedPathPrefix}info${if (hl != null) "?hl=$hl" else ""}"
                                         )
                                     )
                                 }
