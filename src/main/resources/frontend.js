@@ -39,7 +39,7 @@ function onPickupKeyDown(dropId, event) {
 
 function getDrop(id, password) {
     if (password === '') {
-        M.toast({html: 'Please enter a password.', 'classes': 'red-text'});
+        M.toast({html: '%%toast_please_enter_password%%', 'classes': 'red-text'});
         return;
     }
     let baseUrl = window.location.protocol + '//' + window.location.host + (window.location.pathname.substring(0, window.location.pathname.indexOf('pickup')));
@@ -62,8 +62,8 @@ function getDrop(id, password) {
 
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(function () {
-        M.toast({html: 'Text copied!', 'classes': 'green-text'});
+        M.toast({html: '%%toast_clipboard_copy_success%%', 'classes': 'green-text'});
     }, function (err) {
-        M.toast({html: 'Error copying text to clipboard.', 'classes': 'red-text'});
+        M.toast({html: '%%toast_clipboard_copy_error%%', 'classes': 'red-text'});
     });
 }

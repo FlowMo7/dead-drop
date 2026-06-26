@@ -11,6 +11,7 @@ class PickupTemplate(
     localization: Localization,
     shynet: Shynet,
     showLanguageSelectionInFooter: Boolean,
+    hl: String?,
     private val dropId: String?,
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
@@ -20,6 +21,7 @@ class PickupTemplate(
     showLanguageSelectionInFooter = showLanguageSelectionInFooter,
     subSitePath = "pickup/$dropId",
     shynet = shynet,
+    hl = hl,
 ) {
 
     override fun FlowContent.content() {

@@ -27,10 +27,10 @@
   "pickup_kicker_1": "Ta wiadomość jest zaszyfrowana. Wprowadź hasło przekazane Ci przez nadawcę.",
   "pickup_kicker_2": "Ze względów bezpieczeństwa hasło można wprowadzić tylko raz. Po jego wprowadzeniu zaszyfrowane dane zostaną trwale usunięte.",
   "pickup_btn_get_the_drop": "Pobierz wiadomość",
-  "pickup_your_drop_title": "Zaszyfrowana wiadomość",
   "pickup_password_placeholder": "Wpisz tutaj hasło",
-  "pickup_error_title": "Błąd!",
+  "pickup_your_drop_title": "Zaszyfrowana wiadomość",
   "pickup_error_subtitle": "Nie udało nam się odzyskać zaszyfrowanych danych.",
+  "pickup_error_title": "Błąd!",
   "pickup_error_possible_reasons": "Możliwe przyczyny",
   "pickup_error_possible_reasons_bullet_point_1": "Pudełko zostało już otwarte.",
   "pickup_error_possible_reasons_bullet_point_2": "Hasło było nieprawidłowe.",
@@ -40,5 +40,8 @@
   "html_meta_keywords": "drop,hasło,szyfrowanie,bezpieczeństwo,wysyłanie",
   "pickup_hint_encrypt_yourself": "Kliknij tutaj, aby samodzielnie wysłać zaszyfrowane dane.",
   "html_site_title": "Dead-Drop: Bezpieczne przesyłanie informacji",
+  "toast_clipboard_copy_success": "Tekst skopiowany!",
+  "toast_clipboard_copy_error": "Wystąpił błąd podczas kopiowania tekstu do schowka.",
+  "toast_please_enter_password": "Wprowadź hasło.",
   "html_site_title_short": "Dead-Drop"
 }

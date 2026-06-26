@@ -27,8 +27,8 @@
   "pickup_kicker_1": "Ce message est crypté. Saisissez le mot de passe que l'expéditeur vous a communiqué.",
   "pickup_kicker_2": "Pour des raisons de sécurité, le mot de passe ne peut être saisi qu'une seule fois. Une fois saisi, les données cryptées sont définitivement supprimées.",
   "pickup_btn_get_the_drop": "Récupérer le message",
-  "pickup_your_drop_title": "Le message chiffré",
   "pickup_password_placeholder": "Saisis le mot de passe ici",
+  "pickup_your_drop_title": "Le message chiffré",
   "pickup_error_title": "Erreur !",
   "pickup_error_subtitle": "Nous n'avons pas pu récupérer les données chiffrées.",
   "pickup_error_possible_reasons": "Raisons possibles",
@@ -40,5 +40,8 @@
   "html_meta_keywords": "drop,mot de passe,chiffrement,sécurité,envoi",
   "pickup_hint_encrypt_yourself": "Cliquez ici pour envoyer vous-même des données cryptées.",
   "html_site_title": "Dead-Drop : Envoie des informations en toute sécurité",
+  "toast_clipboard_copy_success": "Texte copié !",
+  "toast_clipboard_copy_error": "Erreur lors de la copie du texte dans le presse-papiers.",
+  "toast_please_enter_password": "Veuillez saisir un mot de passe.",
   "html_site_title_short": "Dead-Drop"
 }

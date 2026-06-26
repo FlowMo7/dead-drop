@@ -11,6 +11,7 @@ class IndexTemplate(
     localization: Localization,
     shynet: Shynet,
     showLanguageSelectionInFooter: Boolean,
+    hl: String?,
     private val keepFilesTimeInHours: Int,
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
@@ -19,6 +20,7 @@ class IndexTemplate(
     localization = localization,
     showLanguageSelectionInFooter = showLanguageSelectionInFooter,
     subSitePath = "",
+    hl = hl,
     shynet = shynet,
 ) {
 

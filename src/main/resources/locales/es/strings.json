@@ -27,8 +27,8 @@
   "pickup_kicker_1": "Este mensaje está cifrado. Introduce la contraseña que te ha facilitado el remitente.",
   "pickup_kicker_2": "Por motivos de seguridad, la contraseña solo se puede enviar una vez. Una vez enviada, los datos cifrados se eliminan de forma definitiva.",
   "pickup_btn_get_the_drop": "Obtener el envío",
-  "pickup_password_placeholder": "Introduce aquí la contraseña",
   "pickup_your_drop_title": "El mensaje cifrado",
+  "pickup_password_placeholder": "Introduce aquí la contraseña",
   "pickup_error_title": "¡Error!",
   "pickup_error_subtitle": "No hemos podido recuperar los datos cifrados.",
   "pickup_error_possible_reasons": "Posibles razones",
@@ -37,8 +37,11 @@
   "pickup_error_security_warning": "Advertencia de seguridad",
   "html_meta_description": "Crea enlaces de un solo uso para enviar datos de forma segura",
   "pickup_error_security_warning_text": "Si nadie ha accedido aún a estos datos, da por hecho que el contenido podría estar ahora comprometido.",
-  "pickup_hint_encrypt_yourself": "Haz clic aquí para enviar tú mismo datos cifrados.",
   "html_meta_keywords": "drop,contraseña,cifrar,seguro,enviar",
+  "pickup_hint_encrypt_yourself": "Haz clic aquí para enviar tú mismo datos cifrados.",
   "html_site_title": "Dead-Drop: Envía información segura",
+  "toast_clipboard_copy_success": "¡Texto copiado!",
+  "toast_clipboard_copy_error": "Error al copiar el texto al portapapeles.",
+  "toast_please_enter_password": "Introduce una contraseña, por favor.",
   "html_site_title_short": "Dead-Drop"
 }

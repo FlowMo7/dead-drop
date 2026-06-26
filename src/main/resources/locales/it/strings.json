@@ -40,5 +40,8 @@
   "html_meta_keywords": "drop,password,cifrare,sicuro,inviare",
   "pickup_hint_encrypt_yourself": "Clicca qui per inviare tu stesso dati crittografati.",
   "html_site_title": "Dead-Drop: Invia informazioni in modo sicuro",
+  "toast_clipboard_copy_success": "Testo copiato!",
+  "toast_clipboard_copy_error": "Errore durante la copia del testo negli appunti.",
+  "toast_please_enter_password": "Inserisci una password.",
   "html_site_title_short": "Dead-Drop"
 }
