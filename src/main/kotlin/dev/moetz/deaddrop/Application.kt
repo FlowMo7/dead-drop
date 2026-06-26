@@ -64,7 +64,8 @@ fun main() {
                     ContentType.Text.JavaScript,
                     ContentType.Application.JavaScript,
                     ContentType("application", "manifest+json"),
-                    ContentType.Image.PNG -> {
+                    ContentType.Image.PNG,
+                    ContentType.Image.SVG -> {
                         CachingOptions(
                             CacheControl.MaxAge(
                                 maxAgeSeconds = 24.hours.inWholeSeconds.toInt(),
