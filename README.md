@@ -26,6 +26,8 @@ Possible environment variables:
 * `SHOW_GITHUB_LINK_IN_FOOTER`: Whether the GitHub link should be visible in the footer. Defaults to `true`.
 * `SITE_PRIVACY_POLICY`: The link to a privacy policy for this site. Will not show any privacy policy if not set.
   Defaults to `null`.
+* `SHOW_LANGUAGE_SELECTION_IN_FOOTER`: Whether the footer should show a language selection of all possible languages.
+  Default: `true`
 * `SHYNET_HOST`: The host of the shynet-instance, if shynet tracking should be enabled. Default: `null`
 * `SHYNET_ID`: The id of the shynet site, if shynet tracking should be enabled. Default: `null`
 * `DO_NOT_TRACK`: Whether shynet tracking should be disabled (default: `false`). Note that this only has an effect if

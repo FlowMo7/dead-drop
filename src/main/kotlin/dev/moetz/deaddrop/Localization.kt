@@ -32,8 +32,12 @@ class Localization(
     enum class Language(val identifier: String) {
         EN("en"),
         DE("de"),
+        ES("es"),
+        IT("it"),
+        FR("fr"),
+        PL("pl"),
+        CS("cs"),
     }
-
 
 
     @OptIn(ExperimentalSerializationApi::class)

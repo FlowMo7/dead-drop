@@ -29,6 +29,8 @@ abstract class SiteTemplate(
     protected val privacyPolicyLink: String?,
     protected val localization: Localization,
     protected val shynet: Shynet,
+    protected val showLanguageSelectionInFooter: Boolean,
+    protected val subSitePath: String,
 ) : Template<HTML> {
 
     protected val combinedPathPrefix: String = buildString {
@@ -136,6 +138,15 @@ abstract class SiteTemplate(
                                         )
                                     )
                                 }
+
+                                if (showLanguageSelectionInFooter) {
+                                    add(
+                                        Pair(
+                                            "LANGUAGE",
+                                            "LANGUAGE"
+                                        )
+                                    )
+                                }
                             }
 
                             val size = when (footerLinks.size) {
@@ -152,12 +163,32 @@ abstract class SiteTemplate(
                                     else -> "center-align"
                                 }
                                 div(classes = "col $size $align") {
-                                    a(
-                                        classes = "black-text",
-                                        href = link,
-                                    ) {
-                                        target = "_blank"
-                                        +label
+                                    if (label == "LANGUAGE" && link == "LANGUAGE") {
+                                        +"Language:"
+                                        unsafe { +"&nbsp;" }
+                                        Localization.Language.entries.forEachIndexed { index, language ->
+                                            a(classes = "orange-text text-lighten-3") {
+                                                style = buildString {
+                                                    append("cursor:pointer")
+                                                    if (localization.currentLanguage == language) {
+                                                        append(";text-decoration:underline")
+                                                    }
+                                                }
+                                                href = "${combinedPathPrefix}${subSitePath}?hl=${language.identifier}"
+                                                +language.identifier
+                                            }
+                                            if (index != Localization.Language.entries.lastIndex) {
+                                                unsafe { +"&nbsp;|&nbsp;" }
+                                            }
+                                        }
+                                    } else {
+                                        a(
+                                            classes = "black-text",
+                                            href = link,
+                                        ) {
+                                            target = "_blank"
+                                            +label
+                                        }
                                     }
                                 }
                             }

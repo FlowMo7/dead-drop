@@ -54,6 +54,7 @@ fun Application.configure(
     keepFilesTimeInHours: Int,
     showGithubLinkInFooter: Boolean,
     sitePrivacyPolicyLink: String?,
+    showLanguageSelectionInFooter: Boolean,
     shynet: Shynet,
 ) {
 
@@ -78,6 +79,7 @@ fun Application.configure(
                         pathPrefix = pathPrefix,
                         showGithubLinkInFooter = showGithubLinkInFooter,
                         sitePrivacyPolicyLink = sitePrivacyPolicyLink,
+                        showLanguageSelectionInFooter = showLanguageSelectionInFooter,
                         keepFilesTimeInHours = keepFilesTimeInHours,
                         localization = localization(),
                         shynet = shynet,
@@ -104,6 +106,7 @@ fun Application.configure(
                         pathPrefix = pathPrefix,
                         showGithubLinkInFooter = showGithubLinkInFooter,
                         sitePrivacyPolicyLink = sitePrivacyPolicyLink,
+                        showLanguageSelectionInFooter = showLanguageSelectionInFooter,
                         localization = localization(),
                         shynet = shynet,
                         dropId = dropId,

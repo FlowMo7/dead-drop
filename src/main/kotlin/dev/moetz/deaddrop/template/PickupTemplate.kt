@@ -22,12 +22,15 @@ class PickupTemplate(
     sitePrivacyPolicyLink: String?,
     localization: Localization,
     shynet: Shynet,
+    showLanguageSelectionInFooter: Boolean,
     private val dropId: String?,
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
     showGithubLinkInFooter = showGithubLinkInFooter,
     privacyPolicyLink = sitePrivacyPolicyLink,
     localization = localization,
+    showLanguageSelectionInFooter = showLanguageSelectionInFooter,
+    subSitePath = "pickup/$dropId",
     shynet = shynet,
 ) {
 

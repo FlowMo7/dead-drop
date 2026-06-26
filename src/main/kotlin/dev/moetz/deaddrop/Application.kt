@@ -36,6 +36,9 @@ fun main() {
     val showGithubLinkInFooter =
         System.getenv("SHOW_GITHUB_LINK_IN_FOOTER")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
 
+    val showLanguageSelectionInFooter =
+        System.getenv("SHOW_LANGUAGE_SELECTION_IN_FOOTER")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
+
     val encryptionManager = EncryptionManager(File(encryptionKeyPath))
     val dataRepository = DataRepository(
         dataFolderPath = dataDirectory,
@@ -96,6 +99,7 @@ fun main() {
             keepFilesTimeInHours = keepFilesTimeInHours,
             showGithubLinkInFooter = showGithubLinkInFooter,
             sitePrivacyPolicyLink = sitePrivacyPolicyLink,
+            showLanguageSelectionInFooter = showLanguageSelectionInFooter,
             shynet = shynet,
         )
 

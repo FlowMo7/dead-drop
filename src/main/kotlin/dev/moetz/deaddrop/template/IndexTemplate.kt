@@ -25,12 +25,15 @@ class IndexTemplate(
     sitePrivacyPolicyLink: String?,
     localization: Localization,
     shynet: Shynet,
+    showLanguageSelectionInFooter: Boolean,
     private val keepFilesTimeInHours: Int,
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
     showGithubLinkInFooter = showGithubLinkInFooter,
     privacyPolicyLink = sitePrivacyPolicyLink,
     localization = localization,
+    showLanguageSelectionInFooter = showLanguageSelectionInFooter,
+    subSitePath = "",
     shynet = shynet,
 ) {
 
