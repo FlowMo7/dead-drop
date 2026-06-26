@@ -12,6 +12,7 @@ import kotlinx.html.footer
 import kotlinx.html.head
 import kotlinx.html.header
 import kotlinx.html.id
+import kotlinx.html.lang
 import kotlinx.html.link
 import kotlinx.html.main
 import kotlinx.html.meta
@@ -25,11 +26,8 @@ import kotlinx.html.unsafe
 abstract class SiteTemplate(
     protected val pathPrefix: String?,
     protected val showGithubLinkInFooter: Boolean,
-    protected val colorCode: String,
     protected val showLinkToInfoPage: Boolean = true,
     protected val privacyPolicyLink: String?,
-    protected val siteTitle: String,
-    protected val siteTitleShort: String,
     protected val localization: Localization,
     protected val shynet: Shynet,
     protected val hl: String?,
@@ -52,9 +50,10 @@ abstract class SiteTemplate(
     abstract fun FlowContent.content()
 
     override fun HTML.apply() {
+        lang = localization.currentLanguage.identifier
         head {
             charset("utf-8")
-            title(siteTitle)
+            title(localization["html_site_title"])
             link(href = "${combinedPathPrefix}static/materialize.min.css", rel = "stylesheet", type = "text/css")
 
             style {
@@ -83,10 +82,9 @@ abstract class SiteTemplate(
             }
 
             meta(name = "robots", content = "index, follow")
-            meta(name = "og:title", content = siteTitle)
-            meta(name = "description", content = "Create one-time links for securely sending data")
-            meta(name = "keywords", content = "drop,password,encrypt,secure,send")
-            meta(name = "theme-color", content = "#$colorCode")
+            meta(name = "og:title", content = localization["html_site_title"])
+            meta(name = "description", content = localization["html_meta_description"])
+            meta(name = "keywords", content = localization["html_meta_keywords"])
             meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
             link(href = "${combinedPathPrefix}apple-touch-icon.png", rel = "apple-touch-icon") { sizes = "180x180" }
             link(href = "${combinedPathPrefix}favicon-32x32.png", type = "image/png", rel = "icon") { sizes = "32x32" }
@@ -102,7 +100,7 @@ abstract class SiteTemplate(
                                 id = "logo-container"
                                 span {
                                     style = "text-wrap: nowrap;"
-                                    +siteTitleShort
+                                    +localization["html_site_title_short"]
                                 }
                             }
                         }

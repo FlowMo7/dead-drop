@@ -26,16 +26,7 @@ fun main() {
     val isHttps = System.getenv("IS_HTTPS")?.takeIf { it.isNotBlank() }?.toBoolean() ?: true
     val dataDirectory = "/var/dead-drop/data" // "./data" //for development purpose
     val encryptionKeyPath = "/var/dead-drop/key/key.secret"// "./config/key.secret" //for development purpose
-    val siteTitle = System.getenv("SITE_TITLE")?.takeIf { it.isNotBlank() } ?: "Dead-Drop: Send secure information"
-    val siteTitleShort = System.getenv("SITE_TITLE_SHORT")?.takeIf { it.isNotBlank() } ?: "Dead-Drop"
     val sitePrivacyPolicyLink = System.getenv("SITE_PRIVACY_POLICY")?.takeIf { it.isNotBlank() }
-
-    //color code customization currently only works with colors where white text is visible on.
-    val colorCode = System.getenv("COLOR_CODE")
-        ?.takeIf { it.isNotBlank() }
-        ?.let { colorCode -> colorCode.filter { it.isDigit() || it.lowercaseChar() in 'a'..'f' } }
-        ?.takeIf { it.length == 3 || it.length == 6 }
-        ?: "ff9800"
 
     val keepFilesTimeInHours = System.getenv("FILE_KEEP_TIME_IN_HOURS")
         ?.takeIf { it.isNotBlank() }
@@ -73,7 +64,7 @@ fun main() {
                     ContentType.Image.PNG -> {
                         CachingOptions(
                             CacheControl.MaxAge(
-                                maxAgeSeconds = 24 * 60 * 60,    //24 hours
+                                maxAgeSeconds = 24.hours.inWholeSeconds.toInt(),
                                 visibility = CacheControl.Visibility.Public
                             )
                         )
@@ -104,12 +95,10 @@ fun main() {
             pathPrefix = pathPrefix,
             keepFilesTimeInHours = keepFilesTimeInHours,
             showGithubLinkInFooter = showGithubLinkInFooter,
-            colorCode = colorCode,
-            siteTitle = siteTitle,
-            siteTitleShort = siteTitleShort,
             sitePrivacyPolicyLink = sitePrivacyPolicyLink,
             shynet = shynet,
         )
+
         configureApi(dataRepository, isHttps, domain, pathPrefix)
     }.start(wait = true)
 }

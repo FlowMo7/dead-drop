@@ -13,17 +13,13 @@ import kotlinx.html.i
 import kotlinx.html.id
 import kotlinx.html.onClick
 import kotlinx.html.pre
-import kotlinx.html.style
 import kotlinx.html.textInput
 import kotlinx.html.unsafe
 
 class PickupTemplate(
     pathPrefix: String?,
     showGithubLinkInFooter: Boolean,
-    colorCode: String,
     showLinkToInfoPage: Boolean = true,
-    siteTitle: String,
-    siteTitleShort: String,
     sitePrivacyPolicyLink: String?,
     localization: Localization,
     shynet: Shynet,
@@ -32,10 +28,7 @@ class PickupTemplate(
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
     showGithubLinkInFooter = showGithubLinkInFooter,
-    colorCode = colorCode,
     showLinkToInfoPage = showLinkToInfoPage,
-    siteTitle = siteTitle,
-    siteTitleShort = siteTitleShort,
     privacyPolicyLink = sitePrivacyPolicyLink,
     localization = localization,
     shynet = shynet,
@@ -71,8 +64,7 @@ class PickupTemplate(
                     }
                 }
                 div(classes = "col s12") {
-                    a(classes = "waves-effect waves-light btn") {
-                        style = "background-color:#$colorCode;"
+                    a(classes = "waves-effect waves-light btn orange") {
                         onClick = "getDrop(" +
                                 "'$dropId', " +
                                 "document.getElementById('drop_password').value" +

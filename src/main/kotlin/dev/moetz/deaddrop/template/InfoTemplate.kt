@@ -13,10 +13,7 @@ import kotlinx.html.unsafe
 class InfoTemplate(
     pathPrefix: String?,
     showGithubLinkInFooter: Boolean,
-    colorCode: String,
     showLinkToInfoPage: Boolean = true,
-    siteTitle: String,
-    siteTitleShort: String,
     sitePrivacyPolicyLink: String?,
     localization: Localization,
     shynet: Shynet,
@@ -25,10 +22,7 @@ class InfoTemplate(
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
     showGithubLinkInFooter = showGithubLinkInFooter,
-    colorCode = colorCode,
     showLinkToInfoPage = showLinkToInfoPage,
-    siteTitle = siteTitle,
-    siteTitleShort = siteTitleShort,
     privacyPolicyLink = sitePrivacyPolicyLink,
     localization = localization,
     shynet = shynet,

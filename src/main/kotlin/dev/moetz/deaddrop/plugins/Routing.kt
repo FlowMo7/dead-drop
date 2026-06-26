@@ -54,9 +54,6 @@ fun Application.configure(
     pathPrefix: String?,
     keepFilesTimeInHours: Int,
     showGithubLinkInFooter: Boolean,
-    colorCode: String,
-    siteTitle: String,
-    siteTitleShort: String,
     sitePrivacyPolicyLink: String?,
     shynet: Shynet,
 ) {
@@ -81,10 +78,7 @@ fun Application.configure(
                     IndexTemplate(
                         pathPrefix = pathPrefix,
                         showGithubLinkInFooter = showGithubLinkInFooter,
-                        colorCode = colorCode,
                         showLinkToInfoPage = true,
-                        siteTitle = siteTitle,
-                        siteTitleShort = siteTitleShort,
                         sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                         keepFilesTimeInHours = keepFilesTimeInHours,
                         localization = localization(),
@@ -112,10 +106,7 @@ fun Application.configure(
                     PickupTemplate(
                         pathPrefix = pathPrefix,
                         showGithubLinkInFooter = showGithubLinkInFooter,
-                        colorCode = colorCode,
                         showLinkToInfoPage = true,
-                        siteTitle = siteTitle,
-                        siteTitleShort = siteTitleShort,
                         sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                         localization = localization(),
                         shynet = shynet,
@@ -133,10 +124,7 @@ fun Application.configure(
                 InfoTemplate(
                     pathPrefix = pathPrefix,
                     showGithubLinkInFooter = showGithubLinkInFooter,
-                    colorCode = colorCode,
                     showLinkToInfoPage = false,
-                    siteTitle = siteTitle,
-                    siteTitleShort = siteTitleShort,
                     sitePrivacyPolicyLink = sitePrivacyPolicyLink,
                     keepFilesTimeInHours = keepFilesTimeInHours,
                     localization = localization(),
@@ -150,7 +138,8 @@ fun Application.configure(
 
         get("site.webmanifest") {
             call.respondText(contentType = ContentType.parse("application/manifest+json")) {
-                """{"name":"$siteTitle","short_name":"$siteTitleShort","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#$colorCode","background_color":"#ffffff","display":"standalone"}"""
+                val localization = localization()
+                """{"name":"${localization["html_site_title"]}","short_name":"${localization["html_site_title_short"]}","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#fb8c00","background_color":"#ffffff","display":"standalone"}"""
             }
         }
 

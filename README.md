@@ -24,10 +24,8 @@ Possible environment variables:
   the path needs to be set here. Defaults to no path.
 * `FILE_KEEP_TIME_IN_HOURS`: The number of hours to keep a drop-record. Defaults to `24`.
 * `SHOW_GITHUB_LINK_IN_FOOTER`: Whether the GitHub link should be visible in the footer. Defaults to `true`.
-* `COLOR_CODE`: The hex-color-code the page should be styled in. Only colors on which white text is readable are
-  supported yet. Without the leading '#'. Defaults to `ff9800`.
-* `SITE_TITLE`: The title of the site. Defaults to `Dead-Drop: Send secure information`.
-* `SITE_TITLE_SHORT`: The title of the site in short. Defaults to `Dead-Drop`.
+* `SITE_PRIVACY_POLICY`: The link to a privacy policy for this site. Will not show any privacy policy if not set.
+  Defaults to `null`.
 * `SHYNET_HOST`: The host of the shynet-instance, if shynet tracking should be enabled. Default: `null`
 * `SHYNET_ID`: The id of the shynet site, if shynet tracking should be enabled. Default: `null`
 * `DO_NOT_TRACK`: Whether shynet tracking should be disabled (default: `false`). Note that this only has an effect if
