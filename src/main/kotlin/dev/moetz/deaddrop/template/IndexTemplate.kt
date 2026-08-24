@@ -2,22 +2,7 @@ package dev.moetz.deaddrop.template
 
 import dev.moetz.deaddrop.Localization
 import dev.moetz.deaddrop.Shynet
-import kotlinx.html.FlowContent
-import kotlinx.html.a
-import kotlinx.html.b
-import kotlinx.html.br
-import kotlinx.html.div
-import kotlinx.html.h3
-import kotlinx.html.h4
-import kotlinx.html.hidden
-import kotlinx.html.i
-import kotlinx.html.id
-import kotlinx.html.img
-import kotlinx.html.onClick
-import kotlinx.html.p
-import kotlinx.html.span
-import kotlinx.html.style
-import kotlinx.html.textArea
+import kotlinx.html.*
 
 class IndexTemplate(
     pathPrefix: String?,
@@ -26,6 +11,7 @@ class IndexTemplate(
     localization: Localization,
     shynet: Shynet,
     showLanguageSelectionInFooter: Boolean,
+    hl: String?,
     private val keepFilesTimeInHours: Int,
 ) : SiteTemplate(
     pathPrefix = pathPrefix,
@@ -34,6 +20,7 @@ class IndexTemplate(
     localization = localization,
     showLanguageSelectionInFooter = showLanguageSelectionInFooter,
     subSitePath = "",
+    hl = hl,
     shynet = shynet,
 ) {
 
@@ -189,8 +176,6 @@ class IndexTemplate(
                 }
             }
         }
-
-
 
         div(classes = "section") {
             div(classes = "row") {

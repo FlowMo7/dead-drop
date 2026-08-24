@@ -3,25 +3,7 @@ package dev.moetz.deaddrop.template
 import dev.moetz.deaddrop.Localization
 import dev.moetz.deaddrop.Shynet
 import io.ktor.server.html.*
-import kotlinx.html.FlowContent
-import kotlinx.html.HTML
-import kotlinx.html.a
-import kotlinx.html.body
-import kotlinx.html.div
-import kotlinx.html.footer
-import kotlinx.html.head
-import kotlinx.html.header
-import kotlinx.html.id
-import kotlinx.html.lang
-import kotlinx.html.link
-import kotlinx.html.main
-import kotlinx.html.meta
-import kotlinx.html.nav
-import kotlinx.html.script
-import kotlinx.html.span
-import kotlinx.html.style
-import kotlinx.html.title
-import kotlinx.html.unsafe
+import kotlinx.html.*
 
 abstract class SiteTemplate(
     protected val pathPrefix: String?,
@@ -31,6 +13,7 @@ abstract class SiteTemplate(
     protected val shynet: Shynet,
     protected val showLanguageSelectionInFooter: Boolean,
     protected val subSitePath: String,
+    protected val hl: String?,
 ) : Template<HTML> {
 
     protected val combinedPathPrefix: String = buildString {
@@ -77,7 +60,7 @@ abstract class SiteTemplate(
             script(src = "${combinedPathPrefix}static/drop.js") {
 
             }
-            script(src = "${combinedPathPrefix}static/frontend.js") {
+            script(src = "${combinedPathPrefix}static/frontend.js${if (hl != null) "?hl=$hl" else ""}") {
 
             }
 
@@ -86,9 +69,15 @@ abstract class SiteTemplate(
             meta(name = "description", content = localization["html_meta_description"])
             meta(name = "keywords", content = localization["html_meta_keywords"])
             meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
-            link(href = "${combinedPathPrefix}apple-touch-icon.png", rel = "apple-touch-icon") { sizes = "180x180" }
-            link(href = "${combinedPathPrefix}favicon-32x32.png", type = "image/png", rel = "icon") { sizes = "32x32" }
-            link(href = "${combinedPathPrefix}favicon-16x16.png", type = "image/png", rel = "icon") { sizes = "16x16" }
+            link(href = "${combinedPathPrefix}icon/apple-touch-icon.png", rel = "apple-touch-icon") {
+                sizes = "180x180"
+            }
+            link(href = "${combinedPathPrefix}icon/favicon-32x32.png", type = "image/png", rel = "icon") {
+                sizes = "32x32"
+            }
+            link(href = "${combinedPathPrefix}icon/favicon-16x16.png", type = "image/png", rel = "icon") {
+                sizes = "16x16"
+            }
             link(href = "${combinedPathPrefix}site.webmanifest", rel = "manifest")
         }
         body {
@@ -167,7 +156,7 @@ abstract class SiteTemplate(
                                         +"Language:"
                                         unsafe { +"&nbsp;" }
                                         Localization.Language.entries.forEachIndexed { index, language ->
-                                            a(classes = "orange-text text-lighten-3") {
+                                            a(classes = "orange-text text-lighten-5") {
                                                 style = buildString {
                                                     append("cursor:pointer")
                                                     if (localization.currentLanguage == language) {

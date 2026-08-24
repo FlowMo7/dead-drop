@@ -83,6 +83,7 @@ fun Application.configure(
                         keepFilesTimeInHours = keepFilesTimeInHours,
                         localization = localization(),
                         shynet = shynet,
+                        hl = hlParameterIfPresentAndValidLanguage(),
                     )
                 ) {
 
@@ -109,6 +110,7 @@ fun Application.configure(
                         showLanguageSelectionInFooter = showLanguageSelectionInFooter,
                         localization = localization(),
                         shynet = shynet,
+                        hl = hlParameterIfPresentAndValidLanguage(),
                         dropId = dropId,
                     )
                 ) {
@@ -120,12 +122,25 @@ fun Application.configure(
         get("site.webmanifest") {
             call.respondText(contentType = ContentType.parse("application/manifest+json")) {
                 val localization = localization()
-                """{"name":"${localization["html_site_title"]}","short_name":"${localization["html_site_title_short"]}","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#fb8c00","background_color":"#ffffff","display":"standalone"}"""
+                """{"name":"${localization["html_site_title"]}","short_name":"${localization["html_site_title_short"]}","icons":[{"src":"/icon/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/icon/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#fb8c00","background_color":"#ffffff","display":"standalone"}"""
             }
         }
 
         route("static") {
-            resource(remotePath = "frontend.js", resource = "frontend.js")
+            get("frontend.js") {
+                val localization = localization()
+                val content = this.javaClass
+                    .getResourceAsStream("/frontend.js")!!
+                    .use { stream -> stream.reader().readText() }
+                call.respondText(
+                    contentType = ContentType.Text.JavaScript,
+                    text = content
+                        .replace("%%toast_clipboard_copy_success%%", localization["toast_clipboard_copy_success"])
+                        .replace("%%toast_clipboard_copy_error%%", localization["toast_clipboard_copy_error"])
+                        .replace("%%toast_please_enter_password%%", localization["toast_please_enter_password"])
+                )
+            }
+//            resource(remotePath = "frontend.js", resource = "frontend.js")
             resource(remotePath = "drop.js", resource = "drop.js")
             resource(remotePath = "sjcl.js", resource = "sjcl/sjcl.js")
 
@@ -136,17 +151,7 @@ fun Application.configure(
             resource(remotePath = "styles.css", resource = "styles.css")
         }
 
-        resource(remotePath = "android-chrome-192x192.png", resource = "icon/android-chrome-192x192.png")
-        resource(remotePath = "android-chrome-512x512.png", resource = "icon/android-chrome-512x512.png")
-        resource(remotePath = "apple-touch-icon.png", resource = "icon/apple-touch-icon.png")
-        resource(remotePath = "favicon.ico", resource = "icon/favicon.ico")
-        resource(remotePath = "favicon-16x16.png", resource = "icon/favicon-16x16.png")
-        resource(remotePath = "favicon-32x32.png", resource = "icon/favicon-32x32.png")
-
-        resource(remotePath = "icon/encrypted-browser.svg", resource = "icon/encrypted-browser.svg")
-        resource(remotePath = "icon/encrypted-upload.svg", resource = "icon/encrypted-upload.svg")
-        resource(remotePath = "icon/pass-key.svg", resource = "icon/pass-key.svg")
-        resource(remotePath = "icon/decrypt.svg", resource = "icon/decrypt.svg")
+        staticResources(remotePath = "icon", basePackage = "icon")
 
     }
 }

@@ -30,7 +30,18 @@ function htmlEncode(raw) {
     });
 }
 
+function onPickupKeyDown(dropId, event) {
+    if (event.key === 'Enter') {
+        getDrop(dropId, document.getElementById('drop_password').value)
+    }
+}
+
+
 function getDrop(id, password) {
+    if (password === '') {
+        M.toast({html: '%%toast_please_enter_password%%', 'classes': 'red-text'});
+        return;
+    }
     let baseUrl = window.location.protocol + '//' + window.location.host + (window.location.pathname.substring(0, window.location.pathname.indexOf('pickup')));
     let url = baseUrl + 'api/drop/' + id
     fetchDropAndDecrypt(
@@ -47,4 +58,12 @@ function getDrop(id, password) {
             document.getElementById('error_text').style.display = 'block';
         }
     );
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function () {
+        M.toast({html: '%%toast_clipboard_copy_success%%', 'classes': 'green-text'});
+    }, function (err) {
+        M.toast({html: '%%toast_clipboard_copy_error%%', 'classes': 'red-text'});
+    });
 }

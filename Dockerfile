@@ -1,9 +1,6 @@
-FROM openjdk:22-jdk-bullseye
+FROM alpine/java:22-jdk
 
-EXPOSE ${PORT:-8080}
-
-RUN apt-get -y update && \
-    apt-get install -y --no-install-recommends curl dumb-init
+RUN apk add --no-cache curl dumb-init
 
 HEALTHCHECK CMD curl -f http://127.0.0.1:${PORT}/status || exit 1
 
@@ -14,5 +11,7 @@ RUN unzip /usr/src/dead-drop-0.0.1.zip -d /usr/src &&  \
     mv /usr/src/dead-drop-0.0.1 /var/dead-drop
 
 WORKDIR /var/dead-drop
+
+EXPOSE ${PORT:-8080}
 
 CMD ["dumb-init", "bin/dead-drop"]
