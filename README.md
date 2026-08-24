@@ -10,39 +10,16 @@ encrypted data on the server (while never sharing the password with the server),
 
 This is the source-code of [drop.moetz.dev](https://drop.moetz.dev).
 
-## Setup
+## Prerequisites
 
-The docker image can be found here: [hub.docker.com/r/flowmo7/dead-drop](https://hub.docker.com/r/flowmo7/dead-drop).
+- Docker is installed on your system
+- Docker compose is installed on your system
 
-Possible environment variables:
+## Quick Start
 
-* `PORT`: The port the server listens on. Defaults to `8080`.
-* `DOMAIN`: The domain this application is available at, e.g. `drop.example.org`.
-* `IS_HTTPS`: Whether this application is available as HTTPS / behind an HTTPS reverse proxy (which it should be).
-  Default to `true`.
-* `PATH_PREFIX`: When the application is available on a sub-path of the given domain (routed by a reverse proxy, e.g.),
-  the path needs to be set here. Defaults to no path.
-* `FILE_KEEP_TIME_IN_HOURS`: The number of hours to keep a drop-record. Defaults to `24`.
-* `SHOW_GITHUB_LINK_IN_FOOTER`: Whether the GitHub link should be visible in the footer. Defaults to `true`.
-* `SITE_PRIVACY_POLICY`: The link to a privacy policy for this site. Will not show any privacy policy if not set.
-  Defaults to `null`.
-* `SHOW_LANGUAGE_SELECTION_IN_FOOTER`: Whether the footer should show a language selection of all possible languages.
-  Default: `true`
-* `SHYNET_HOST`: The host of the shynet-instance, if shynet tracking should be enabled. Default: `null`
-* `SHYNET_ID`: The id of the shynet site, if shynet tracking should be enabled. Default: `null`
-* `DO_NOT_TRACK`: Whether shynet tracking should be disabled (default: `false`). Note that this only has an effect if
-  `SHYNET_HOST` and `SHYNET_ID` are set. If those values are not set, tracking is disabled anyway.
+The Docker image is available at [hub.docker.com/r/flowmo7/dead-drop](https://hub.docker.com/r/flowmo7/dead-drop).
 
-### Data persistence
-
-If you want to persist the encrypted storage, and map it out of the docker container, the following mounting points are
-available:
-
-* `/var/dead-drop/data`: Is the directory that contains the encrypted data (for at most 24 hours)
-* `/var/dead-drop/key/key.secret`: Is the file that contains the key for the server-side encryption (the data stored in
-  the data directory is encrypted another time before persisted in the given path).
-
-### Example docker-compose.yml
+Get up and running with this basic `docker-compose.yml`:
 
 ```yaml
 services:
@@ -55,6 +32,43 @@ services:
       - /srv/docker/dead-drop/data:/var/dead-drop/data:rw
       - /srv/docker/dead-drop/key:/var/dead-drop/key:rw
 ```
+
+Then run: `docker-compose up -d`
+
+## Setup
+
+### Security Notice
+
+⚠️ **Important**: This application should always run behind HTTPS. When deploying, ensure `IS_HTTPS` is set to `true`
+and the service is behind an HTTPS reverse proxy (like NGINX or Traefik).
+
+### Environment Variables
+
+| Variable                            | Default | Required | Description                                                                                                 |
+|-------------------------------------|---------|----------|-------------------------------------------------------------------------------------------------------------|
+| `PORT`                              | `8080`  | No       | Port the server listens on                                                                                  |
+| `DOMAIN`                            |         | Yes      | Domain where the app is available (e.g., `drop.example.org`). Used to generate share links.                 |
+| `IS_HTTPS`                          | `true`  | No       | Set to `true` if the app is behind an HTTPS reverse proxy (it should be).                                   |
+| `PATH_PREFIX`                       |         | No       | Sub-path where the app is mounted (e.g., `/drop` if available at `example.org/drop`). Leave empty for root. |
+| `FILE_KEEP_TIME_IN_HOURS`           | `24`    | No       | Hours to keep encrypted drops before automatic deletion.                                                    |
+| `SHOW_GITHUB_LINK_IN_FOOTER`        | `true`  | No       | Show GitHub repository link in the footer.                                                                  |
+| `SITE_PRIVACY_POLICY`               |         | No       | URL to your privacy policy. Leave empty to hide the privacy policy link.                                    |
+| `SHOW_LANGUAGE_SELECTION_IN_FOOTER` | `true`  | No       | Show language selection dropdown in the footer.                                                             |
+| `SHYNET_HOST`                       |         | No       | Hostname of your Shynet analytics instance (requires `SHYNET_ID` to be active).                             |
+| `SHYNET_ID`                         |         | No       | Site ID on Shynet (requires `SHYNET_HOST` to be active).                                                    |
+| `DO_NOT_TRACK`                      | `false` | No       | Disable Shynet tracking (only effective if both `SHYNET_HOST` and `SHYNET_ID` are set).                     |
+
+### Data Persistence
+
+By default, drops are stored in the container and lost when it restarts. To persist encrypted drops across container
+restarts, mount these volumes:
+
+| Mount Point                     | Purpose                                                                                                                                                                            |
+|---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `/var/dead-drop/data`           | Encrypted drop storage. Drops are automatically deleted after `FILE_KEEP_TIME_IN_HOURS`.                                                                                           |
+| `/var/dead-drop/key/key.secret` | Server-side encryption key. Required to decrypt persisted drops. Keep this safe! (Feel free to just mount the folder `/var/dead-drop/key`, so that the file can be created in it.) |
+
+Mount both volumes to a host directory (as shown in the Quick Start example) to enable persistence.
 
 ## Acknowledgments
 
