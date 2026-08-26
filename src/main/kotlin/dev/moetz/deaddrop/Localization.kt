@@ -37,6 +37,7 @@ class Localization(
         FR("fr"),
         PL("pl"),
         CS("cs"),
+        TR("tr"),
     }
 
 
