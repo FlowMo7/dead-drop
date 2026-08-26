@@ -1,4 +1,5 @@
 {
+  "select_language": "Změnit jazyk",
   "index_btn_make_the_drop": "Zašifrovat a vytvořit odkaz",
   "footer_open_source_on_github": "Open source na GitHubu",
   "footer_privacy_policy": "Zásady ochrany osobních údajů",
@@ -23,8 +24,8 @@
   "drop_message_6_description_1": "Tento odkaz bude fungovat pouze jednou, takže si dej pozor na heslo a data si hned zkopíruj.",
   "drop_message_7_description_2": "Po vyzvednutí (ať už úspěšném nebo například se špatným heslem) se data sama zničí a už nebudou dostupná.",
   "drop_message_8_description_3_time": "Tento odkaz bude fungovat pouze %1$d hodin. Poté se data také sama zničí.",
-  "pickup_kicker": "Zadejte heslo, které vám bylo zasláno spolu s tímto odkazem.",
   "pickup_title": "Šifrovaná zpráva",
+  "pickup_kicker": "Zadejte heslo, které vám bylo zasláno spolu s tímto odkazem.",
   "pickup_description_before_button_text": "To bude fungovat jen jednou! Kliknutím na ",
   "pickup_kicker_1": "Tato zpráva je zašifrována. Zadejte heslo, které vám sdělil odesílatel.",
   "pickup_kicker_2": "Z bezpečnostních důvodů lze heslo zadat pouze jednou. Po odeslání jsou zašifrovaná data trvale smazána.",

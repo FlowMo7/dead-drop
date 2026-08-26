@@ -1,5 +1,6 @@
 {
   "index_btn_make_the_drop": "Şifrele ve Bağlantı Oluştur",
+  "select_language": "Dili değiştir",
   "footer_open_source_on_github": "GitHub'da açık kaynak",
   "footer_privacy_policy": "Gizlilik Politikası",
   "index_headline": "Şifreli bir mesaj gönder",
@@ -34,8 +35,8 @@
   "pickup_error_possible_reasons_bullet_point_2": "Şifre yanlıştı.",
   "pickup_error_security_warning": "Güvenlik uyarısı",
   "pickup_error_security_warning_text": "Henüz hiç kimse bu verilere erişmemişse, içeriğin artık güvenliği ihlal edilmiş olabileceğini varsayınız.",
-  "html_meta_keywords": "bırak, şifre, şifreleme, güvenli, gönder, uçtan uca şifreli",
   "pickup_hint_encrypt_yourself": "Şifrelenmiş verileri kendiniz göndermek için buraya tıklayın.",
+  "html_meta_keywords": "bırak, şifre, şifreleme, güvenli, gönder, uçtan uca şifreli",
   "pickup_kicker": "Bu bağlantı ile size gönderilen şifreyi girin.",
   "pickup_description_before_button_text": "Bu sadece bir kez işe yarayacak! Tıklayın ",
   "toast_clipboard_copy_success": "Kopyalandı!",

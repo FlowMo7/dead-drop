@@ -3,7 +3,28 @@ package dev.moetz.deaddrop.template
 import dev.moetz.deaddrop.Localization
 import dev.moetz.deaddrop.Shynet
 import io.ktor.server.html.*
-import kotlinx.html.*
+import kotlinx.html.FlowContent
+import kotlinx.html.HTML
+import kotlinx.html.a
+import kotlinx.html.body
+import kotlinx.html.div
+import kotlinx.html.footer
+import kotlinx.html.h3
+import kotlinx.html.head
+import kotlinx.html.header
+import kotlinx.html.id
+import kotlinx.html.img
+import kotlinx.html.lang
+import kotlinx.html.link
+import kotlinx.html.main
+import kotlinx.html.meta
+import kotlinx.html.nav
+import kotlinx.html.onClick
+import kotlinx.html.script
+import kotlinx.html.span
+import kotlinx.html.style
+import kotlinx.html.title
+import kotlinx.html.unsafe
 
 abstract class SiteTemplate(
     protected val pathPrefix: String?,
@@ -104,6 +125,42 @@ abstract class SiteTemplate(
                 }
             }
 
+            div(classes = "modal") {
+                id = "select-language"
+                div(classes = "modal-content") {
+                    div(classes = "row") {
+                        div(classes = "col s12 black-text") {
+                            h3 { +"Language" }
+                        }
+                    }
+                    div(classes = "row") {
+                        div(classes = "col s12") {
+                            div(classes = "collection") {
+                                Localization.Language.entries.forEach { language ->
+                                    val classes = if (language == localization.currentLanguage) {
+                                        "collection-item active"
+                                    } else {
+                                        "collection-item"
+                                    }
+                                    a(classes = classes) {
+                                        href =
+                                            "${combinedPathPrefix}${subSitePath}?hl=${language.identifier}"
+                                        img {
+                                            style = "height:1em;margin-right:12px;"
+                                            src =
+                                                "${combinedPathPrefix}flags/${language.flagIdentifier}.svg"
+                                        }
+                                        span {
+                                            +language.languageNameInEnglish
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             footer(classes = "page-footer orange") {
                 div(classes = "footer-copyright") {
                     div(classes = "container") {
@@ -151,23 +208,23 @@ abstract class SiteTemplate(
                                     footerLinks.lastIndex -> "right-align"
                                     else -> "center-align"
                                 }
+
                                 div(classes = "col $size $align") {
                                     if (label == "LANGUAGE" && link == "LANGUAGE") {
-                                        +"Language:"
-                                        unsafe { +"&nbsp;" }
-                                        Localization.Language.entries.forEachIndexed { index, language ->
-                                            a(classes = "orange-text text-lighten-5") {
-                                                style = buildString {
-                                                    append("cursor:pointer")
-                                                    if (localization.currentLanguage == language) {
-                                                        append(";text-decoration:underline")
-                                                    }
-                                                }
-                                                href = "${combinedPathPrefix}${subSitePath}?hl=${language.identifier}"
-                                                +language.identifier
+                                        a(classes = "orange-text text-lighten-5") {
+                                            style = "cursor:pointer"
+
+                                            onClick =
+                                                "M.Modal.getInstance(document.getElementById('select-language')).open();"
+
+                                            img {
+                                                style = "height:1em;margin-right:12px;"
+                                                src =
+                                                    "${combinedPathPrefix}flags/${localization.currentLanguage.flagIdentifier}.svg"
+                                                alt = localization.currentLanguage.languageNameInEnglish
                                             }
-                                            if (index != Localization.Language.entries.lastIndex) {
-                                                unsafe { +"&nbsp;|&nbsp;" }
+                                            span {
+                                                +localization["select_language"]
                                             }
                                         }
                                     } else {
@@ -183,6 +240,15 @@ abstract class SiteTemplate(
                             }
                         }
                     }
+                }
+            }
+
+            script {
+                unsafe {
+                    +"document.addEventListener('DOMContentLoaded', function() {"
+                    +"var elems = document.querySelectorAll('.modal');"
+                    +"var instances = M.Modal.init(elems);"
+                    +"});"
                 }
             }
 

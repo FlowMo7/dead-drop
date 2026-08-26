@@ -153,5 +153,7 @@ fun Application.configure(
 
         staticResources(remotePath = "icon", basePackage = "icon")
 
+        staticResources(remotePath = "flags", basePackage = "flags")
+
     }
 }
