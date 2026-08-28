@@ -1,5 +1,10 @@
 # Changelog
 
+# Unreleased
+
+* Visual update (add a bit more explanation)
+* Introduce various languages
+
 # 1.0.3
 
 * Update dependencies
