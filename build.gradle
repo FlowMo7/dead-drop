@@ -6,7 +6,14 @@ plugins {
 
 group "dev.moetz.deaddrop"
 version "0.0.1"
-mainClassName = "dev.moetz.deaddrop.ApplicationKt"
+
+application {
+    mainClass = 'dev.moetz.deaddrop.ApplicationKt'
+}
+
+kotlin {
+    jvmToolchain(21)
+}
 
 repositories {
     mavenCentral()
