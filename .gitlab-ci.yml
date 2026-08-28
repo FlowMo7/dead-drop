@@ -16,7 +16,8 @@ build application:
     paths:
       - build/distributions/dead-drop.zip
   tags:
-    - maven
+    - docker
+  image: maven:3.9.10-eclipse-temurin-21
 
 build and push private registry:
   stage: build_image
@@ -26,6 +27,8 @@ build and push private registry:
     - docker push $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG
   tags:
     - docker
+  except:
+    - tags
 
 build and push docker hub:
   stage: tag_image
@@ -41,6 +44,8 @@ build and push docker hub:
     - develop
     - master
     - tags
+  except:
+    - tags
 
 publish versioned image:
   stage: tag_image
@@ -52,13 +57,16 @@ publish versioned image:
       MAJOR=${VERSION%%.*}
       MAJOR_MINOR=${VERSION%.*}
 
-      docker build --pull \
-        -t "$PRIVATE_REGISTRY:$VERSION" \
-        -t "$PRIVATE_REGISTRY:$MAJOR" \
-        -t "$PRIVATE_REGISTRY:$MAJOR_MINOR" \
-        -t "$PUBLIC_REGISTRY:$VERSION" \
-        -t "$PUBLIC_REGISTRY:$MAJOR" \
-        -t "$PUBLIC_REGISTRY:$MAJOR_MINOR" ./
+      docker login -u $REGISTRY_MOETZ_DEV_USERNAME -p $REGISTRY_MOETZ_DEV_PASSWORD registry.moetz.dev
+      docker pull $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG
+
+      docker tag $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG $PRIVATE_REGISTRY:$VERSION
+      docker tag $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG $PRIVATE_REGISTRY:$MAJOR
+      docker tag $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG $PRIVATE_REGISTRY:$MAJOR_MINOR
+      
+      docker tag $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG $PUBLIC_REGISTRY:$VERSION
+      docker tag $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG $PUBLIC_REGISTRY:$MAJOR
+      docker tag $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG $PUBLIC_REGISTRY:$MAJOR_MINOR
 
       docker login -u $REGISTRY_MOETZ_DEV_USERNAME -p $REGISTRY_MOETZ_DEV_PASSWORD registry.moetz.dev
       docker push "$PRIVATE_REGISTRY:$VERSION"
