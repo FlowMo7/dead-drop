@@ -11,6 +11,16 @@ application {
     mainClass = 'dev.moetz.deaddrop.ApplicationKt'
 }
 
+distributions {
+    main {
+        distributionBaseName = 'dead-drop'
+    }
+}
+
+tasks.distZip {
+    archiveFileName = 'dead-drop.zip'
+}
+
 kotlin {
     jvmToolchain(21)
 }

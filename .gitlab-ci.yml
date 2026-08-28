@@ -1,8 +1,6 @@
 variables:
-  COMPONENT_IMAGE_PRIVATE_REGISTRY: registry.moetz.dev/dead-drop:$CI_COMMIT_REF_SLUG
-  COMPONENT_LATEST_IMAGE_PRIVATE_REGISTRY: registry.moetz.dev/dead-drop:latest
-  COMPONENT_IMAGE_DOCKER_HUB: flowmo7/dead-drop:$CI_COMMIT_REF_SLUG
-  COMPONENT_LATEST_IMAGE_DOCKER_HUB: flowmo7/dead-drop:latest
+  PRIVATE_REGISTRY: registry.moetz.dev/dead-drop
+  PUBLIC_REGISTRY: flowmo7/dead-drop
 
 stages:
   - build_application
@@ -16,25 +14,27 @@ build application:
     - ./gradlew clean build test distZip
   artifacts:
     paths:
-      - build/distributions/dead-drop-0.0.1.zip
+      - build/distributions/dead-drop.zip
   tags:
     - maven
 
 build and push private registry:
   stage: build_image
   script:
-    - docker build --pull -t $COMPONENT_IMAGE_PRIVATE_REGISTRY ./
+    - docker build --pull -t $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG ./
     - docker login -u $REGISTRY_MOETZ_DEV_USERNAME -p $REGISTRY_MOETZ_DEV_PASSWORD registry.moetz.dev
-    - docker push $COMPONENT_IMAGE_PRIVATE_REGISTRY
+    - docker push $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG
   tags:
     - docker
 
 build and push docker hub:
-  stage: build_image
+  stage: deploy_image
   script:
-    - docker build --pull -t $COMPONENT_IMAGE_DOCKER_HUB ./
+    - docker login -u $REGISTRY_MOETZ_DEV_USERNAME -p $REGISTRY_MOETZ_DEV_PASSWORD registry.moetz.dev
+    - docker pull $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG
+    - docker tag $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG $PUBLIC_REGISTRY:$CI_COMMIT_REF_SLUG
     - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-    - docker push $COMPONENT_IMAGE_DOCKER_HUB
+    - docker push $PUBLIC_REGISTRY:$CI_COMMIT_REF_SLUG
   tags:
     - docker
   only:
@@ -42,13 +42,43 @@ build and push docker hub:
     - master
     - tags
 
+publish versioned image:
+  stage: tag_image
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/'
+  script:
+    - |
+      VERSION=$CI_COMMIT_TAG
+      MAJOR=${VERSION%%.*}
+      MAJOR_MINOR=${VERSION%.*}
+
+      docker build --pull \
+        -t "$PRIVATE_REGISTRY:$VERSION" \
+        -t "$PRIVATE_REGISTRY:$MAJOR" \
+        -t "$PRIVATE_REGISTRY:$MAJOR_MINOR" \
+        -t "$PUBLIC_REGISTRY:$VERSION" \
+        -t "$PUBLIC_REGISTRY:$MAJOR" \
+        -t "$PUBLIC_REGISTRY:$MAJOR_MINOR" ./
+
+      docker login -u $REGISTRY_MOETZ_DEV_USERNAME -p $REGISTRY_MOETZ_DEV_PASSWORD registry.moetz.dev
+      docker push "$PRIVATE_REGISTRY:$VERSION"
+      docker push "$PRIVATE_REGISTRY:$MAJOR"
+      docker push "$PRIVATE_REGISTRY:$MAJOR_MINOR"
+
+      docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+      docker push "$PUBLIC_REGISTRY:$VERSION"
+      docker push "$PUBLIC_REGISTRY:$MAJOR"
+      docker push "$PUBLIC_REGISTRY:$MAJOR_MINOR"
+  tags:
+    - docker
+
 tag latest private registry:
   stage: tag_image
   script:
     - docker login -u $REGISTRY_MOETZ_DEV_USERNAME -p $REGISTRY_MOETZ_DEV_PASSWORD registry.moetz.dev
-    - docker pull $COMPONENT_IMAGE_PRIVATE_REGISTRY
-    - docker tag $COMPONENT_IMAGE_PRIVATE_REGISTRY $COMPONENT_LATEST_IMAGE_PRIVATE_REGISTRY
-    - docker push $COMPONENT_LATEST_IMAGE_PRIVATE_REGISTRY
+    - docker pull $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG
+    - docker tag $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG $PRIVATE_REGISTRY:latest
+    - docker push $PRIVATE_REGISTRY:latest
   tags:
     - docker
   only:
@@ -58,9 +88,9 @@ tag latest docker hub:
   stage: tag_image
   script:
     - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-    - docker pull $COMPONENT_IMAGE_DOCKER_HUB
-    - docker tag $COMPONENT_IMAGE_DOCKER_HUB $COMPONENT_LATEST_IMAGE_DOCKER_HUB
-    - docker push $COMPONENT_LATEST_IMAGE_DOCKER_HUB
+    - docker pull $PUBLIC_REGISTRY:$CI_COMMIT_REF_SLUG
+    - docker tag $PUBLIC_REGISTRY:$CI_COMMIT_REF_SLUG $PUBLIC_REGISTRY:latest
+    - docker push $PUBLIC_REGISTRY:latest
   tags:
     - docker
   only:
