@@ -28,7 +28,7 @@ build and push private registry:
     - docker
 
 build and push docker hub:
-  stage: deploy_image
+  stage: tag_image
   script:
     - docker login -u $REGISTRY_MOETZ_DEV_USERNAME -p $REGISTRY_MOETZ_DEV_PASSWORD registry.moetz.dev
     - docker pull $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG
