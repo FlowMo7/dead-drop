@@ -3,28 +3,7 @@ package dev.moetz.deaddrop.template
 import dev.moetz.deaddrop.Localization
 import dev.moetz.deaddrop.Shynet
 import io.ktor.server.html.*
-import kotlinx.html.FlowContent
-import kotlinx.html.HTML
-import kotlinx.html.a
-import kotlinx.html.body
-import kotlinx.html.div
-import kotlinx.html.footer
-import kotlinx.html.h3
-import kotlinx.html.head
-import kotlinx.html.header
-import kotlinx.html.id
-import kotlinx.html.img
-import kotlinx.html.lang
-import kotlinx.html.link
-import kotlinx.html.main
-import kotlinx.html.meta
-import kotlinx.html.nav
-import kotlinx.html.onClick
-import kotlinx.html.script
-import kotlinx.html.span
-import kotlinx.html.style
-import kotlinx.html.title
-import kotlinx.html.unsafe
+import kotlinx.html.*
 
 abstract class SiteTemplate(
     protected val pathPrefix: String?,
@@ -136,25 +115,26 @@ abstract class SiteTemplate(
                     div(classes = "row") {
                         div(classes = "col s12") {
                             div(classes = "collection") {
-                                Localization.Language.entries.forEach { language ->
-                                    val classes = if (language == localization.currentLanguage) {
-                                        "collection-item active"
-                                    } else {
-                                        "collection-item"
-                                    }
-                                    a(classes = classes) {
-                                        href =
-                                            "${combinedPathPrefix}${subSitePath}?hl=${language.identifier}"
-                                        img {
-                                            style = "height:1em;margin-right:12px;"
-                                            src =
-                                                "${combinedPathPrefix}flags/${language.flagIdentifier}.svg"
+                                Localization.Language.entries
+                                    .sortedBy { it.languageNameInEnglish }
+                                    .forEach { language ->
+                                        val classes = if (language == localization.currentLanguage) {
+                                            "collection-item active"
+                                        } else {
+                                            "collection-item"
                                         }
-                                        span {
-                                            +language.languageNameInEnglish
+                                        a(classes = classes) {
+                                            href =
+                                                "${combinedPathPrefix}${subSitePath}?hl=${language.identifier}"
+                                            img {
+                                                style = "height:0.8em;margin-right:12px;"
+                                                src = "${combinedPathPrefix}flags/${language.flagIdentifier}.svg"
+                                            }
+                                            span {
+                                                +language.languageNameInEnglish
+                                            }
                                         }
                                     }
-                                }
                             }
                         }
                     }
@@ -214,14 +194,16 @@ abstract class SiteTemplate(
                                         a(classes = "orange-text text-lighten-5") {
                                             style = "cursor:pointer"
 
+                                            val language = localization.currentLanguage
+
                                             onClick =
                                                 "M.Modal.getInstance(document.getElementById('select-language')).open();"
 
                                             img {
-                                                style = "height:1em;margin-right:12px;"
+                                                style = "height:0.8em;margin-right:8px;"
                                                 src =
-                                                    "${combinedPathPrefix}flags/${localization.currentLanguage.flagIdentifier}.svg"
-                                                alt = localization.currentLanguage.languageNameInEnglish
+                                                    "${combinedPathPrefix}flags/${language.flagIdentifier}.svg"
+                                                alt = language.languageNameInEnglish
                                             }
                                             span {
                                                 +localization["select_language"]

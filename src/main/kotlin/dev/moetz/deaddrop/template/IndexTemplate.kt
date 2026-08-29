@@ -191,69 +191,28 @@ class IndexTemplate(
             }
 
             div(classes = "row") {
-                div(classes = "col s12 m6 l3") {
-                    div(classes = "card-panel green darken-1") {
-                        div(classes = "row") {
-                            div(classes = "col s12 center-align") {
-                                img {
-                                    style = "height: 8em;aspect-ratio:1;"
-                                    src = "/icon/encrypted-browser.svg"
-                                }
-                            }
-                            div(classes = "col s12 center-align") {
-                                style = "height:4em;"
-                                +localization["index_how_it_works_step_1"]
-                            }
-                        }
-                    }
-                }
 
-                div(classes = "col s12 m6 l3") {
-                    div(classes = "card-panel green darken-1") {
-                        div(classes = "row") {
-                            div(classes = "col s12 center-align") {
-                                img {
-                                    style = "height: 8em;aspect-ratio:1;"
-                                    src = "/icon/encrypted-upload.svg"
-                                }
-                            }
-                            div(classes = "col s12 center-align") {
-                                style = "height:4em;"
-                                +localization["index_how_it_works_step_2"]
-                            }
-                        }
-                    }
-                }
+                val cards = listOf<Pair<String, String>>(
+                    "index_how_it_works_step_1" to "/icon/encrypted-browser.svg",
+                    "index_how_it_works_step_2" to "/icon/encrypted-upload.svg",
+                    "index_how_it_works_step_3" to "/icon/pass-key.svg",
+                    "index_how_it_works_step_4" to "/icon/decrypt.svg",
+                )
 
-                div(classes = "col s12 m6 l3") {
-                    div(classes = "card-panel green darken-1") {
-                        div(classes = "row") {
-                            div(classes = "col s12 center-align") {
-                                img {
-                                    style = "height: 8em;aspect-ratio:1;"
-                                    src = "/icon/pass-key.svg"
+                cards.forEach { (localizationKey, iconUrl) ->
+                    div(classes = "col s12 m6 l3") {
+                        div(classes = "card-panel green darken-1") {
+                            div(classes = "row") {
+                                div(classes = "col s12 center-align") {
+                                    img {
+                                        style = "height: 8em;aspect-ratio:1;"
+                                        src = iconUrl
+                                    }
                                 }
-                            }
-                            div(classes = "col s12 center-align") {
-                                style = "height:4em;"
-                                +localization["index_how_it_works_step_3"]
-                            }
-                        }
-                    }
-                }
-
-                div(classes = "col s12 m6 l3") {
-                    div(classes = "card-panel green darken-1") {
-                        div(classes = "row") {
-                            div(classes = "col s12 center-align") {
-                                img {
-                                    style = "height: 8em;aspect-ratio:1;"
-                                    src = "/icon/decrypt.svg"
+                                div(classes = "col s12 center-align") {
+                                    style = "height:5em;"
+                                    +localization[localizationKey]
                                 }
-                            }
-                            div(classes = "col s12 center-align") {
-                                style = "height:4em;"
-                                +localization["index_how_it_works_step_4"]
                             }
                         }
                     }
