@@ -39,7 +39,7 @@ class Localization(
         IT("it", "it", "Italian"),
         NL("nl", "nl", "Dutch"),
         RO("ro", "ro", "Romanian"),
-        UK("uk", "ua", "Ukranian"),
+        UK("uk", "ua", "Ukrainian"),
         PL("pl", "pl", "Polish"),
     }
 
