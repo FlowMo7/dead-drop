@@ -3,9 +3,10 @@ import assert from "node:assert/strict";
 import puppeteer from "puppeteer";
 
 const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:8080";
+const LANGUAGE = process.env.E2E_LANGUAGE ?? "en";
 const LAUNCH_ARGS = {
   headless: true,
-  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  args: ["--no-sandbox", "--disable-setuid-sandbox", `--lang=${LANGUAGE}`],
 };
 
 let browser;
@@ -44,6 +45,7 @@ async function waitForAppReady() {
 async function newPage() {
   page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 800 });
+  await page.setExtraHTTPHeaders({ "Accept-Language": LANGUAGE });
   return page;
 }
 

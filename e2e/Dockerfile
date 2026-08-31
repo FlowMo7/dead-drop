@@ -13,6 +13,7 @@ RUN npm install
 COPY e2e.test.mjs ./
 
 ENV E2E_BASE_URL=http://localhost:8080
+ENV E2E_LANGUAGE=en
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 CMD ["npm", "test"]
