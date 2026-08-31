@@ -1,0 +1,13 @@
+{
+  "name": "deaddrop-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "End-to-end tests for the Dead Drop web application using Puppeteer",
+  "type": "module",
+  "scripts": {
+    "test": "node --test --test-concurrency=1"
+  },
+  "dependencies": {
+    "puppeteer": "^23.0.0"
+  }
+}
