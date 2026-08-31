@@ -135,9 +135,21 @@ fun Application.configure(
                 call.respondText(
                     contentType = ContentType.Text.JavaScript,
                     text = content
-                        .replace("%%toast_clipboard_copy_success%%", localization["toast_clipboard_copy_success"])
-                        .replace("%%toast_clipboard_copy_error%%", localization["toast_clipboard_copy_error"])
-                        .replace("%%toast_please_enter_password%%", localization["toast_please_enter_password"])
+                        .replaceWithLocalizedEntryAndEscapeSingleQuotes(
+                            localization = localization,
+                            placeholder = "%%toast_clipboard_copy_success%%",
+                            localizedKey = "toast_clipboard_copy_success",
+                        )
+                        .replaceWithLocalizedEntryAndEscapeSingleQuotes(
+                            localization = localization,
+                            placeholder = "%%toast_clipboard_copy_error%%",
+                            localizedKey = "toast_clipboard_copy_error",
+                        )
+                        .replaceWithLocalizedEntryAndEscapeSingleQuotes(
+                            localization = localization,
+                            placeholder = "%%toast_please_enter_password%%",
+                            localizedKey = "toast_please_enter_password",
+                        )
                 )
             }
 //            resource(remotePath = "frontend.js", resource = "frontend.js")
@@ -156,4 +168,15 @@ fun Application.configure(
         staticResources(remotePath = "flags", basePackage = "flags")
 
     }
+}
+
+private fun String.replaceWithLocalizedEntryAndEscapeSingleQuotes(
+    localization: Localization,
+    placeholder: String,
+    localizedKey: String
+): String {
+    return this.replace(
+        placeholder,
+        localization[localizedKey].replace("\'", "\\\'")
+    )
 }
