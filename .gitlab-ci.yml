@@ -36,7 +36,7 @@ e2e tests en:
   script:
     - docker build --pull -t $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG ./
     - mkdir -p ./tmp/dead-drop-e2e/data ./tmp/dead-drop-e2e/config
-    - docker network create dead-drop-e2e
+    - docker network create dead-drop-e2e-en
     - |
       docker run -d --name deaddrop-e2e-en \
         --network dead-drop-e2e-en --network-alias deaddrop \
@@ -57,7 +57,7 @@ e2e tests de:
   script:
     - docker build --pull -t $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG ./
     - mkdir -p ./tmp/dead-drop-e2e/data ./tmp/dead-drop-e2e/config
-    - docker network create dead-drop-e2e
+    - docker network create dead-drop-e2e-de
     - |
       docker run -d --name deaddrop-e2e-de \
         --network dead-drop-e2e-de --network-alias deaddrop \
