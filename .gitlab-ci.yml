@@ -51,17 +51,17 @@ e2e tests:
     - mkdir -p ./tmp/dead-drop-e2e/data ./tmp/dead-drop-e2e/config
     - docker network create dead-drop-e2e
     - |
-      docker run -d --name deaddrop-e2e \
-        --network dead-drop-e2e --network-alias deaddrop \
+      docker run -d --name deaddrop-e2e-$E22_LANGUAGE \
+        --network dead-drop-e2e-$E22_LANGUAGE --network-alias deaddrop \
         -e PORT=8080 -e DOMAIN=deaddrop:8080 -e IS_HTTPS=false -e SHOW_GITHUB_LINK_IN_FOOTER=false \
         -v $(pwd)/tmp/dead-drop-e2e/data:/var/dead-drop/data \
         -v $(pwd)/tmp/dead-drop-e2e/config:/var/dead-drop/config \
         $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG
-    - docker build -t dead-drop-e2e-runner ./e2e
-    - docker run --rm --network dead-drop-e2e -e E2E_BASE_URL=http://deaddrop:8080 -e E2E_LANGUAGE=$E2E_LANGUAGE dead-drop-e2e-runner
+    - docker build -t dead-drop-e2e-runner-$E22_LANGUAGE ./e2e
+    - docker run --rm --network dead-drop-e2e -e E2E_BASE_URL=http://deaddrop:8080 -e E2E_LANGUAGE=$E2E_LANGUAGE dead-drop-e2e-runner-$E22_LANGUAGE
   after_script:
-    - docker rm -f deaddrop-e2e || true
-    - docker network rm dead-drop-e2e || true
+    - docker rm -f deaddrop-e2e-$E22_LANGUAGE || true
+    - docker network rm dead-drop-e2e-$E22_LANGUAGE || true
   tags:
     - docker
 
