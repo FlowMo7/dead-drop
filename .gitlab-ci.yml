@@ -33,7 +33,6 @@ build and push private registry:
 
 e2e tests:
   stage: end 2 end test
-  name: e2e tests ($E2E_LANGUAGE)
   parallel:
     matrix:
       - E2E_LANGUAGE: en
