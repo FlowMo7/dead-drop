@@ -31,45 +31,15 @@ build and push private registry:
   except:
     - tags
 
-e2e tests en:
+e2e tests:
   stage: end 2 end test
+  parallel:
+    matrix:
+      - E2E_LANGUAGE: en
+      - E2E_LANGUAGE: de
   script:
-    - docker build --pull -t $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG ./
-    - mkdir -p ./tmp/dead-drop-e2e/data ./tmp/dead-drop-e2e/config
-    - docker network create dead-drop-e2e-en
-    - |
-      docker run -d --name deaddrop-e2e-en \
-        --network dead-drop-e2e-en --network-alias deaddrop \
-        -e PORT=8080 -e DOMAIN=deaddrop:8080 -e IS_HTTPS=false -e SHOW_GITHUB_LINK_IN_FOOTER=false \
-        -v $(pwd)/tmp/dead-drop-e2e/data:/var/dead-drop/data \
-        -v $(pwd)/tmp/dead-drop-e2e/config:/var/dead-drop/config \
-        $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG
-    - docker build -t dead-drop-e2e-runner ./e2e
-    - docker run --rm --network dead-drop-e2e -e E2E_BASE_URL=http://deaddrop:8080 -e E2E_LANGUAGE=en dead-drop-e2e-runner-en
-  after_script:
-    - docker rm -f deaddrop-e2e-en || true
-    - docker network rm dead-drop-e2e-en || true
-  tags:
-    - docker
-
-e2e tests de:
-  stage: end 2 end test
-  script:
-    - docker build --pull -t $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG ./
-    - mkdir -p ./tmp/dead-drop-e2e/data ./tmp/dead-drop-e2e/config
-    - docker network create dead-drop-e2e-de
-    - |
-      docker run -d --name deaddrop-e2e-de \
-        --network dead-drop-e2e-de --network-alias deaddrop \
-        -e PORT=8080 -e DOMAIN=deaddrop:8080 -e IS_HTTPS=false -e SHOW_GITHUB_LINK_IN_FOOTER=false \
-        -v $(pwd)/tmp/dead-drop-e2e/data:/var/dead-drop/data \
-        -v $(pwd)/tmp/dead-drop-e2e/config:/var/dead-drop/config \
-        $PRIVATE_REGISTRY:$CI_COMMIT_REF_SLUG
-    - docker build -t dead-drop-e2e-runner ./e2e
-    - docker run --rm --network dead-drop-e2e -e E2E_BASE_URL=http://deaddrop:8080 -e E2E_LANGUAGE=de dead-drop-e2e-runner-de
-  after_script:
-    - docker rm -f deaddrop-e2e-de || true
-    - docker network rm dead-drop-e2e-de || true
+    - docker build -f e2e/Dockerfile -t dead-drop-e2e-$E2E_LANGUAGE ./
+    - docker run --rm -e E2E_LANGUAGE=$E2E_LANGUAGE dead-drop-e2e-$E2E_LANGUAGE
   tags:
     - docker
 
