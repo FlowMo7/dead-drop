@@ -191,7 +191,7 @@ abstract class SiteTemplate(
 
                                 div(classes = "col $size $align") {
                                     if (label == "LANGUAGE" && link == "LANGUAGE") {
-                                        a(classes = "orange-text text-lighten-5") {
+                                        a(classes = "black-text") {
                                             style = "cursor:pointer"
 
                                             val language = localization.currentLanguage
