@@ -43,6 +43,25 @@ e2e tests:
   tags:
     - docker
 
+screenshots:
+  stage: end 2 end test
+  variables:
+    SCREENSHOT_LANGUAGES: "en,de,es,cs,fr,tr,it,nl,ro,uk,pl"
+  script:
+    - docker build -f e2e/Dockerfile -t dead-drop-screenshots ./
+    - mkdir -p screenshots
+    - docker run --rm
+      -e SCREENSHOT_LANGUAGES="$SCREENSHOT_LANGUAGES"
+      -e SCREENSHOT_OUT_DIR=/screenshots
+      -v "$(pwd)/screenshots:/screenshots"
+      dead-drop-screenshots /e2e/screenshots-entrypoint.sh
+  artifacts:
+    paths:
+      - screenshots/
+    expire_in: 1 week
+  tags:
+    - docker
+
 build and push docker hub:
   stage: tag_image
   script:

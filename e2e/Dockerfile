@@ -7,7 +7,8 @@ ENV JAVA_HOME=/opt/java/openjdk
 ENV PATH=/opt/java/openjdk/bin:$PATH
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends chromium dumb-init unzip \
+    && apt-get install -y --no-install-recommends \
+        chromium dumb-init unzip fonts-noto-color-emoji fonts-noto-core \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /e2e
@@ -16,8 +17,9 @@ COPY e2e/package.json ./
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 RUN npm install
 
-COPY e2e/e2e.test.mjs e2e/entrypoint.sh ./
-RUN chmod +x /e2e/entrypoint.sh
+COPY e2e/e2e.test.mjs e2e/entrypoint.sh e2e/screenshots.mjs e2e/screenshots-entrypoint.sh ./
+RUN chmod +x /e2e/entrypoint.sh /e2e/screenshots-entrypoint.sh
+RUN mkdir -p /screenshots
 
 COPY build/distributions/dead-drop.zip /tmp/dead-drop.zip
 RUN unzip /tmp/dead-drop.zip -d /var && \
@@ -26,6 +28,7 @@ RUN unzip /tmp/dead-drop.zip -d /var && \
 
 ENV E2E_BASE_URL=http://localhost:8080
 ENV E2E_LANGUAGE=en
+ENV SCREENSHOT_OUT_DIR=/screenshots
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 ENV PORT=8080
 ENV DOMAIN=localhost:8080
