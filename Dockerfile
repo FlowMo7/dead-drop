@@ -2,7 +2,7 @@ FROM eclipse-temurin:21-jre-alpine
 
 RUN apk add --no-cache curl dumb-init
 
-HEALTHCHECK CMD curl -f http://127.0.0.1:${PORT}/status || exit 1
+HEALTHCHECK CMD curl -f http://127.0.0.1:${PORT:-8080}/status || exit 1
 
 COPY ./build/distributions/dead-drop.zip /usr/src/app.zip
 
