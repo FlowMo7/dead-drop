@@ -1,5 +1,7 @@
 plugins {
     // See https://jmfayard.github.io/refreshVersions
+    // This version must stay literal here: refreshVersions is the bootstrap plugin that reads
+    // versions.properties, so it cannot source its own version from there.
     id 'de.fayard.refreshVersions' version '0.60.6'
 }
 

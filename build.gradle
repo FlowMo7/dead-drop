@@ -34,16 +34,16 @@ dependencies {
     implementation Ktor.server.netty
     implementation Ktor.server.htmlBuilder
     implementation KotlinX.serialization.json
-    implementation 'io.ktor:ktor-server-default-headers-jvm:_'
-    implementation 'io.ktor:ktor-server-auto-head-response-jvm:_'
-    implementation 'io.ktor:ktor-server-caching-headers-jvm:_'
-    implementation 'io.ktor:ktor-server-forwarded-header-jvm:_'
-    implementation 'io.ktor:ktor-server-conditional-headers-jvm:_'
-    implementation 'io.ktor:ktor-server-compression-jvm:_'
+    implementation Ktor.server.defaultHeaders
+    implementation Ktor.server.autoHeadResponse
+    implementation Ktor.server.cachingHeaders
+    implementation Ktor.server.forwardedHeader
+    implementation Ktor.server.conditionalHeaders
+    implementation Ktor.server.compression
 
     implementation "ch.qos.logback:logback-classic:_"
 
-    testImplementation "io.ktor:ktor-server-tests:_"
+    testImplementation Ktor.server.testHost
     testImplementation Kotlin.test
     testImplementation Testing.mockK
 }
