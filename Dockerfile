@@ -1,4 +1,4 @@
-FROM alpine/java:22-jdk
+FROM eclipse-temurin:21-jre-alpine
 
 RUN apk add --no-cache curl dumb-init
 
