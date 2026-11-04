@@ -1,4 +1,16 @@
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jdk-alpine AS jre-build
+
+RUN "$JAVA_HOME/bin/jlink" \
+    --add-modules java.base,java.desktop,java.instrument,java.logging,java.management,java.naming,jdk.unsupported,jdk.crypto.ec \
+    --strip-debug --no-man-pages --no-header-files --compress=2 \
+    --output /javaruntime
+
+
+FROM alpine:3.20
+
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH=$JAVA_HOME/bin:$PATH
+COPY --from=jre-build /javaruntime $JAVA_HOME
 
 RUN apk add --no-cache curl dumb-init
 
