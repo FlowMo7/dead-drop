@@ -102,6 +102,8 @@ fun main() {
             sitePrivacyPolicyLink = sitePrivacyPolicyLink,
             showLanguageSelectionInFooter = showLanguageSelectionInFooter,
             shynet = shynet,
+            isHttps = isHttps,
+            domain = domain,
         )
 
         configureApi(dataRepository, isHttps, domain, pathPrefix)

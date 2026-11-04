@@ -2,6 +2,7 @@ package dev.moetz.deaddrop.plugins
 
 import dev.moetz.deaddrop.Localization
 import dev.moetz.deaddrop.Shynet
+import dev.moetz.deaddrop.combinePartsToFullUrl
 import dev.moetz.deaddrop.template.IndexTemplate
 import dev.moetz.deaddrop.template.PickupTemplate
 import io.ktor.http.*
@@ -56,6 +57,8 @@ fun Application.configure(
     sitePrivacyPolicyLink: String?,
     showLanguageSelectionInFooter: Boolean,
     shynet: Shynet,
+    isHttps: Boolean,
+    domain: String,
 ) {
 
     routing {
@@ -63,6 +66,13 @@ fun Application.configure(
         get("robots.txt") {
             call.respondText(ContentType.Text.Plain) {
                 "User-agent: * Allow: /"
+            }
+        }
+
+        get("llms.txt") {
+            val baseUrl = combinePartsToFullUrl(isHttps, domain, pathPrefix)
+            call.respondText(ContentType.Text.Plain) {
+                buildLlmsTxt(baseUrl)
             }
         }
 
@@ -179,4 +189,34 @@ private fun String.replaceWithLocalizedEntryAndEscapeSingleQuotes(
         placeholder,
         localization[localizedKey].replace("\'", "\\\'")
     )
+}
+
+private fun buildLlmsTxt(baseUrl: String): String {
+    return """# Dead Drop Service
+
+> Send one-time secrets securely. Data is encrypted in the browser with a
+> password that is never sent to the server; the server stores only the
+> encrypted blob and hands out a single-use pickup link.
+
+Dead Drop is a self-hostable one-time-secret sharing service built with
+Kotlin and Ktor. Secrets are encrypted client-side using sjcl, encrypted
+again at rest on the server, retrievable exactly once, and automatically
+deleted after a configurable expiry. Licensed under Apache-2.0.
+
+## Pages
+
+- [Home / create a drop](${baseUrl}): Web UI to encrypt a secret and generate a one-time link
+- [Pickup a drop](${baseUrl}pickup/{id}): One-time retrieval page for a given drop id
+- [Service status](${baseUrl}status): Plain-text health check endpoint
+
+## HTTP API
+
+- [Create drop](${baseUrl}api/drop): POST the client-encrypted payload as the request body; returns JSON {"id","pickupUrl"}
+- [Retrieve drop](${baseUrl}api/drop/{id}): GET the encrypted payload once; the drop is deleted on retrieval and returns 404 afterwards or when expired
+
+## Optional
+
+- [Web app manifest](${baseUrl}site.webmanifest): PWA manifest
+- [robots.txt](${baseUrl}robots.txt): Crawl policy
+""".trimIndent()
 }
