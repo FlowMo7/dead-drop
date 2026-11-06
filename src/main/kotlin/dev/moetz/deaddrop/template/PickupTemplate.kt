@@ -2,7 +2,23 @@ package dev.moetz.deaddrop.template
 
 import dev.moetz.deaddrop.Localization
 import dev.moetz.deaddrop.Shynet
-import kotlinx.html.*
+import kotlinx.html.FlowContent
+import kotlinx.html.InputType
+import kotlinx.html.a
+import kotlinx.html.br
+import kotlinx.html.div
+import kotlinx.html.h3
+import kotlinx.html.h4
+import kotlinx.html.h5
+import kotlinx.html.hidden
+import kotlinx.html.i
+import kotlinx.html.id
+import kotlinx.html.onClick
+import kotlinx.html.onKeyDown
+import kotlinx.html.pre
+import kotlinx.html.style
+import kotlinx.html.textInput
+import kotlinx.html.unsafe
 
 class PickupTemplate(
     pathPrefix: String?,
@@ -44,6 +60,7 @@ class PickupTemplate(
             div("row valign-wrapper") {
                 div("input-field col s12 m8 l8") {
                     textInput(classes = "white-text") {
+                        type = InputType.password
                         id = "drop_password"
                         placeholder = localization["pickup_password_placeholder"]
                         pattern = ".{1,}"
