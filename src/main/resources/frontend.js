@@ -60,9 +60,9 @@ function getDrop(id, password) {
     );
 }
 
-function copyToClipboard(text) {
+function copyToClipboard(text, successMessage) {
     navigator.clipboard.writeText(text).then(function () {
-        M.toast({html: '%%toast_clipboard_copy_success%%', 'classes': 'green-text'});
+        M.toast({html: successMessage, 'classes': 'green-text'});
     }, function (err) {
         M.toast({html: '%%toast_clipboard_copy_error%%', 'classes': 'red-text'});
     });

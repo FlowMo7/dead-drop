@@ -147,11 +147,6 @@ fun Application.configure(
                     text = content
                         .replaceWithLocalizedEntryAndEscapeSingleQuotes(
                             localization = localization,
-                            placeholder = "%%toast_clipboard_copy_success%%",
-                            localizedKey = "toast_clipboard_copy_success",
-                        )
-                        .replaceWithLocalizedEntryAndEscapeSingleQuotes(
-                            localization = localization,
                             placeholder = "%%toast_clipboard_copy_error%%",
                             localizedKey = "toast_clipboard_copy_error",
                         )
