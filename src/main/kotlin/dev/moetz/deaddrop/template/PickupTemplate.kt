@@ -91,6 +91,7 @@ class PickupTemplate(
                     div(classes = "card-panel grey darken-3") {
                         pre {
                             id = "drop_content"
+                            style = "white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; margin: 0;"
                         }
                     }
                 }

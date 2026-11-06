@@ -2,7 +2,23 @@ package dev.moetz.deaddrop.template
 
 import dev.moetz.deaddrop.Localization
 import dev.moetz.deaddrop.Shynet
-import kotlinx.html.*
+import kotlinx.html.DIV
+import kotlinx.html.FlowContent
+import kotlinx.html.a
+import kotlinx.html.b
+import kotlinx.html.br
+import kotlinx.html.div
+import kotlinx.html.h3
+import kotlinx.html.h4
+import kotlinx.html.hidden
+import kotlinx.html.i
+import kotlinx.html.id
+import kotlinx.html.img
+import kotlinx.html.onClick
+import kotlinx.html.p
+import kotlinx.html.span
+import kotlinx.html.style
+import kotlinx.html.textArea
 
 class IndexTemplate(
     pathPrefix: String?,
@@ -97,6 +113,7 @@ class IndexTemplate(
                         }
                         p {
                             id = "message_to_share_drop"
+                            style = "white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; margin: 0;"
 
                             +localization["drop_message_2_kicker"]
                             br()
@@ -154,17 +171,7 @@ class IndexTemplate(
             }.replace("\n", "\\n")
 
             div(classes = "row") {
-                div(classes = "col s12 m6 l6 left-align") {
-                    a(classes = "waves-effect waves-light btn orange black-text") {
-                        onClick = "window.location.reload();"
-                        i(classes = "material-icons right") {
-                            +"refresh"
-                        }
-                        +localization["index_btn_make_another_drop"]
-                    }
-                }
-
-                div(classes = "col s12 m6 l6 right-align") {
+                div(classes = "col s12 right-align") {
                     a(classes = "waves-effect waves-light btn blue white-text") {
                         style = "margin-bottom: 12px"
                         onClick = "copyToClipboard(\"$message\");"
@@ -172,6 +179,17 @@ class IndexTemplate(
                             +"content_copy"
                         }
                         +localization["index_btn_copy_message"]
+                    }
+                }
+            }
+            div(classes = "row") {
+                div(classes = "col s12 m12 l12") {
+                    a(classes = "waves-effect waves-teal btn-flat orange-text") {
+                        onClick = "window.location.reload();"
+                        i(classes = "material-icons right") {
+                            +"refresh"
+                        }
+                        +localization["index_btn_make_another_drop"]
                     }
                 }
             }
