@@ -1,6 +1,10 @@
 "use strict";
 
 function sendDrop(data) {
+    if (data === "") {
+        M.toast({html: '%%toast_send_drop_message_empty%%', 'classes': 'red-text'});
+        return;
+    }
     let baseUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
     let postUrl = baseUrl + 'api/drop'
     encryptAndPostDrop(
