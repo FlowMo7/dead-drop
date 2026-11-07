@@ -109,7 +109,12 @@ abstract class SiteTemplate(
                 div(classes = "modal-content") {
                     div(classes = "row") {
                         div(classes = "col s12 black-text") {
-                            h3 { +"Language" }
+                            h4 { +localization["modal_language_title"] }
+                        }
+                    }
+                    div(classes = "row") {
+                        div(classes = "col s12 black-text") {
+                            +localization["modal_language_description"]
                         }
                     }
                     div(classes = "row") {
@@ -119,9 +124,9 @@ abstract class SiteTemplate(
                                     .sortedBy { it.languageNameInEnglish }
                                     .forEach { language ->
                                         val classes = if (language == localization.currentLanguage) {
-                                            "collection-item active"
+                                            "collection-item active black-text green lighten-3"
                                         } else {
-                                            "collection-item"
+                                            "collection-item black-text"
                                         }
                                         a(classes = classes) {
                                             href =

@@ -171,7 +171,7 @@ class IndexTemplate(
             }.replace("\n", "\\n")
 
             div(classes = "row") {
-                div(classes = "col s12 m6 l6 right-align") {
+                div(classes = "col s12 right-align") {
                     a(classes = "waves-effect waves-light btn white black-text") {
                         style = "margin-bottom: 12px"
                         onClick =
@@ -209,7 +209,7 @@ class IndexTemplate(
                 div(classes = "col s12 m12 l12") {
                     a(classes = "waves-effect waves-teal btn-flat orange-text") {
                         onClick = "window.location.reload();"
-                        i(classes = "material-icons right") {
+                        i(classes = "material-icons left") {
                             +"refresh"
                         }
                         +localization["index_btn_make_another_drop"]
