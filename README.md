@@ -1,8 +1,13 @@
 # Dead Drop Service
 
-**Send One-Time Secrets in a secure way**
+> A dead drop or dead letter box is a method of espionage tradecraft used to pass items or information between two individuals (e.g., a case officer and an agent, or two agents) via a secret location.
 
-A Dead Drop service written in Kotlin / KTor.
+[Source: Wikipedia](https://en.wikipedia.org/wiki/Dead_drop)
+
+Send data securely to another person via an unsecure (or better: 2 different unsecure) means of transportation.
+
+Check out [the Diagrams](./Diagrams.md) to see how this is intended.
+
 
 This service uses [sjcl](https://github.com/bitwiseshiftleft/sjcl) on client-side to encrypt the data, stores the
 encrypted data on the server (while never sharing the password with the server), and generates a link to get the data
