@@ -146,7 +146,6 @@ abstract class SiteTemplate(
                     div(classes = "container") {
                         div(classes = "row") {
                             val footerLinks = buildList<Pair<String, String>> {
-
                                 if (showGithubLinkInFooter) {
                                     add(
                                         Pair(

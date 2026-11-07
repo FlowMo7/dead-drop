@@ -171,14 +171,37 @@ class IndexTemplate(
             }.replace("\n", "\\n")
 
             div(classes = "row") {
-                div(classes = "col s12 right-align") {
-                    a(classes = "waves-effect waves-light btn blue white-text") {
+                div(classes = "col s12 m6 l6 right-align") {
+                    a(classes = "waves-effect waves-light btn white black-text") {
                         style = "margin-bottom: 12px"
-                        onClick = "copyToClipboard(\"$message\");"
+                        onClick =
+                            "copyToClipboard(\"$message\", \"${localization["toast_clipboard_copy_message_success"]}\");"
                         i(classes = "material-icons left") {
                             +"content_copy"
                         }
                         +localization["index_btn_copy_message"]
+                    }
+                }
+
+                div(classes = "col s12 m12 l12 right-align") {
+                    a(classes = "waves-effect waves-light btn green white-text") {
+                        style = "margin-bottom: 12px"
+                        onClick =
+                            "copyToClipboard(document.getElementById('drop_share_link').innerHTML, \"${localization["toast_clipboard_copy_link_success"]}\");"
+                        i(classes = "material-icons left") {
+                            +"link"
+                        }
+                        +localization["index_btn_copy_link"]
+                    }
+                    +"  "
+                    a(classes = "waves-effect waves-light btn blue white-text") {
+                        style = "margin-bottom: 12px"
+                        onClick =
+                            "copyToClipboard(document.getElementById('drop_share_password').innerHTML, \"${localization["toast_clipboard_copy_password_success"]}\");"
+                        i(classes = "material-icons left") {
+                            +"key"
+                        }
+                        +localization["index_btn_copy_password"]
                     }
                 }
             }
