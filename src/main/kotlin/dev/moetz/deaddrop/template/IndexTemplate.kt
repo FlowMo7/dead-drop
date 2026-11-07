@@ -2,6 +2,7 @@ package dev.moetz.deaddrop.template
 
 import dev.moetz.deaddrop.Localization
 import dev.moetz.deaddrop.Shynet
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.a
 import kotlinx.html.b
@@ -112,6 +113,7 @@ class IndexTemplate(
                         }
                         p {
                             id = "message_to_share_drop"
+                            style = "white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; margin: 0;"
 
                             +localization["drop_message_2_kicker"]
                             br()
@@ -169,17 +171,7 @@ class IndexTemplate(
             }.replace("\n", "\\n")
 
             div(classes = "row") {
-                div(classes = "col s12 m6 l6 left-align") {
-                    a(classes = "waves-effect waves-light btn orange black-text") {
-                        onClick = "window.location.reload();"
-                        i(classes = "material-icons right") {
-                            +"refresh"
-                        }
-                        +localization["index_btn_make_another_drop"]
-                    }
-                }
-
-                div(classes = "col s12 m6 l6 right-align") {
+                div(classes = "col s12 right-align") {
                     a(classes = "waves-effect waves-light btn white black-text") {
                         style = "margin-bottom: 12px"
                         onClick =
@@ -210,6 +202,17 @@ class IndexTemplate(
                             +"key"
                         }
                         +localization["index_btn_copy_password"]
+                    }
+                }
+            }
+            div(classes = "row") {
+                div(classes = "col s12 m12 l12") {
+                    a(classes = "waves-effect waves-teal btn-flat orange-text") {
+                        onClick = "window.location.reload();"
+                        i(classes = "material-icons left") {
+                            +"refresh"
+                        }
+                        +localization["index_btn_make_another_drop"]
                     }
                 }
             }
