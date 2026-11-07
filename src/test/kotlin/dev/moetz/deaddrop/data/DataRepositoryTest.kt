@@ -3,19 +3,17 @@ package dev.moetz.deaddrop.data
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import java.io.File
 import java.time.ZonedDateTime
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 
 class DataRepositoryTest {
@@ -35,13 +33,14 @@ class DataRepositoryTest {
     }
 
     @Test
-    fun `addDrop succeeds when data folder does not exist yet`() = runBlocking {
+    fun `addDrop succeeds when data folder does not exist yet`() = runTest {
         dataFolderPath = File("./dataFolderPath-test1")
         dataRepository = DataRepository(
             dataFolderPath = dataFolderPath.absolutePath,
             encryptionManager = encryptionManager,
             keepFilesTime = 100.seconds,
             timePeriodToSweepOverdueFiles = 100.seconds,
+            scope = this.backgroundScope,
         )
 
         every { encryptionManager.encrypt(any()) } returns "encryptedContent"
@@ -59,13 +58,14 @@ class DataRepositoryTest {
     }
 
     @Test
-    fun `addDrop succeeds when data folder already exists`() = runBlocking {
+    fun `addDrop succeeds when data folder already exists`() = runTest {
         dataFolderPath = File("./dataFolderPath-test2").also { it.mkdirs() }
         dataRepository = DataRepository(
             dataFolderPath = dataFolderPath.absolutePath,
             encryptionManager = encryptionManager,
             keepFilesTime = 100.seconds,
             timePeriodToSweepOverdueFiles = 100.seconds,
+            scope = this.backgroundScope,
         )
 
         every { encryptionManager.encrypt(any()) } returns "encryptedContent12"
@@ -83,7 +83,7 @@ class DataRepositoryTest {
     }
 
     @Test
-    fun `getDrop succeeds when file exists and is not overdue`() = runBlocking {
+    fun `getDrop succeeds when file exists and is not overdue`() = runTest {
         dataFolderPath = File("./dataFolderPath-test3").also { it.mkdirs() }
         val dropFile = File(dataFolderPath, "ASDF1234").also {
             it.writeText("encryptedContent123")
@@ -94,6 +94,7 @@ class DataRepositoryTest {
             encryptionManager = encryptionManager,
             keepFilesTime = 100.seconds,
             timePeriodToSweepOverdueFiles = 100.seconds,
+            scope = this.backgroundScope,
         )
 
         every { encryptionManager.decrypt("encryptedContent123") } returns "some-content".toByteArray(Charsets.UTF_8)
@@ -107,7 +108,7 @@ class DataRepositoryTest {
     }
 
     @Test
-    fun `getDrop returns null when file exists but is overdue`() = runBlocking {
+    fun `getDrop returns null when file exists but is overdue`() = runTest {
         dataFolderPath = File("./dataFolderPath-test4").also { it.mkdirs() }
         val dropFile = File(dataFolderPath, "ASDF1234").also {
             it.writeText("encryptedContent123")
@@ -119,6 +120,7 @@ class DataRepositoryTest {
             encryptionManager = encryptionManager,
             keepFilesTime = 100.seconds,
             timePeriodToSweepOverdueFiles = 100.seconds,
+            scope = this.backgroundScope,
         )
 
         every { encryptionManager.decrypt("encryptedContent123") } returns "some-content".toByteArray(Charsets.UTF_8)
@@ -133,7 +135,7 @@ class DataRepositoryTest {
     }
 
     @Test
-    fun `getDrop returns null when file does not exist`() = runBlocking {
+    fun `getDrop returns null when file does not exist`() = runTest {
         dataFolderPath = File("./dataFolderPath-test5").also { it.mkdirs() }
 
         dataRepository = DataRepository(
@@ -141,6 +143,7 @@ class DataRepositoryTest {
             encryptionManager = encryptionManager,
             keepFilesTime = 100.seconds,
             timePeriodToSweepOverdueFiles = 100.seconds,
+            scope = this.backgroundScope,
         )
 
         val dropContent = dataRepository.getDrop("ASDF1234")
@@ -156,17 +159,17 @@ class DataRepositoryTest {
 
         val fileOverdue1 = File(dataFolderPath, "file-overdue-1").also {
             it.writeText("old content 1")
-            it.setLastModified(System.currentTimeMillis() - 101_000) // 101 seconds ago
+            it.setLastModified(Clock.System.now().minus(101.seconds).toEpochMilliseconds())
         }
 
         val fileNotOverdue = File(dataFolderPath, "file-not-overdue").also {
             it.writeText("recent content")
-            it.setLastModified(System.currentTimeMillis() - 50_000) // 50 seconds ago
+            it.setLastModified(Clock.System.now().minus(50.seconds).toEpochMilliseconds())
         }
 
         val fileOverdue2 = File(dataFolderPath, "file-overdue-2").also {
             it.writeText("old content 2")
-            it.setLastModified(System.currentTimeMillis() - 150_000) // 150 seconds ago
+            it.setLastModified(Clock.System.now().minus(150.seconds).toEpochMilliseconds())
         }
 
         // Create repository with short sweep period
@@ -175,10 +178,11 @@ class DataRepositoryTest {
             encryptionManager = encryptionManager,
             keepFilesTime = 100.seconds,
             timePeriodToSweepOverdueFiles = 2.seconds,
+            scope = GlobalScope,
         )
 
         // Wait for cleanup to run (2s sweep period + buffer)
-        delay(3000)
+        delay(3.seconds)
 
         // Assert overdue files are deleted
         assertFalse(fileOverdue1.exists())
@@ -189,7 +193,7 @@ class DataRepositoryTest {
     }
 
     @Test
-    fun `cleanUpOverdueFiles handles empty directory without errors`() = runBlocking {
+    fun `cleanUpOverdueFiles handles empty directory without errors`() = runTest {
         dataFolderPath = File("./dataFolderPath-test-empty").also { it.mkdirs() }
 
         dataRepository = DataRepository(
@@ -197,10 +201,11 @@ class DataRepositoryTest {
             encryptionManager = encryptionManager,
             keepFilesTime = 100.seconds,
             timePeriodToSweepOverdueFiles = 2.seconds,
+            scope = this.backgroundScope,
         )
 
         // Wait for cleanup to run
-        delay(3000)
+        delay(3.seconds)
 
         // Assert no errors and folder still exists
         assertTrue(dataFolderPath.exists())

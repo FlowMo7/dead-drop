@@ -46,6 +46,7 @@ dependencies {
     testImplementation Ktor.server.testHost
     testImplementation Kotlin.test
     testImplementation Testing.mockK
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0'
 }
 
 jar {

@@ -15,6 +15,7 @@ import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.conditionalheaders.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.forwardedheaders.*
+import kotlinx.coroutines.GlobalScope
 import java.io.File
 import kotlin.time.Duration.Companion.hours
 
@@ -45,6 +46,7 @@ fun main() {
         encryptionManager = encryptionManager,
         keepFilesTime = keepFilesTimeInHours.hours,
         timePeriodToSweepOverdueFiles = 1.hours,
+        scope = GlobalScope,
     )
 
     val shynet = Shynet(
